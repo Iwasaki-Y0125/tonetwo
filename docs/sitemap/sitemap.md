@@ -1,14 +1,12 @@
 # ToneTwo サイトマップ（Routes一覧）
 
-![alt text](sitemap-0.png)
-![alt text](sitemap-1.png)
-![alt text](sitemap-2.png)
-![alt text](sitemap-3.png)
-![alt text](sitemap-4.png)
-![alt text](sitemap-5.png)
-
 > 目的: 画面設計（サイトマップ）を Rails のルーティングに寄せて整理し、実装・漏れ確認をしやすくする。
 
+![alt text](01Public.png)
+![alt text](02Registration.png)
+![alt text](03Login.png)
+![alt text](04Authenticated.png)
+![alt text](05Administrate.png)
 ---
 
 ## Public（未ログイン）
