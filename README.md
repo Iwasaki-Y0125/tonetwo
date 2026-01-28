@@ -242,7 +242,7 @@
 | レコメンド | ActiveRecord（PostgreSQLを用いた軽量レコメンド） |
 | モデレーション | 禁止ワードフィルタ（モデルバリデーション） |
 | メール作成/送信 | ActionMailer |
-| メール配信基盤 | SendGrid |
+| メール配信基盤 | Resend |
 | 非同期ジョブ | Active Job（adapter: :async） |
 | 管理画面 | Administrate |
 | エラーモニタリング | Renderログ(エラーモニタリングは本リリース以降) |
@@ -363,7 +363,7 @@
     - 送信は `deliver_later` を基本とし、ユーザー操作のレスポンスを待たせないUX
 
 ### メール配信基盤
-- **SendGrid**
+- **Resend**
     - ActionMailerから受け取ったメールを実際に配送するための配信基盤
     - 配送の信頼性と運用の手間を考慮して採用
 
@@ -448,7 +448,7 @@ https://techracho.bpsinc.jp/hachi8833/2024_10_21/145343
 - Cloudflare公式: https://www.cloudflare.com/ja-jp/
 - Cron Trigger(Cloudflare Docs): https://developers.cloudflare.com/workers/configuration/cron-triggers/
 ---
-- SendGrid: https://sendgrid.kke.co.jp/
+- Resend: https://resend.com/
 ---
 - Turbo Handbook : https://turbo.hotwired.dev/handbook/introduction
 - Stimulus Handbook : https://stimulus.hotwired.dev/handbook/introduction
