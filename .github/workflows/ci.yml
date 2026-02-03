@@ -50,8 +50,8 @@ jobs:
       #       sudo apt-get install -y --no-install-recommends \
       #         mecab libmecab-dev mecab-ipadic-utf8
       # # ソース取得
-      # - name: Checkout code
-      #   uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       # Rubyセットアップ（importmapコマンド実行にRails環境が必要になることがあるため）
       - name: Set up Ruby
@@ -125,18 +125,20 @@ jobs:
       # - pkg-config: ネイティブ依存の検出補助
       # - google-chrome-stable: system test（capybara等）でChromeを使う前提
       # - mecab/libmecab-dev/mecab-ipadic-utf8: natto が MeCab（libmecab.so）を使うために必要
+      # ---- MeCab (natto) は導入後に有効化 ----
+      # mecab \
+      # libmecab-dev \
+      # mecab-ipadic-utf8
       - name: Install packages
-        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y \
-          build-essential \
-          git \
-          libpq-dev \
-          libyaml-dev \
-          pkg-config \
-          google-chrome-stable
-          # ---- MeCab (natto) は導入後に有効化 ----
-          # mecab \
-          # libmecab-dev \
-          # mecab-ipadic-utf8
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y \
+            build-essential \
+            git \
+            libpq-dev \
+            libyaml-dev \
+            pkg-config \
+            google-chrome-stable
 
       # ソース取得
       - name: Checkout code
