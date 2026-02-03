@@ -1,0 +1,175 @@
+# Workflow名（GitHub Actionsの画面に表示される）
+name: CI
+
+# いつこのCIを動かすか（トリガー）
+on:
+  # PRが作成/更新されたときに実行
+  pull_request:
+  # mainブランチにpushされたときに実行
+  push:
+    branches: [ main ]
+
+jobs:
+  # ----------------------------
+  # Ruby/Rails向けセキュリティ静的解析（Brakeman）
+  # ----------------------------
+  scan_ruby:
+    # 実行環境（GitHubが用意するUbuntuマシン）
+    runs-on: ubuntu-latest
+
+    steps:
+      # リポジトリのコードを runner にチェックアウトする（CI上にソースを配置）
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Rubyをセットアップする（.ruby-version の指定に合わせる）
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          # bundler-cache: true により bundle install の結果をキャッシュして高速化
+          bundler-cache: true
+
+      # BrakemanでRailsアプリのよくある脆弱性を静的解析
+      # --no-pager は出力をページャ（less/more等）に流さずCIログにそのまま出す
+      - name: Scan for common Rails security vulnerabilities using static analysis
+        run: bin/brakeman --no-pager
+
+  # ----------------------------
+  # importmap の依存（JS）脆弱性監査
+  # =>アプリが使っているJavaScriptの部品（ライブラリ）の中に、すでに知られている危険な欠陥がないかを自動でチェックする
+  # ----------------------------
+  scan_js:
+    runs-on: ubuntu-latest
+
+    steps:
+      # # OSパッケージをインストール（natto/MeCab用）
+      # - name: Install packages (for natto/MeCab)
+      #   run: |
+      #       sudo apt-get update
+      #       sudo apt-get install -y --no-install-recommends \
+      #         mecab libmecab-dev mecab-ipadic-utf8
+      # # ソース取得
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Rubyセットアップ（importmapコマンド実行にRails環境が必要になることがあるため）
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+
+      # importmap の依存関係を監査（脆弱性が見つかると失敗する）
+      - name: Scan for security vulnerabilities in JavaScript dependencies
+        run: bin/importmap audit
+
+  # ----------------------------
+  # コード整形/静的解析（Rubocop）
+  # ----------------------------
+  lint:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read    # コードをチェックアウトするために必要
+    # contents: write   # push するために必要 （自動修正を有効にした場合）
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+
+      - name: Lint code for consistent style
+        run: bin/rubocop -f github
+
+  # ----------------------------
+  # テスト（DBあり / system testあり）
+  # ----------------------------
+  test:
+    runs-on: ubuntu-latest
+
+    # job内で使うサービスコンテナ（テスト用DBなど）を起動
+    services:
+      postgres:
+        # postgres公式イメージでDBを起動
+        image: postgres
+        # DBユーザー/パスワード（テスト用）
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        # runner（Ubuntu）側の localhost:5432 にポート公開
+        ports:
+          - 5432:5432
+        # DB起動完了を待つためのヘルスチェック（pg_isready が通るまでリトライ）
+        options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=3
+
+      # Redisも使う場合のテンプレ（今は無効）
+      # redis:
+      #   image: redis
+      #   ports:
+      #     - 6379:6379
+      #   options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      # OSパッケージをインストール
+      # - build-essential: ネイティブ拡張のビルド（ffi等）に必要になることがある
+      # - git: bundlerがgitソースのgemを取る場合に必要
+      # - libpq-dev: PostgreSQL用ネイティブ拡張（pg等）ビルド用ヘッダ
+      # - libyaml-dev: psych（YAML）まわりで必要になることがある
+      # - pkg-config: ネイティブ依存の検出補助
+      # - google-chrome-stable: system test（capybara等）でChromeを使う前提
+      # - mecab/libmecab-dev/mecab-ipadic-utf8: natto が MeCab（libmecab.so）を使うために必要
+      # ---- MeCab (natto) は導入後に有効化 ----
+      # mecab \
+      # libmecab-dev \
+      # mecab-ipadic-utf8
+      - name: Install packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y \
+            build-essential \
+            git \
+            libpq-dev \
+            libyaml-dev \
+            pkg-config \
+            google-chrome-stable
+
+      # ソース取得
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Rubyセットアップ + bundlerキャッシュ
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+
+      # テスト実行
+      # - RAILS_ENV=test: テスト環境で起動
+      # - DATABASE_URL: services.postgres が localhost:5432 で待っているのでそこに接続
+      # - db:test:prepare: テストDB準備
+      # - test: unit/integration等のテスト
+      # - test:system: system test（ブラウザを使う）を実行
+      - name: Run tests
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432
+          # REDIS_URL: redis://localhost:6379/0
+        run: bin/rails db:test:prepare test test:system
+
+      # system testが失敗したときにスクショを成果物としてアップロード
+      # if: failure() なので失敗時のみ実行
+      - name: Keep screenshots from failed system tests
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: screenshots
+          path: ${{ github.workspace }}/tmp/screenshots
+          if-no-files-found: ignore
