@@ -20,7 +20,7 @@ jobs:
     steps:
       # リポジトリのコードを runner にチェックアウトする（CI上にソースを配置）
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       # Rubyをセットアップする（.ruby-version の指定に合わせる）
       - name: Set up Ruby
@@ -51,7 +51,7 @@ jobs:
               mecab libmecab-dev mecab-ipadic-utf8
       # ソース取得
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       # Rubyセットアップ（importmapコマンド実行にRails環境が必要になることがあるため）
       - name: Set up Ruby
@@ -75,7 +75,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -130,7 +130,7 @@ jobs:
 
       # ソース取得
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       # Rubyセットアップ + bundlerキャッシュ
       - name: Set up Ruby
