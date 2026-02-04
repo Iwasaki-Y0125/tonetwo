@@ -1,0 +1,85 @@
+# *開発用構成
+services:
+  #* web / Railsコンテナ
+  web:
+    # ビルド先指定
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+
+    # DATABASE_URLの式展開が不安定になるのでファイルごと読み込み
+    env_file:
+      - .env.dev
+
+    # 開発時の対話操作用（rails console / binding.pry など）
+    tty: true
+    stdin_open: true
+
+    # Railsサーバーを起動する（ポート3000指定を上書き）
+    # 補足/このComposeのcommandがDockerfileのCMDより後に実行される
+    command: >
+      bash -lc "
+        bundle install &&
+        rm -f tmp/pids/server.pid &&
+        bin/rails db:prepare &&
+        bin/rails server -b 0.0.0.0 -p 3000
+      "
+
+    volumes:
+      # - .:/appとは
+      # =>ホストのカレントディレクトリをコンテナの/appと共有する
+      # =>ファイルを編集すると即時コンテナ(画面）に反映される
+      #! 本番では使わない。開発環境専用
+      - .:/app
+
+      # バンドルデータの永続化
+      #  Bundler の保存先（BUNDLE_PATH）を named volume にして、コンテナ削除でも gems を保持する
+      # !これがないとコンテナを消すとバンドルの中身も消えエラーになる
+      - bundle_data:/app/vendor/bundle
+
+      # Node.js用
+      # DausyUIを使用したいため
+      # !脆弱性のリスク回避のため本番ではビルド時のみ記載すること
+      - node_modules:/app/node_modules
+
+    # 環境設定
+    environment:
+      RAILS_ENV: development
+      TZ: Asia/Tokyo
+
+    # ブラウザからホストの3000番への要求 → Dockerコンテナの3000番へつなぐ
+    ports:
+      - "3000:3000"
+
+    # dbが起動してからwebを起動する
+    depends_on:
+      db:
+        condition: service_healthy
+
+  #* db / PostgreSQLコンテナ
+  db:
+    # postgres:17のイメージを使う
+    image: postgres:17
+    # 環境設定
+    environment:
+      TZ: Asia/Tokyo
+      POSTGRES_DB: ${APP_NAME}_development
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+    # DB永続化
+    # DBの中身をコンテナ外の管理領域に保存する
+    # !これがないとコンテナを消すとDBの中身も消える
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    # DB接続テスト設定
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+# コンテナ外に保存領域を用意
+volumes:
+  postgres_data:
+  bundle_data:
+  node_modules:

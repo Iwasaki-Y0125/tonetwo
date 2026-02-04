@@ -1,0 +1,189 @@
+#* 開発用構成
+
+# バージョン管理
+ARG RUBY_VERSION=3.4.8
+ARG NODE_MAJOR=22
+
+FROM ruby:${RUBY_VERSION}-slim
+
+ARG RUBY_VERSION
+ARG NODE_MAJOR
+
+# 環境設定
+ENV LANG=C.UTF-8 \
+    TZ=Asia/Tokyo
+
+# ====================
+# OSパッケージ導入
+# ====================
+# apt-get updateはビルド時間がながくなるので、できるだけ一つのRUN命令でまとめる
+# 参考: https://docs.docker.jp/develop/develop-images/dockerfile_best-practices.html#run
+# 責務の分離のため、機能ごとにRUN命令を分けることもあるが、
+# 開発中は少しでもビルド時間短縮を優先し、OSパッケージ導入を一つにまとめている。
+
+# apt-get update -qq：aptのパッケージ一覧を更新
+# apt-get install -y：対話なしでインストール
+# --no-install-recommends：おすすめパッケージを入れない → 余計な依存なしで軽量化
+RUN apt-get update -qq && apt-get install -y --no-install-recommends \
+    # Cコンパイラ一式
+    build-essential \
+    # Gemfileで Git から gem を取る場合に必要
+    git \
+    # PostgreSQL使う時に必須のCライブラリ（libpq）の 開発用ヘッダ
+    libpq-dev \
+    # psych(yaml読み込み)を使う時に必須の開発用ヘッダ(Rails8で必須)
+    libyaml-dev \
+    # nokogiri（HTML/XLMの組み立て）を使用するとき必須の開発用ヘッダ（一応）
+    libxml2-dev \
+    libxslt-dev \
+    # postgresqlのクライアントツール
+    postgresql-client \
+    # タイムゾーン設定
+    tzdata \
+    # HTTPS証明書ストア。これがないと https 経由のダウンロード（curl等）が失敗しやすい。
+    ca-certificates \
+    # ====================
+    # Node.js 関連
+    # ====================
+    # NodeSource の鍵を取るのに使う。
+    curl \
+    # 鍵（GPG）を扱う。ダウンロードした鍵を apt が使える形に変換するため。
+    gnupg \
+    # ====================
+    #  MeCab（本体 + 補助コマンド + 開発ヘッダ + IPA辞書）
+    # ====================
+    mecab \
+    libmecab-dev \
+    mecab-ipadic-utf8 \
+    # ====================
+    # NEologdのインストールに必要な追加パッケージ群
+    # ====================
+    # .xz 形式で圧縮された辞書データやコーパスを展開するため
+    xz-utils \
+    # ファイルにパッチを当てる（NEologd のセットアップで辞書定義やビルド用ファイルに修正を当てる工程がある）
+    patch \
+    # ファイル種別を判定するコマンド。インストーラが「これは何のファイルか」を確認するのに使うことがある。
+    file \
+    # sudo 権限でインストール
+    # !=> セキュリティ的に問題があるので本番環境ではビルド時のみ実装すること
+    # !Todoビルド時のみの導入でNEologdの動作に問題ないか要確認
+    sudo \
+  && rm -rf /var/lib/apt/lists/*
+
+# ====================
+#  Node.js
+# ====================
+    # Node.jsをいれるための前処理
+    # NodeSourceの鍵をを置くディレクトリ
+RUN mkdir -p /etc/apt/keyrings \
+  # NodeSourceの署名鍵を取得して保存
+  && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
+    | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+  # NodeSourceのaptリポジトリを追加
+  && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODE_MAJOR}.x nodistro main" \
+    > /etc/apt/sources.list.d/nodesource.list \
+  # リポジトリ追加後に update して nodejs をインストール
+  && apt-get update -qq && apt-get install -y --no-install-recommends nodejs \
+  # rm -rf /var/lib/apt/lists/*：aptのキャッシュ削除 → 軽量化
+  && rm -rf /var/lib/apt/lists/*
+
+# ====================
+#  NEologdのインストール
+#  NEologdは重くたまに失敗するので5回までリトライする
+# ====================
+ENV MECAB_DICDIR=/opt/mecab-dic/neologd
+
+# set -eux: Dockerビルドのデバッグをしやすくする定番セット
+# -e:エラー時に即座に終了 -u:未定義の変数を使ったらエラー -x:実行するコマンドをログに全部出力
+RUN set -eux; \
+  # NEologdのインストールを最大5回までリトライ
+  for i in 1 2 3 4 5; do \
+    # 毎回クローンキャッシュを削除してから実行
+    rm -rf /tmp/mecab-ipadic-neologd; \
+    # NEologdのGitクローン(公式手順に準拠) --depth 1: 履歴を1つだけにして軽量化
+    if git clone --depth 1 https://github.com/neologd/mecab-ipadic-neologd.git /tmp/mecab-ipadic-neologd && \
+      \
+      # インストールを実行(公式手順に準拠)
+      # -y:全てyesで実行
+      # -n: ログからインストーラの更新/更新チェック挙動に関わるオプションっぽい、詳細不明
+      /tmp/mecab-ipadic-neologd/bin/install-mecab-ipadic-neologd -n -y; then \
+      rm -rf /tmp/mecab-ipadic-neologd; \
+      \
+      # インストール成功後、NEologd辞書を固定パスにコピーして退避
+      mkdir -p "$(dirname "${MECAB_DICDIR}")"; \
+      rm -rf "${MECAB_DICDIR}"; \
+      cp -a "$(mecab-config --dicdir)/mecab-ipadic-neologd" "${MECAB_DICDIR}"; \
+      test -f "${MECAB_DICDIR}/dicrc"; \
+      # RUN ステップを成功で終了
+      exit 0; \
+    fi; \
+    # >&2: 標準エラー出力にメッセージを出す
+    echo "NEologd install failed. retry=${i}" >&2; \
+    # バックオフ戦略: リトライ毎に待機時間を長くする(混雑や一時障害に強い)
+    # 例: 1回目=10秒, 2回目=20秒, 3回目=30秒...
+    sleep $((i*10)); \
+  # forループここまで
+  # 5回リトライしても成功しなかった場合の処理
+  done; \
+  echo "NEologd install failed after retries" >&2; \
+  # exit 1：RUNステップが失敗 → Dockerビルド全体が失敗
+  exit 1
+
+# ====================
+#  日本語評価極性辞書（名詞編 + 用言編）の取得（dev用）
+#  参照: 東北大 乾・岡崎研究室 公開辞書
+# ====================
+ENV SENTIMENT_LEX_DIR=/opt/sentiment_lex
+
+RUN set -eux; \
+  mkdir -p "${SENTIMENT_LEX_DIR}"; \
+  for i in 1 2 3 4 5; do \
+    rm -f "${SENTIMENT_LEX_DIR}/wago.121808.pn" "${SENTIMENT_LEX_DIR}/pn.csv.m3.120408.trim"; \
+    if \
+      curl -fsSL --retry 3 --retry-delay 5 --retry-all-errors \
+        -o "${SENTIMENT_LEX_DIR}/wago.121808.pn" \
+        "https://www.cl.ecei.tohoku.ac.jp/resources/sent_lex/wago.121808.pn" \
+      && \
+      curl -fsSL --retry 3 --retry-delay 5 --retry-all-errors \
+        -o "${SENTIMENT_LEX_DIR}/pn.csv.m3.120408.trim" \
+        "https://www.cl.ecei.tohoku.ac.jp/resources/sent_lex/pn.csv.m3.120408.trim"; \
+    then \
+      break; \
+    fi; \
+    echo "Japanese Sentiment Dictionary download failed. retry=${i}" >&2; \
+    sleep $((i*10)); \
+  done; \
+  test -s "${SENTIMENT_LEX_DIR}/wago.121808.pn"; \
+  test -s "${SENTIMENT_LEX_DIR}/pn.csv.m3.120408.trim"
+
+
+# Bundlerの保存先を確保（非root実行でも書けるようにする）
+ENV BUNDLE_PATH=/app/vendor/bundle \
+    BUNDLE_GEMFILE=/app/Gemfile
+
+RUN mkdir -p /app/vendor/bundle \
+    && chown -R 1000:1000 /app/vendor/bundle
+
+# 作業ディレクトリの明示（Railsプロジェクトのルート）
+WORKDIR /app
+
+# Gemfile設定（ dev用 ）
+# GemfileとGemfile.lockをコンテナにコピー
+# => 差分があればbundle install
+# => 差分がなければ前回のコンテナキャッシュを利用
+COPY Gemfile ./
+COPY Gemfile.lock ./
+RUN bundle install
+
+# npm設定（ dev 用）
+# 開発時の初回エラー回避の構成
+COPY package.json* package-lock.json* ./
+RUN if [ -f package.json ]; then npm install; fi
+
+# Railsアプリのコードすべて（一個目の./ホスト側のカレントディレクトリ)を
+# コンテナ内(二個目の./コンテナ内のカレントディレクトリ)にコピー = コンテナに載せる
+COPY . .
+
+# Railsサーバーを起動する bin/rails server -b 0.0.0.0を実行
+# -b 0.0.0.0 でIP制限を外す（これがないとDockerコンテナは内部からしかアクセスできない）
+CMD ["bin/rails", "server", "-b", "0.0.0.0"]
