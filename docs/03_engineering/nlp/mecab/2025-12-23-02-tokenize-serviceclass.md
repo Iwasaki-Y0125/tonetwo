@@ -36,7 +36,7 @@
 
     # 動作確認 ==============================
     # $ make exec
-    # $ ruby script/mecab_tokens_cases.rb > tmp/mecab_tokens_cases.log
+    # $ ruby script/mecab/mecab_tokens_cases.rb > tmp/mecab/mecab_tokens_cases.log
     # ======================================
 
     # MeCabのfeatureの各要素のメモ
