@@ -2,26 +2,27 @@ require_relative "boot"
 
 require "rails/all"
 
-# Require the gems listed in Gemfile, including any gems
-# you've limited to :test, :development, or :production.
+# Gemfile に記載されているすべての gem を読み込みます。これには、:test、:development、:production のいずれかに限定されている gem も含まれます。
 Bundler.require(*Rails.groups)
 
-module ToneTwo
+module App
   class Application < Rails::Application
-    # Initialize configuration defaults for originally generated Rails version.
+    # Rails の元々のバージョン用に、設定のデフォルト値を初期化します。
     config.load_defaults 8.0
 
-    # Please, add to the `ignore` list any other `lib` subdirectories that do
-    # not contain `.rb` files, or that should not be reloaded or eager loaded.
-    # Common ones are `templates`, `generators`, or `middleware`, for example.
+    # .rb ファイルを含まない lib サブディレクトリや、リロードまたは早期ロードされるべきではないディレクトリを ignore リストに追加してください。
+    # 例としては、templates、generators、middleware などが一般的です。
     config.autoload_lib(ignore: %w[assets tasks])
 
-    # Configuration for the application, engines, and railties goes here.
+    # アプリケーション、エンジン、およびルーティングの各設定をここに記述します。
     #
-    # These settings can be overridden in specific environments using the files
-    # in config/environments, which are processed later.
-    #
-    # config.time_zone = "Central Time (US & Canada)"
-    # config.eager_load_paths << Rails.root.join("extras")
+    # これらの設定は、後で処理される config/environments 内のファイルを使用して、
+    # 特定の環境で上書きすることができます。
+
+    # config.autoload_paths << ... | 定数を参照した時に、Rails が必要なファイルを探しに行くディレクトリを増やす
+    config.autoload_paths << Rails.root.join("app/services")
+
+    # config.eager_load_paths << ... | 本番で起動時にまとめて全部読み込む対象のディレクトリを増やす
+    config.eager_load_paths << Rails.root.join("app/services")
   end
 end

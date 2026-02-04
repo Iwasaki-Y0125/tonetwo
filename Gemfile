@@ -40,6 +40,17 @@ gem "thruster", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
+# ====================
+# 追記した箇所
+# ====================
+
+# MeCabライブラリをRubyのコードから使えるようにするラッパー
+gem "natto"
+
+# ====================
+# 開発 + テスト
+# ====================
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
@@ -51,11 +62,17 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 end
 
+# ====================
+# 開発
+# ====================
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
 end
 
+# ====================
+# テスト環境用
+# ====================
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
