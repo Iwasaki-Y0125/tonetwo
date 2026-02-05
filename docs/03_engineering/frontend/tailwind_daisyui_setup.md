@@ -62,7 +62,7 @@ touch app/assets/stylesheets/application.tailwind.css
 - `build:css` → 本番ビルド用に 一度だけ生成
 - `watch:css` → 開発中に 自動で再生成
 
-- `build:css` の出力先を `application.css` に設定。
+- `build:css` の出力先を `tailwind.css` に設定。
 
 - `package.json` に以下を追加:
 ```json
@@ -102,7 +102,7 @@ Rails.application.config.assets.paths << Rails.root.join("app/assets/builds")
 
 - `application.html.erb ` に`body` もしくは `html` に `data-theme="light"` を付与。
 ```rb
-<body data-theme="light">
+<body data-theme="light"  class="min-h-screen">
   <%= yield %>
 </body>
 ```
