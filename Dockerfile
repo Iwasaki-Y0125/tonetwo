@@ -216,10 +216,9 @@ RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
     bundle exec bootsnap precompile --gemfile
 
-# !todo: npm導入後コメントアウト解除
-# # npm設定（本番 build 用）
-# COPY package.json package-lock.json ./
-# RUN npm ci && npm cache clean --force
+# npm設定（本番 build 用）
+COPY package.json package-lock.json ./
+RUN npm ci && npm cache clean --force
 
 # Railsアプリのコードすべて（一個目の./ホスト側のカレントディレクトリ)を
 # コンテナ内(二個目の./コンテナ内のカレントディレクトリ)にコピー = コンテナに載せる

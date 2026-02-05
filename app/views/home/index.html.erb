@@ -1,7 +1,29 @@
-<h1>Root Test Page</h1>
+<div class="p-8 max-w-3xl">
+  <div class="prose">
+    <h1>Root Test Page</h1>
+    <p>It works!</p>
+  </div>
 
-<p>It works!</p>
+  <div class="stats shadow mt-6">
+    <div class="stat">
+      <div class="stat-title">Rails.env</div>
+      <div class="stat-value text-primary"><%= Rails.env %></div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Time</div>
+      <div class="stat-value text-secondary"><%= Time.current %></div>
+    </div>
+  </div>
+</div>
 
-<ul>
-  <li>Rails.env: <%= Rails.env %></li>
-  <li>Time: <%= Time.current %></li>
+<div class="p-8">
+  <div class="card bg-base-100 shadow-xl max-w-md">
+    <div class="card-body">
+      <h2 class="card-title">DaisyUI OK</h2>
+      <p>Tailwind + DaisyUI が反映されています。</p>
+      <div class="card-actions justify-end">
+        <button class="btn btn-primary">確認</button>
+      </div>
+    </div>
+  </div>
+</div>
