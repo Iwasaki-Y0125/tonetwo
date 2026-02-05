@@ -1,0 +1,13 @@
+{
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.18",
+    "autoprefixer": "^10.4.24",
+    "daisyui": "^5.5.17",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.18"
+  },
+  "scripts": {
+    "build:css": "tailwindcss -c tailwind.config.js -i ./app/assets/stylesheets/application.tailwind.css -o ./app/assets/builds/tailwind.css",
+    "watch:css": "tailwindcss -c tailwind.config.js -i ./app/assets/stylesheets/application.tailwind.css -o ./app/assets/builds/tailwind.css --watch"
+  }
+}

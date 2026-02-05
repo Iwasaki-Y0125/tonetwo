@@ -1,0 +1,31 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+/* ここでスキャン対象を明示 */
+@source "../views/**/*.erb";
+@source "../helpers/**/*.rb";
+@source "../javascript/**/*.js";
+@source "../assets/stylesheets/**/*.css";
+
+/* 自作CSSを追加する場合 */
+
+/* base: リセットや要素の標準見た目 */
+/* @layer base {
+  h1 {
+    @apply text-3xl font-bold;
+  }
+} */
+
+/* components: 再利用する部品 */
+/* @layer components {
+  .btn-primary {
+    @apply btn btn-primary;
+  }
+} */
+
+/* utilities: ちょい足しの便利クラス */
+/* @layer utilities {
+  .text-shadow {
+    text-shadow: 0 2px 6px rgba(0,0,0,.2);
+  }
+} */

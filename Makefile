@@ -1,4 +1,4 @@
-.PHONY: ch dev dev-restart dev-build dev-build-nocache down clean ps logs logs-web logs-db exec rails-c bundle-install license-report g-migr db-migrate db-prepare db-reset g-con g-model rspec rubocop rubocop-a help
+.PHONY: ch dev dev-restart dev-build dev-build-nocache down clean ps logs logs-web logs-db exec rails-c bundle-install npm npm-root css-build css license-report g-migr db-migrate db-prepare db-reset g-con g-model rspec rubocop rubocop-a help
 
 .DEFAULT_GOAL := help
 
@@ -9,8 +9,12 @@ help: ## ターゲット一覧を表示
 # 共通: 環境変数 + 非root実行
 OPTS      := -e HOME=/tmp --user $(shell id -u):$(shell id -g)
 
+# root 実行用（user 指定なし）
+OPTS_ROOT := -e HOME=/tmp
+
 # exec 用: /app を起点にする（Gemfile迷子防止）
-EXEC_OPTS := -w /app $(OPTS)
+EXEC_OPTS      := -w /app $(OPTS)
+EXEC_OPTS_ROOT := -w /app $(OPTS_ROOT)
 
 # run 用: workdir は --workdir を使う（docker compose run の正式オプション）
 RUN_OPTS  := --workdir /app $(OPTS)
@@ -113,6 +117,26 @@ rails-c: ## railsコンソール起動
 # Gemインストール
 bundle-install: ## Gemインストール
 	$(DEV) exec $(EXEC_OPTS) web sh -lc 'bundle install'
+
+# ====================
+# npm
+# ====================
+
+# make npm p="tailwindcss postcss autoprefixer daisyui"
+npm: ## npmパッケージインストール
+	$(DEV) exec $(EXEC_OPTS) web npm install -D $(p)
+
+npm-root: ## rootでnpmインストール（初回の権限修正用）
+	$(DEV) exec -u root $(EXEC_OPTS_ROOT) web npm install -D $(p)
+	$(DEV) exec -u root $(EXEC_OPTS_ROOT) web chown -R 1000:1000 /app/node_modules /app/package.json /app/package-lock.json
+
+# CSSビルド
+css-build: ## CSSビルド
+	$(DEV) exec $(EXEC_OPTS) web npm run build:css
+
+# CSSウォッチ
+css: ## CSSウォッチ
+	$(DEV) exec $(EXEC_OPTS) web npm run watch:css
 
 # ライセンスレポート発行
 license-report: ## ライセンスレポート発行
