@@ -53,3 +53,6 @@ vendor/bundle/
 # Git管理をせず、Dockerイメージビルド時に生成する方式を採用
 mecab_userdic/*.dic
 mecab_userdic/*.bin
+
+# Ignore Codex config file
+.codex/config.toml
