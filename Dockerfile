@@ -107,6 +107,9 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
     patch \
     # ファイル種別を判定するコマンド。インストーラが「これは何のファイルか」を確認するのに使うことがある。
     file \
+    # NEologdインストーラがインストール先次第で sudo を呼ぶため、build時のみ導入する
+    # todo 暫定運用としては許容。恒久的には NEologd を固定化して sudo なしで動くようにするのが望ましい。
+    sudo \
   && rm -rf /var/lib/apt/lists/*
 
 # ====================

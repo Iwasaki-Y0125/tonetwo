@@ -1,4 +1,7 @@
 require "active_support/core_ext/integer/time"
+# 仮公開時の Basic認証ミドルウェア
+# TODO(MVP公開前): 完全公開時にこの require / middleware が必要かを再判断する。
+require Rails.root.join("lib/preview_access_control")
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -79,12 +82,22 @@ Rails.application.configure do
   # Only use :id for inspections in production.
   config.active_record.attributes_for_inspect = [ :id ]
 
-  # Enable DNS rebinding protection and other `Host` header attacks.
-  # config.hosts = [
-  #   "example.com",     # Allow requests from example.com
-  #   /.*\.example\.com/ # Allow requests from subdomains like `www.example.com`
-  # ]
-  #
-  # Skip DNS rebinding protection for the default health check endpoint.
-  # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+  # 独自ドメイン導入時に、受け付ける Host を環境変数で明示する。
+  # TODO(MVP公開前): 本番ドメイン確定後に APP_ALLOWED_HOSTS を最終値へ更新する。
+  allowed_hosts = ENV.fetch("APP_ALLOWED_HOSTS", "")
+                     .split(",")
+                     .map(&:strip)
+                     .reject(&:empty?)
+  config.hosts.concat(allowed_hosts) if allowed_hosts.any?
+
+  # デフォルトのヘルスチェックエンドポイントに対して、DNSリバインディング保護を無効にします。
+  config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+
+  # 仮公開中のみ有効化できるアクセス制限（/up は middleware 側で除外）。
+  # TODO(MVP公開前): 公開時に制限不要なら PreviewAccessControl を外す。
+  config.middleware.use(
+    PreviewAccessControl,
+    basic_user: ENV["PREVIEW_BASIC_AUTH_USER"],
+    basic_password: ENV["PREVIEW_BASIC_AUTH_PASSWORD"]
+  )
 end

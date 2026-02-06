@@ -6,8 +6,11 @@ if [ -z "${LD_PRELOAD+x}" ]; then
     export LD_PRELOAD
 fi
 
-# If running the rails server then create or migrate existing database
-if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
+# Render の Docker デプロイでは `bundle exec puma` が起動コマンドになるため、
+# rails server だけでなく puma 起動時も db:prepare を実行する。
+if { [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; } \
+  || { [ "${1:-}" == "bundle" ] && [ "${2:-}" == "exec" ] && [ "${3:-}" == "puma" ]; } \
+  || [ "${1:-}" == "puma" ]; then
   ./bin/rails db:prepare
 fi
 
