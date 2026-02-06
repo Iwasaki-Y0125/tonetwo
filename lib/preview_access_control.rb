@@ -52,5 +52,4 @@ class PreviewAccessControl
     }
     [ 401, headers, [ "Unauthorized" ] ]
   end
-
 end

@@ -15,6 +15,6 @@ class Rack::Attack
 
   # 429応答
   self.throttled_responder = lambda do |_env|
-    [429, { "Content-Type" => "text/plain" }, ["Too Many Requests"]]
+    [ 429, { "Content-Type" => "text/plain" }, [ "Too Many Requests" ] ]
   end
 end
