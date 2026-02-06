@@ -6,7 +6,6 @@ description: git diff（主に staged）を読んで、日本語のコミット�
 <!--
 使い方テンプレ（コピペ用）:
 
-使い方:
 `commit` を使って `git diff --staged` を読み、日本語のコミットメッセージ1行＋PR本文（指定テンプレ）を作成。
 PR本文に `Closes #NN`を必ず入れる。
 -->
