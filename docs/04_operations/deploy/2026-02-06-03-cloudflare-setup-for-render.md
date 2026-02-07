@@ -59,3 +59,52 @@
 3. Cloudflare SSL モードが `Full (strict)` になっている
 4. 必要に応じて `Always Use HTTPS` が有効
 
+## 6. 覚えておく最小設定（クイック確認用）
+
+### DNS
+
+- 場所: `DNS` -> `Records`
+- `www` 用:
+  - `Type`: `CNAME`
+  - `Name`: `www`
+  - `Target`: Render 画面の値（例: `tonetwo.onrender.com`）
+- `@`（ルート）用:
+  - 置けるなら `CNAME`（`Name: @` -> Render 指示値）
+  - 置けない場合は `A`（`Name: @` -> Render 画面のIP）
+- `Proxy status`:
+  - 検証中は `DNS only`
+  - 検証完了後に `Proxied`
+
+### SSL/TLS
+
+- 場所: `SSL/TLS` -> `Overview`
+  - `Encryption mode`: `Full (strict)`
+- 場所: `SSL/TLS` -> `Edge Certificates`
+  - `Always Use HTTPS`: HTTP が残る場合は `On`
+
+### 動作確認
+
+- `https://www.tonetwo.net` が表示できる
+- `https://tonetwo.net` が `https://www.tonetwo.net` へリダイレクトされる
+- `https://www.tonetwo.net/up` が `200`
+
+補足:
+- `216.24.57.1` のような A レコードIPへの直アクセスで `Error 1003` が出るのは正常（ドメイン名なしアクセス拒否）。
+
+## 7. TODO（2026-02-07 時点の設定値）
+
+- [x] `DNS` -> `Records` に `www` の `CNAME` を作成（`Name: www`, `Target: tonetwo.onrender.com`）
+- [x] `DNS` -> `Records` に `@`（ルート）のレコードを作成（Render 指示に合わせて `CNAME` または `A`）
+- [x] 初回検証中は `Proxy status` を `DNS only` にする
+- [x] Render 側で `tonetwo.net` / `www.tonetwo.net` が `Verified` になることを確認する
+- [x] 検証完了後、必要に応じて `Proxy status` を `Proxied` に切り替える
+- [x] `DNSSEC` が `pending` から `Active/Enabled` に変わったことを確認する
+- [x] `SSL/TLS` -> `Overview` で `Full (strict)` を設定する
+- [x] `SSL/TLS` -> `Edge Certificates` で `Always Use HTTPS` を `On` にする
+- [x] `SSL/TLS` -> `Edge Certificates` で `Minimum TLS Version` を `TLS 1.2` にする
+- [x] `SSL/TLS` -> `Edge Certificates` で `TLS 1.3` を `On` にする
+- [x] `Security` -> `Settings` で `Cloudflare managed ruleset` が `Always active` になっていることを確認する
+- [x] `Security` -> `Settings` で `I'm under attack mode` が通常時 `disabled` であることを確認する
+- [x] `https://www.tonetwo.net/up` が `200` を返すことを確認する
+- [x] `Bot Fight Mode` は有効化する（誤検知が多い場合はログを確認して調整する）
+- [x] `JS Detections` は `On` で運用する
