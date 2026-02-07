@@ -37,6 +37,7 @@ description: Issue番号/URL/タイトルが提示されたとき、ローカル
 - 規約がある場合は規約を優先する。
 - 規約がない場合は `feature/issue-<number>-<slug>` を使う。
 - `<slug>` はIssueタイトルを小文字kebab-caseにし、英数字と`-`以外は除去する。
+- `<slug>` が長くなる場合は、意味が崩れない範囲で短縮してよい（目安: 2〜4語）。
 - タイトルがない、または `<slug>` が空になる場合は `feature/issue-<number>-task` を使う。
 
 4. 競合を確認する。
@@ -57,6 +58,7 @@ description: Issue番号/URL/タイトルが提示されたとき、ローカル
 ## 制約
 - 既存規約と矛盾する命名で作らない。
 - Issueタイトルが不足しても `feature/issue-<number>-task` で作業開始できる状態にする。
+- slugは可読性を優先し、冗長な語を詰め込みすぎない。
 - `git checkout -b` より `git switch -c` を優先する。
 - `cached` 設定時はIssueメタデータの自動補完を期待しない。
 - キャプチャ読取は誤認識の可能性があるため、番号とrepoだけは必ず確認を取る。

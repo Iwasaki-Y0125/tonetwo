@@ -227,6 +227,9 @@ RUN npm ci && npm cache clean --force
 # コンテナ内(二個目の./コンテナ内のカレントディレクトリ)にコピー = コンテナに載せる
 COPY . .
 
+# .dockerignore で app/assets/builds/* を除外しているため、コンテナ内でCSSを生成する。
+RUN npm run build:css
+
 # precompile => アセットを先に用意しておき、読み込み速度向上するRailsの仕組み
 # bootsnap => Rails が標準で使う高速化用ライブラリ、Rubyファイルの読み込みを速くする
 RUN bundle exec bootsnap precompile app/ lib/

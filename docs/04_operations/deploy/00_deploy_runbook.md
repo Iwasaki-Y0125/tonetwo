@@ -11,6 +11,8 @@
   - `docs/04_operations/deploy/2026-02-06-02-mvp-release-deploy-checklist.md`
 - Cloudflare設定:
   - `docs/04_operations/deploy/2026-02-06-03-cloudflare-setup-for-render.md`
+- トラブルシュート記録:
+  - `docs/04_operations/deploy/2026-02-07-01-render-deploy-troubleshooting-notes.md`
 
 ## 1. 事前準備
 
