@@ -258,7 +258,7 @@
 | シークレット検知（CI） | GitGuardian |
 | 静的解析 | RuboCop |
 | セキュリティ静的解析 | Brakeman |
-| テスト | MVPでは最小限（手動確認＋重要箇所のみrequest spec） |
+| テスト | MVPでは最小限（手動確認＋重要箇所のみMinitestのrequest/integration test） |
 | バージョン管理 | GitHub |
 | インフラ補助 | Docker, GitHub Actions |
 
@@ -416,9 +416,9 @@
 ---
 
 ###  テスト
-- **MVPでは最小限（手動確認＋重要箇所のみrequest spec）**
+- **MVPでは最小限（手動確認＋重要箇所のみMinitestのrequest/integration test）**
     - MVP段階では開発スピードを優先し、基本は手動確認で動作を担保する
-    - ただし、壊れると致命的な導線（例：ログイン、投稿、リプライ、ミュート、退会など）は `request spec` を最小限だけ用意し、回帰バグを防ぐ
+    - ただし、壊れると致命的な導線（例：ログイン、投稿、リプライ、ミュート、退会など）は Minitest の `request/integration test` を最小限だけ用意し、回帰バグを防ぐ
 
 ---
 
