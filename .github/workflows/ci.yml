@@ -139,6 +139,13 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
+      # Tailwind CSS をビルド（レイアウトで tailwind.css を参照するため）
+      - name: Build CSS assets
+        run: |
+          mkdir -p app/assets/builds
+          npm ci
+          npm run build:css
+
       # テスト実行
       # - RAILS_ENV=test: テスト環境で起動
       # - DATABASE_URL: services.postgres が localhost:5432 で待っているのでそこに接続
