@@ -83,14 +83,13 @@ Rails.application.configure do
   config.active_record.attributes_for_inspect = [ :id ]
 
   # 独自ドメイン導入時に、受け付ける Host を環境変数で明示する。
-  # TODO(MVP公開前): 本番ドメイン確定後に APP_ALLOWED_HOSTS を最終値へ更新する。
   allowed_hosts = ENV.fetch("APP_ALLOWED_HOSTS", "")
                      .split(",")
                      .map(&:strip)
                      .reject(&:empty?)
   config.hosts.concat(allowed_hosts) if allowed_hosts.any?
 
-  # デフォルトのヘルスチェックエンドポイントに対して、DNSリバインディング保護を無効にします。
+  # ヘルスチェックエンドポイントに対して、ホスト保護を無効にします。（死活監視用）
   config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 
   # 仮公開中のみ有効化できるアクセス制限（/up は middleware 側で除外）。

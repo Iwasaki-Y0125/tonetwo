@@ -15,7 +15,7 @@ class PreviewAccessControl
 
   def call(env)
     req = ActionDispatch::Request.new(env)
-    # Render の監視導線は常に通す（ここを塞ぐとヘルスチェックが落ちる）。
+    # Render の監視導線は常に通す（ここを塞ぐとヘルスチェックが落ちる）
     return @app.call(env) if req.path == HEALTHCHECK_PATH
     # Basic認証が有効なときは、認証失敗なら 401 を返す。
     return unauthorized unless basic_auth_ok?(req)
