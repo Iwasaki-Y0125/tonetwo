@@ -81,6 +81,12 @@
 }
 
 @layer components {
+  .alert-error {
+    background-color: #ffd7de !important;
+    border-color: #f3a9b6 !important;
+    color: var(--tt-text) !important;
+  }
+
   .input-plain {
     border-color: transparent !important;
     box-shadow: none !important;
