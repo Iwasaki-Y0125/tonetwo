@@ -1,31 +1,96 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+@font-face {
+  font-family: "Noto Sans JP";
+  src: url("../fonts/NotoSansJP-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Noto Sans JP";
+  src: url("../fonts/NotoSansJP-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ここでスキャン対象を明示 */
 @source "../views/**/*.erb";
 @source "../helpers/**/*.rb";
 @source "../javascript/**/*.js";
 @source "../assets/stylesheets/**/*.css";
 
-/* 自作CSSを追加する場合 */
-
-/* base: リセットや要素の標準見た目 */
-/* @layer base {
-  h1 {
-    @apply text-3xl font-bold;
+@layer base {
+  :root {
+    --tt-bg: #F0EEE9;
+    --tt-text: #3A486D;
+    --tt-link: #4E90C2;
+    --tt-brand: #68CBCE;
   }
-} */
 
-/* components: 再利用する部品 */
-/* @layer components {
-  .btn-primary {
-    @apply btn btn-primary;
+  body {
+    background-color: var(--tt-bg);
+    color: var(--tt-text);
+    font-family: "Noto Sans JP", sans-serif;
   }
-} */
 
-/* utilities: ちょい足しの便利クラス */
-/* @layer utilities {
-  .text-shadow {
-    text-shadow: 0 2px 6px rgba(0,0,0,.2);
+  a {
+    color: var(--tt-link);
   }
-} */
+}
+
+@layer components {
+  .btn-brand {
+    --btn-color: var(--tt-brand);
+    --btn-fg: #ffffff;
+    background-color: var(--tt-brand) !important;
+    border-color: var(--tt-brand) !important;
+    color: #ffffff !important;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12) !important;
+  }
+
+  .btn-brand:hover {
+    --btn-color: #58bcc0;
+    background-color: #58bcc0 !important;
+    border-color: #58bcc0 !important;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12) !important;
+  }
+}
+
+/* DaisyUI(light) の既定色を上書きして、全ページで同じ4色を再利用する */
+@layer utilities {
+  :root,
+  [data-theme="light"] {
+    --color-base-100: #F0EEE9;
+    --color-base-content: #3A486D;
+    --color-primary: #68CBCE;
+    --color-primary-content: #ffffff;
+  }
+
+  body {
+    background-color: var(--tt-bg) !important;
+    color: var(--tt-text) !important;
+  }
+
+  a:not(.btn) {
+    color: var(--tt-link) !important;
+  }
+}
+
+@layer components {
+  .input-plain {
+    border-color: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+  }
+
+  .input-plain:focus,
+  .input-plain:focus-visible {
+    border-color: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+  }
+}

@@ -108,6 +108,8 @@ User.create!(
   - メールのリンクを再度開くと「リンクが無効か、有効期限が切れています。」の表示とともにパスワードリセット画面へリダイレクトされること
 
 ## 参考
+- セッション有効期限ポリシー（MVP）
+  - ./2026-02-09-02-session-expiration-policy.md
 - Rails Security Guide
   - https://guides.rubyonrails.org/security.html
 - Rails Guides: Sign Up and Settings(generates_token_for)

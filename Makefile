@@ -1,4 +1,4 @@
-.PHONY: ch dev dev-restart dev-build dev-build-nocache down clean ps logs logs-web logs-db exec rails-c bundle-install npm npm-root css-build css license-report g-migr db-migrate db-prepare db-reset g-con g-model test importmap-audit rubocop rubocop-a help
+.PHONY: ch dev dev-restart dev-build dev-build-nocache down clean ps logs logs-web logs-db exec rails-c bundle-install npm npm-root css-build css license-report g-migr db-migrate db-prepare db-reset g-con g-model test test-all importmap-audit rubocop rubocop-a help
 
 .DEFAULT_GOAL := help
 
@@ -185,6 +185,10 @@ g-model: ## モデル生成
 # Minitest一括実行（db:test:prepare + test + test:system）
 test: ## Minitest一括実行
 	$(DEV) exec $(EXEC_OPTS) web bash -lc 'bin/rails db:test:prepare && bin/rails test && bin/rails test:system'
+
+# 品質チェック一括実行（rubocop + brakeman + importmap audit + test）
+test-all: ## 品質チェック一括実行
+	$(DEV) exec $(EXEC_OPTS) web bin/rails quality:all
 
 # importmap脆弱性監査
 importmap-audit: ## importmap監査
