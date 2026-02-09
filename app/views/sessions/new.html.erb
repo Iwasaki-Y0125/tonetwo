@@ -1,0 +1,57 @@
+<main class="min-h-screen">
+  <header class="bg-white border-b border-base-300">
+    <div class="max-w-6xl mx-auto px-6 py-4">
+      <%= link_to root_path, class: "inline-flex items-center" do %>
+        <%= image_tag "Logo.svg", alt: "ToneTwo", class: "h-8 w-auto" %>
+      <% end %>
+    </div>
+  </header>
+
+  <section class="max-w-md mx-auto px-6 py-16">
+    <h1 class="text-4xl font-bold mb-10">ログイン</h1>
+
+    <% if flash[:alert] %>
+      <div class="alert alert-error mb-6">
+        <span><%= flash[:alert] %></span>
+      </div>
+    <% end %>
+    <% if flash[:notice] %>
+      <div class="alert alert-success mb-6">
+        <span><%= flash[:notice] %></span>
+      </div>
+    <% end %>
+
+    <%= form_with url: session_path, class: "space-y-5" do |form| %>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend text-base font-semibold">メールアドレス</legend>
+        <%= form.email_field :email_address,
+                             required: true,
+                             autofocus: true,
+                             autocomplete: "username",
+                             placeholder: "メールアドレスを入力",
+                             value: params[:email_address],
+                             class: "input input-plain w-full bg-white" %>
+      </fieldset>
+
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend text-base font-semibold">パスワード</legend>
+        <%= form.password_field :password,
+                                required: true,
+                                autocomplete: "current-password",
+                                placeholder: "パスワードを入力",
+                                maxlength: 72,
+                                class: "input input-plain w-full bg-white" %>
+      </fieldset>
+
+      <div class="pt-2 flex justify-center">
+        <%= form.submit "ログイン", class: "btn btn-brand w-32 h-48px px-6" %>
+      </div>
+    <% end %>
+
+    <div class="mt-16 text-center leading-8">
+      <p>アカウント登録がまだの方はこちら</p>
+      <a href="#" class="underline">ユーザー登録</a>
+    </div>
+
+  </section>
+</main>

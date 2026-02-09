@@ -21,8 +21,20 @@
     <div class="card-body">
       <h2 class="card-title">DaisyUI OK</h2>
       <p>Tailwind + DaisyUI が反映されています。</p>
+
+      <div class="divider my-2"></div>
+
+      <% if authenticated? %>
+        <p>
+          現在ログイン中: はい（<span class="font-semibold"><%= Current.user&.email_address %></span>）
+        </p>
+      <% else %>
+        <p>現在ログイン中: いいえ</p>
+      <% end %>
+
       <div class="card-actions justify-end">
-        <button class="btn btn-primary">確認</button>
+        <%= link_to "ログイン", new_session_path, class: "btn btn-primary" %>
+        <%= link_to "ログアウト", session_path, data: { turbo_method: :delete }, class: "btn btn-outline" %>
       </div>
     </div>
   </div>

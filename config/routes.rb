@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  resource :session, only: %i[new create destroy]
+  # TODO(Auth): MVP時点ではパスワードリセットは未実装のため非公開。
+  # 本リリースまでに下記ルートを有効化する。
+  # resource :password, only: %i[new create]
+  # resources :passwords, only: %i[edit update], param: :token
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
