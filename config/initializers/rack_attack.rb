@@ -9,7 +9,7 @@ class Rack::Attack
 
   # TODO(deploy後): Render/Cloudflare経由の本番で req.ip が期待どおりか検証し、必要ならしきい値/プロキシ設定を調整する
   # 1分あたりのリクエスト数をIPごとに制限（仮値）
-  throttle("req/ip", limit: 120, period: 1.minute) do |req|
+  throttle("req/ip", limit: 240, period: 1.minute) do |req|
     client_ip(req)
   end
 

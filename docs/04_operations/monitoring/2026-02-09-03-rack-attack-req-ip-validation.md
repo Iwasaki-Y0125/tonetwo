@@ -7,6 +7,7 @@
 ## 結論（2026-02-09時点）
 - 本番ログの `Started ... for ...` には `172.69.x.x` / `172.70.x.x` / `162.158.x.x` が出ており、利用者IPではなくCloudflare側IPを拾っている可能性が高い。
 - `config/initializers/rack_attack.rb` を修正し、Rack::Attack の判定キーを `CF-Connecting-IP` 優先に統一した。
+- `throttle("req/ip")` は試行値として `240/min` に設定した。運用中の429エラーの件数次第で調整。
 
 ## 事実ベースの確認ログ
 - 検証アクセス:
@@ -47,11 +48,13 @@ end
 - Rails `ActionDispatch::Request#ip` / `ActionDispatch::RemoteIp`
   - https://github.com/rails/rails/tree/v8.1.2/actionpack/lib/action_dispatch
 
-## 次アクション
-1. 本修正をデプロイする。
-2. 同様に `?ipcheck=<token>` 付きでアクセスし、Renderログを確認する。
-3. 必要なら一時的に `request.ip` / `request.remote_ip` / `HTTP_CF_CONNECTING_IP` / `HTTP_X_FORWARDED_FOR` を同時ログ出力して最終判定する。
-4. IP判定が安定した後に、`limit` / `period` を実トラフィックに合わせて調整する。
+## 手順
+1. `rack_attack.rb` で `Rack::Attack.client_ip(req)` に変更
+2. `SessionsController#new` に検証用の一時ログを追記する。
+3. 本番へデプロイする。
+4. `?ipcheck=<token>` 付きで `session/new` にアクセスする。
+5. 一時ログで `cf` と `rack_attack_key` と自分のIPアドレスが一致することを確認。
+6. 検証用の一時ログを削除する。
 
 ## 補足_1 CF-Connecting-IP を使う前提
 - クライアントは `CF-Connecting-IP` ヘッダを任意送信できるが、Cloudflare 経由時は Cloudflare が origin へ渡すヘッダを再構成する前提で運用する。
@@ -71,3 +74,8 @@ end
   - レスポンスヘッダに `x-render-routing: no-render-subdomain`
 - 判定:
   - Renderサブドメイン（`.onrender.com`）は直接ルーティングされておらず、origin 直アクセスは閉じられている。
+
+## 補足_3 ログイン試行制限の方針
+- `POST /session` は `SessionsController#create` の `rate_limit` を主担当とする。
+- 同一対象を `rack_attack.rb` 側でも重複して絞ると、誤遮断時の原因切り分けが難しくなるため原則避ける。
+- `rack_attack.rb` は全体防御（`req/ip`）と Basic認証向け（`basic_auth/ip`）を主目的に運用する。
