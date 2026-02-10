@@ -33,15 +33,12 @@
                              class: "input input-plain w-full bg-white" %>
       </fieldset>
 
-      <fieldset class="fieldset">
-        <legend class="fieldset-legend text-base font-semibold">パスワード</legend>
-        <%= form.password_field :password,
-                                required: true,
-                                autocomplete: "current-password",
-                                placeholder: "パスワードを入力",
-                                maxlength: 72,
-                                class: "input input-plain w-full bg-white" %>
-      </fieldset>
+      <%= render "shared/password_field",
+                 form: form,
+                 field_name: :password,
+                 legend: "パスワード",
+                 autocomplete: "current-password",
+                 placeholder: "パスワードを入力" %>
 
       <div class="pt-2 flex justify-center">
         <%= form.submit "ログイン", class: "btn btn-brand w-32 h-48px px-6" %>
@@ -50,7 +47,7 @@
 
     <div class="mt-16 text-center leading-8">
       <p>アカウント登録がまだの方はこちら</p>
-      <a href="#" class="underline">ユーザー登録</a>
+      <%= link_to "ユーザー登録", new_sign_up_path, class: "underline" %>
     </div>
 
   </section>
