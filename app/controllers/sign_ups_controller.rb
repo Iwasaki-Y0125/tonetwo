@@ -12,7 +12,7 @@ class SignUpsController < ApplicationController
 
     if @user.save
       start_new_session_for(@user)
-      redirect_to root_path, notice: "ユーザー登録が完了しました。"
+      redirect_to root_path
     else
       flash.now[:alert] = "入力内容を確認してください。"
       render :new, status: :unprocessable_entity
