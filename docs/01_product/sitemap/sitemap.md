@@ -27,7 +27,7 @@ https://guides.rubyonrails.org/sign_up_and_settings.html
 
 | 概要 | アクション | ヘルパー名 | HTTPメソッド | パス | コントローラー#アクション |
 |---|---|---|---|---|---|
-| ユーザー登録フォーム表示 | show | sign_up_path | GET | `/sign_up` | `sign_ups#show` |
+| ユーザー登録フォーム表示 | new | sign_up_path | GET | `/sign_up` | `sign_ups#new` |
 | ユーザー登録 | create | sign_up_path | POST | `/sign_up` | `sign_ups#create` |
 | ログインフォーム表示 | new | new_session_path | GET | `/session/new` | `sessions#new` |
 | ログイン | create | session_path | POST | `/session` | `sessions#create` |

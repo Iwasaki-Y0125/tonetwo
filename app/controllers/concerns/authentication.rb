@@ -1,5 +1,7 @@
 module Authentication
   extend ActiveSupport::Concern
+  IDLE_TIMEOUT = 7.days
+  ABSOLUTE_TIMEOUT = 30.days
 
   included do
     before_action :require_authentication
@@ -9,6 +11,12 @@ module Authentication
   class_methods do
     def allow_unauthenticated_access(**options)
       skip_before_action :require_authentication, **options
+    end
+
+    # 未ログインユーザー専用アクション（ログイン中は root へ退避）
+    def unauthenticated_access_only(**options)
+      allow_unauthenticated_access(**options)
+      before_action(-> { redirect_to root_path if authenticated? }, **options)
     end
   end
 
@@ -64,7 +72,7 @@ module Authentication
           httponly: true,
           same_site: :lax,   # CSRF対策:クロスサイトでPOSTは送信されない
           secure: Rails.env.production?,
-          expires: SessionPolicy::ABSOLUTE_TIMEOUT.from_now
+          expires: ABSOLUTE_TIMEOUT.from_now
         }
       end
     end
@@ -77,7 +85,7 @@ module Authentication
 
     # 7日アイドル or 30日絶対期限のどちらかを超えたら失効
     def session_expired?(session)
-      session.updated_at < SessionPolicy::IDLE_TIMEOUT.ago || session.created_at < SessionPolicy::ABSOLUTE_TIMEOUT.ago
+      session.updated_at < IDLE_TIMEOUT.ago || session.created_at < ABSOLUTE_TIMEOUT.ago
     end
 
     # 外部URLや不正値は受け入れず、同一オリジンの相対パスのみ許可する

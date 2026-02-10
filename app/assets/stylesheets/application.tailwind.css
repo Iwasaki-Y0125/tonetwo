@@ -3,7 +3,7 @@
 
 @font-face {
   font-family: "Noto Sans JP";
-  src: url("../fonts/NotoSansJP-Regular.ttf") format("truetype");
+  src: url("NotoSansJP-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -11,7 +11,7 @@
 
 @font-face {
   font-family: "Noto Sans JP";
-  src: url("../fonts/NotoSansJP-Bold.ttf") format("truetype");
+  src: url("NotoSansJP-Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -57,6 +57,26 @@
     background-color: #58bcc0 !important;
     border-color: #58bcc0 !important;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12) !important;
+  }
+
+  /* btn-brand の !important より強く disabled 見た目を固定する */
+  .btn-sign-up-submit:disabled,
+  .btn-sign-up-submit[disabled] {
+    background-color: #D1D5DB !important;
+    border-color: #D1D5DB !important;
+    color: rgba(58, 72, 109, 0.55) !important;
+    box-shadow: none !important;
+    pointer-events: auto !important;
+    cursor: not-allowed !important;
+  }
+
+  .btn-sign-up-submit:disabled:hover,
+  .btn-sign-up-submit:disabled:active,
+  .btn-sign-up-submit[disabled]:hover,
+  .btn-sign-up-submit[disabled]:active {
+    transform: none !important;
+    translate: 0 0 !important;
+    box-shadow: none !important;
   }
 }
 

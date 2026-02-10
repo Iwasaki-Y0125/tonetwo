@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_09_061620) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_10_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -27,8 +27,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_09_061620) do
     t.datetime "created_at", null: false
     t.string "email_address", null: false
     t.string "password_digest", null: false
+    t.datetime "privacy_accepted_at", null: false
+    t.string "privacy_version", null: false
+    t.datetime "terms_accepted_at", null: false
+    t.string "terms_version", null: false
     t.datetime "updated_at", null: false
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
+    t.check_constraint "char_length(TRIM(BOTH FROM privacy_version)) > 0", name: "chk_users_privacy_version_not_blank"
+    t.check_constraint "char_length(TRIM(BOTH FROM terms_version)) > 0", name: "chk_users_terms_version_not_blank"
   end
 
   add_foreign_key "sessions", "users"

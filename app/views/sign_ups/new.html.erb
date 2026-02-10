@@ -1,0 +1,115 @@
+<main class="min-h-screen">
+  <header class="bg-white border-b border-base-300">
+    <div class="max-w-6xl mx-auto px-6 py-4">
+      <%= link_to root_path, class: "inline-flex items-center" do %>
+        <%= image_tag "Logo.svg", alt: "ToneTwo", class: "h-8 w-auto" %>
+      <% end %>
+    </div>
+  </header>
+
+  <section class="max-w-md mx-auto px-6 py-16">
+    <h1 class="text-4xl font-bold mb-10">ユーザー登録</h1>
+
+    <% if flash[:alert] %>
+      <div class="alert alert-error mb-6">
+        <span><%= flash[:alert] %></span>
+      </div>
+    <% end %>
+
+    <%= form_with model: @user,
+                  url: sign_up_path,
+                  class: "space-y-5",
+                  data: {
+                    controller: "sign-up-submit",
+                    action: "input->sign-up-submit#update change->sign-up-submit#update submit->sign-up-submit#guardSubmit"
+                  } do |form| %>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend text-base font-semibold">メールアドレス</legend>
+        <%= form.email_field :email_address,
+                             required: true,
+                             autofocus: true,
+                             autocomplete: "username",
+                             placeholder: "メールアドレスを入力",
+                             value: @user.email_address,
+                             class: "input input-plain w-full bg-white",
+                             data: { sign_up_submit_target: "email" } %>
+      </fieldset>
+
+      <%= render "shared/password_field",
+                 form: form,
+                 field_name: :password,
+                 legend: "パスワード",
+                 autocomplete: "new-password",
+                 placeholder: "パスワードを入力",
+                 controllers: "password-rules",
+                 input_data: {
+                   sign_up_submit_target: "password",
+                   password_rules_target: "input",
+                   action: "input->password-rules#check change->password-rules#check"
+                 } do %>
+        <%= render "sign_ups/password_rules" %>
+      <% end %>
+
+      <%= render "shared/password_field",
+                 form: form,
+                 field_name: :password_confirmation,
+                 legend: "確認用パスワード",
+                 autocomplete: "new-password",
+                 placeholder: "確認用パスワードを入力",
+                 aria_label: "確認用パスワードを表示",
+                 controllers: "password-confirmation",
+                 fieldset_data: {
+                   password_confirmation_password_selector_value: "#user_password"
+                 },
+                 input_data: {
+                   sign_up_submit_target: "confirmation",
+                   password_confirmation_target: "confirmation",
+                   action: "keydown->password-confirmation#checkOnKeydown blur->password-confirmation#checkMismatch change->password-confirmation#checkMismatch"
+                 } do %>
+        <%= render "sign_ups/password_confirmation_field" %>
+      <% end %>
+
+      <fieldset class="fieldset items-center gap-1">
+        <label class="label cursor-pointer flex-row items-center justify-center gap-3 w-full max-w-md mx-auto text-sm">
+          <%= form.check_box :terms_agreed,
+                             {
+                               required: true,
+                               class: "checkbox checkbox-primary",
+                               data: {
+                                 sign_up_submit_target: "terms",
+                                 action: "change->sign-up-submit#update"
+                               }
+                             },
+                             "1",
+                             "0" %>
+          <span class="label-text text-sm text-left leading-relaxed">
+            利用規約およびプライバシーポリシーに同意する
+          </span>
+        </label>
+        <div class="text-sm w-full">
+          <div class="mx-auto flex max-w-sm flex-col items-center gap-1 text-center">
+            <%= link_to "利用規約", "/tos", class: "underline" %>
+            <%= link_to "プライバシーポリシー", "/privacy", class: "underline" %>
+          </div>
+        </div>
+      </fieldset>
+
+      <% if @user.errors.any? %>
+        <div class="alert alert-error">
+          <ul class="list-disc pl-5">
+            <% @user.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="pt-2 flex justify-center">
+        <%= form.submit "登録する",
+                        disabled: true,
+                        class: "btn btn-brand btn-sign-up-submit w-36 h-48px px-6",
+                        data: { sign_up_submit_target: "submit" } %>
+      </div>
+    <% end %>
+  </section>
+</main>

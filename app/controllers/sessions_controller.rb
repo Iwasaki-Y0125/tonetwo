@@ -1,6 +1,7 @@
 class SessionsController < ApplicationController
   allow_unauthenticated_access only: %i[ new create ]
-  rate_limit to: 10, within: 3.minutes, only: :create, with: -> { redirect_to new_session_path, alert: "ログイン試行が上限に達しました。3分ほど待ってから再度お試しください。" }
+  rate_limit to: 10, within: 3.minutes, only: :create,
+             with: -> { handle_create_rate_limit }
 
   def new
   end
@@ -17,5 +18,21 @@ class SessionsController < ApplicationController
   def destroy
     terminate_session
     redirect_to new_session_path, status: :see_other
+  end
+
+  private
+
+  # UX優先の制限（controller層）で抑止したことを明示的に観測する
+  def handle_create_rate_limit
+    ActiveSupport::Notifications.instrument(
+      "security.throttle",
+      layer: "rails_rate_limit",
+      rule: "sessions#create",
+      status: 302,
+      method: request.request_method,
+      path: request.path
+    )
+
+    redirect_to new_session_path, alert: "試行回数が上限に達しました。時間をおいて再度お試しください。"
   end
 end

@@ -7,7 +7,6 @@ class Rack::Attack
     req.get_header("HTTP_CF_CONNECTING_IP").presence || req.ip
   end
 
-  # TODO(deploy後): Render/Cloudflare経由の本番で req.ip が期待どおりか検証し、必要ならしきい値/プロキシ設定を調整する
   # 1分あたりのリクエスト数をIPごとに制限（仮値）
   throttle("req/ip", limit: 240, period: 1.minute) do |req|
     client_ip(req)
@@ -18,8 +17,34 @@ class Rack::Attack
     client_ip(req) if req.path != "/up" && req.get_header("HTTP_AUTHORIZATION").present?
   end
 
-  # 429応答
-  self.throttled_responder = lambda do |_env|
+  # 役割分担:
+  # - Rack::Attack はミドルウェア層で粗く遮断（429）
+  # - Controller 側 rate_limit は UX を保った制御（主にリダイレクト）
+  # 閾値は同一にせず、層ごとに分離して運用する。
+  throttle("auth/session_create/ip", limit: 20, period: 1.minute) do |req|
+    client_ip(req) if req.post? && req.path == "/session"
+  end
+
+  throttle("auth/sign_up_create/ip", limit: 20, period: 1.minute) do |req|
+    client_ip(req) if req.post? && req.path == "/sign_up"
+  end
+
+  # Rack::Attackで弾いたときに、監視イベントを記録して429を返す処理
+  def self.throttled_response(request)
+    ActiveSupport::Notifications.instrument("security.throttle", throttled_payload(request))
     [ 429, { "Content-Type" => "text/plain" }, [ "Too Many Requests" ] ]
   end
+
+  def self.throttled_payload(request)
+    {
+      layer: "rack_attack",
+      rule: request.env["rack.attack.matched"],
+      status: 429,
+      method: request.request_method,
+      path: request.path
+    }
+  end
+  private_class_method :throttled_payload
+
+  self.throttled_responder = method(:throttled_response)
 end

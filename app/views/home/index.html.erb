@@ -33,8 +33,12 @@
       <% end %>
 
       <div class="card-actions justify-end">
-        <%= link_to "ログイン", new_session_path, class: "btn btn-primary" %>
-        <%= link_to "ログアウト", session_path, data: { turbo_method: :delete }, class: "btn btn-outline" %>
+        <% if authenticated? %>
+          <%= link_to "ログアウト", session_path, data: { turbo_method: :delete }, class: "btn btn-outline" %>
+        <% else %>
+          <%= link_to "ユーザー登録", new_sign_up_path, class: "btn btn-brand" %>
+          <%= link_to "ログイン", new_session_path, class: "btn btn-primary" %>
+        <% end %>
       </div>
     </div>
   </div>
