@@ -4,14 +4,14 @@ class UserTest < ActiveSupport::TestCase
   test "email_addressは必須" do
     user = User.new(email_address: nil)
     assert_not user.valid?
-    assert_includes user.errors[:email_address], "can't be blank"
+    assert_includes user.errors[:email_address], "を入力してください"
   end
 
   test "email_addressは重複不可" do
     existing = users(:one)
     user = User.new(email_address: "  #{existing.email_address.upcase}  ")
     assert_not user.valid?
-    assert_includes user.errors[:email_address], "has already been taken"
+    assert user.errors.where(:email_address).any? { |error| error.type == :taken }
   end
 
   test "email_addressは前後空白を除去して小文字化される" do
@@ -61,7 +61,7 @@ class UserTest < ActiveSupport::TestCase
     )
 
     assert_not user.valid?
-    assert_includes user.errors[:terms_agreed], "に同意してください"
+    assert_includes user.errors[:terms_agreed], "に同意にチェックしてください"
   end
 
   test "terms_agreedに同意した場合は同意日時とバージョンが保存される" do

@@ -10,5 +10,8 @@ Rails.application.routes.draw do
   # 監視用ヘルスチェック（正常時200 / 異常時500）
   get "up" => "rails/health#show", as: :rails_health_check
 
+  # 認証保護ページのサンプルルート
+  get "protected" => "protected_pages#show", as: :protected_page
+
   root "home#index"
 end
