@@ -39,9 +39,9 @@ test:
   primary: &primary_test
     <<: *default
     database: tone_two_test
-    host: db
+    host: <%= ENV["DB_HOST"] || (ENV["CI"] ? "localhost" : "db") %>
     username: postgres
-    password: <%= ENV.fetch("POSTGRES_PASSWORD", nil) %>
+    password: <%= ENV.fetch("POSTGRES_PASSWORD", ENV["CI"] ? "postgres" : nil) %>
   cache:
     <<: *primary_test
     database: tone_two_test_cache
