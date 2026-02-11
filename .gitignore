@@ -58,7 +58,7 @@ mecab_userdic/*.bin
 .codex/config.toml
 
 # Local-only constants map helper
-docs/03_engineering/auth/00-auth-constants-map.md
+docs/00_tool/00-constants-map.md
 script/docs/update_constants_map.rb
 
 # Local-only make targets
