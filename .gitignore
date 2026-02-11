@@ -56,3 +56,10 @@ mecab_userdic/*.bin
 
 # Ignore Codex config file
 .codex/config.toml
+
+# Local-only constants map helper
+docs/03_engineering/auth/00-auth-constants-map.md
+script/docs/update_constants_map.rb
+
+# Local-only make targets
+/Makefile
