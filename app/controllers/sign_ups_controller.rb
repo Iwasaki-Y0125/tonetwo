@@ -14,6 +14,11 @@ class SignUpsController < ApplicationController
       start_new_session_for(@user)
       redirect_to root_path
     else
+      # メール重複の詳細エラーメッセージはアカウント列挙攻撃につながるため、
+      # ユーザー画面には表示しない
+      if @user.errors.where(:email_address).any? { |error| error.type == :taken }
+        @user.errors.delete(:email_address)
+      end
       flash.now[:alert] = "入力内容を確認してください。"
       render :new, status: :unprocessable_entity
     end
@@ -32,7 +37,7 @@ class SignUpsController < ApplicationController
       path: request.path
     )
 
-    redirect_to sign_up_path, alert: "試行回数が上限に達しました。時間をおいて再度お試しください。"
+    redirect_to new_sign_up_path, alert: "試行回数が上限に達しました。時間をおいて再度お試しください。"
   end
 
   def sign_up_params

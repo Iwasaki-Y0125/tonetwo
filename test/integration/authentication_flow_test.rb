@@ -2,6 +2,7 @@ require "test_helper"
 
 class AuthenticationFlowTest < ActionDispatch::IntegrationTest
   setup do
+    Rails.cache.clear
     @user = users(:one)
   end
 
@@ -15,6 +16,7 @@ class AuthenticationFlowTest < ActionDispatch::IntegrationTest
       post session_path, params: { email_address: @user.email_address, password: "password" }
     end
 
+    assert_response :redirect
     assert_redirected_to root_url
     assert cookies[:session_id].present?
   end
@@ -25,6 +27,7 @@ class AuthenticationFlowTest < ActionDispatch::IntegrationTest
     end
 
     assert_redirected_to new_session_path
+    assert_equal "メールアドレスまたはパスワードが異なります。", flash[:alert]
     assert cookies[:session_id].blank?
   end
 
@@ -35,6 +38,7 @@ class AuthenticationFlowTest < ActionDispatch::IntegrationTest
       delete session_path
     end
 
+    assert_response :see_other
     assert_redirected_to new_session_path
     assert cookies[:session_id].blank?
   end
@@ -43,6 +47,45 @@ class AuthenticationFlowTest < ActionDispatch::IntegrationTest
     delete session_path
 
     assert_redirected_to new_session_path
+  end
+
+  test "未ログインで保護ページへアクセスするとログイン画面へリダイレクトされる" do
+    get protected_page_path
+
+    assert_redirected_to new_session_path
+  end
+
+  test "ログイン済みなら保護ページを表示できる" do
+    sign_in_as(@user)
+
+    get protected_page_path
+
+    assert_response :success
+    assert_select "h1", "Protected Page"
+  end
+
+  test "未ログインで保護ページへ遷移後にログインすると元ページへ戻る" do
+    get protected_page_path
+    assert_redirected_to new_session_path
+
+    post session_path, params: { email_address: @user.email_address, password: "password" }
+
+    assert_redirected_to protected_page_path
+    assert cookies[:session_id].present?
+  end
+
+  test "保護ページ復帰先は1回で消費され次回ログインではrootへ戻る" do
+    get protected_page_path
+    assert_redirected_to new_session_path
+
+    post session_path, params: { email_address: @user.email_address, password: "password" }
+    assert_redirected_to protected_page_path
+
+    delete session_path
+    assert_redirected_to new_session_path
+
+    post session_path, params: { email_address: @user.email_address, password: "password" }
+    assert_redirected_to root_url
   end
 
   test "アイドル期限切れセッションは無効化される" do
@@ -63,6 +106,18 @@ class AuthenticationFlowTest < ActionDispatch::IntegrationTest
 
     assert_difference("Session.count", -1) do
       delete session_path
+    end
+
+    assert_redirected_to new_session_path
+    assert cookies[:session_id].blank?
+  end
+
+  test "期限切れセッションで保護ページへアクセスするとセッション無効化後にログイン画面へリダイレクトされる" do
+    expired_session = @user.sessions.create!(updated_at: 8.days.ago)
+    set_session_cookie(expired_session)
+
+    assert_difference("Session.count", -1) do
+      get protected_page_path
     end
 
     assert_redirected_to new_session_path

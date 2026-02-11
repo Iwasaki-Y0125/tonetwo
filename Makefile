@@ -159,9 +159,9 @@ g-migr: ## マイグレーションファイル生成
 db-prepare: ## 初回マイグレーション
 	$(DEV) exec $(EXEC_OPTS) web $(RAILS) db:prepare
 
-# DB全消し（開発専用）
+# DB全消し（開発専用、cache DB再準備まで実行）
 db-reset: ## DB全消し（開発専用）
-	$(DEV) exec $(EXEC_OPTS) web $(RAILS) db:drop db:create db:migrate
+	$(DEV) exec $(EXEC_OPTS) web $(RAILS) db:drop db:create db:prepare
 
 # ====================
 # 生成
