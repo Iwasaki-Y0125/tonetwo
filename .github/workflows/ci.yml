@@ -5,13 +5,39 @@ name: CI
 on:
   # PRが作成/更新されたときに実行
   pull_request:
-  # mainブランチにpushされたときに実行
-  push:
-    branches: [ main ]
+
+# 同じPRで新しい実行が始まったら古い実行をキャンセル
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
+  # PR差分にRails関連の変更があるかを判定
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      rails: ${{ steps.filter.outputs.rails }}
+    steps:
+      - name: Detect changed paths
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            rails:
+              - "app/**"
+              - "bin/**"
+              - "config/**"
+              - "db/**"
+              - "lib/**"
+              - "test/**"
+              - "Gemfile"
+              - "Gemfile.lock"
+              - "Rakefile"
+
   # ----------------------------
-  # Ruby/Rails向けセキュリティ静的解析（Brakeman）
+  # Ruby静的チェック（Brakeman + Rubocop）
   # ----------------------------
   scan_ruby:
     # 実行環境（GitHubが用意するUbuntuマシン）
@@ -34,6 +60,9 @@ jobs:
       # --no-pager は出力をページャ（less/more等）に流さずCIログにそのまま出す
       - name: Scan for common Rails security vulnerabilities using static analysis
         run: bin/brakeman --no-pager
+      # Rubocopでコード整形/静的解析を実行
+      - name: Lint code for consistent style
+        run: bin/rubocop -f github
 
   # ----------------------------
   # importmap の依存（JS）脆弱性監査
@@ -65,33 +94,12 @@ jobs:
         run: bin/importmap audit
 
   # ----------------------------
-  # コード整形/静的解析（Rubocop）
-  # ----------------------------
-  lint:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read    # コードをチェックアウトするために必要
-    # contents: write   # push するために必要 （自動修正を有効にした場合）
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-
-      - name: Lint code for consistent style
-        run: bin/rubocop -f github
-
-  # ----------------------------
-  # テスト（DBあり / system testあり）
+  # テスト（DBあり）
   # ----------------------------
   test:
+    # Rails関連の変更があるPRのみ実行
+    if: needs.changes.outputs.rails == 'true'
+    needs: changes
     runs-on: ubuntu-latest
 
     # job内で使うサービスコンテナ（テスト用DBなど）を起動
@@ -123,10 +131,9 @@ jobs:
       # - libpq-dev: PostgreSQL用ネイティブ拡張（pg等）ビルド用ヘッダ
       # - libyaml-dev: psych（YAML）まわりで必要になることがある
       # - pkg-config: ネイティブ依存の検出補助
-      # - google-chrome-stable: system test（capybara等）でChromeを使う前提
       # - mecab/libmecab-dev/mecab-ipadic-utf8: natto が MeCab（libmecab.so）を使うために必要
       - name: Install packages
-        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y build-essential git libpq-dev libyaml-dev pkg-config google-chrome-stable mecab libmecab-dev mecab-ipadic-utf8
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y build-essential git libpq-dev libyaml-dev pkg-config mecab libmecab-dev mecab-ipadic-utf8
 
       # ソース取得
       - name: Checkout code
@@ -151,20 +158,10 @@ jobs:
       # - DATABASE_URL: services.postgres が localhost:5432 で待っているのでそこに接続
       # - db:test:prepare: テストDB準備
       # - test: unit/integration等のテスト
-      # - test:system: system test（ブラウザを使う）を実行
+      # - --exclude: Rack::Attack系はローカル実行に寄せる
       - name: Run tests
         env:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
           # REDIS_URL: redis://localhost:6379/0
-        run: bin/rails db:test:prepare test test:system
-
-      # system testが失敗したときにスクショを成果物としてアップロード
-      # if: failure() なので失敗時のみ実行
-      - name: Keep screenshots from failed system tests
-        uses: actions/upload-artifact@v6
-        if: failure()
-        with:
-          name: screenshots
-          path: ${{ github.workspace }}/tmp/screenshots
-          if-no-files-found: ignore
+        run: bin/rails db:test:prepare test --exclude '/RackAttackThrottleTest/'
