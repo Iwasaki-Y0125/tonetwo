@@ -22,6 +22,7 @@ jobs:
       rails: ${{ steps.filter.outputs.rails }}
     steps:
       - name: Detect changed paths
+        id: filter
         uses: dorny/paths-filter@v3
         with:
           filters: |
@@ -164,4 +165,6 @@ jobs:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
           # REDIS_URL: redis://localhost:6379/0
-        run: bin/rails db:test:prepare test --exclude '/RackAttackThrottleTest/'
+        run: |
+          bin/rails db:test:prepare
+          bin/rails test --exclude '/RackAttackThrottleTest/'
