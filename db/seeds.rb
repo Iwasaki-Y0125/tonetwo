@@ -7,3 +7,8 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+# Load local-only seed files (e.g. sensitive moderation terms) if present.
+Dir[Rails.root.join("db/seeds/*.local.rb")].sort.each do |seed_file|
+  load seed_file
+end

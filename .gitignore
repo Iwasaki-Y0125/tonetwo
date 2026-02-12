@@ -63,3 +63,6 @@ script/docs/update_constants_map.rb
 
 # Local-only make targets
 /Makefile
+
+# Local-only seeds (sensitive moderation words etc.)
+/db/seeds/*.local.rb
