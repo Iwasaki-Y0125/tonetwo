@@ -12,14 +12,14 @@ class FilterTermTest < ActiveSupport::TestCase
     assert_equal "od", normalized
   end
 
-  test "matchingは正規化後の完全一致でヒットする" do
+  test "matchingはsupportがヒットした場合にsupportのみ返す" do
     prohibit_term = FilterTerm.create!(term: "しね", action: "prohibit")
     support_term = FilterTerm.create!(term: "らくにしにたい", action: "support")
 
     matched = FilterTerm.matching("らくにしにたい しね")
 
-    assert_includes matched, prohibit_term
     assert_includes matched, support_term
+    assert_not_includes matched, prohibit_term
   end
 
   test "matchingはヒットがない場合は空になる" do

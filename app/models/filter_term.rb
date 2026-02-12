@@ -13,10 +13,9 @@ class FilterTerm < ApplicationRecord
   validates :term, presence: true, uniqueness: true
   validates :action, presence: true
 
-  # 完全一致でフィルタリングした結果をaction別に返す。正規化してからDBの全件を走査するため、件数が多い場合は注意。
+  # 完全一致でフィルタリングした結果をaction別に返す。
   class << self
     # キャッシュ化した語彙をaction別に正しく取得するためのメソッド。
-    # 更新のたびにキャッシュが無効になるように、updated_atの最大値をキーに含める。
     def cached_normalized_terms_by_action(expires_in: 5.minutes)
       Rails.cache.fetch(normalized_terms_cache_key, expires_in: expires_in) do
         grouped_terms = {}
@@ -39,29 +38,40 @@ class FilterTerm < ApplicationRecord
       end
     end
 
+    # 管理画面更新直後などで即時反映したいときに使う。
     def invalidate_terms_cache!
       Rails.cache.delete(normalized_terms_cache_key)
     end
 
+    # 全角半角や大文字小文字の揺れを吸収して比較を安定化する。
     def normalize_for_match(text)
       text.to_s.unicode_normalize(:nfkc).downcase.strip
     end
 
-    # 表記ゆれは語彙側で吸収し、判定は完全一致のみを行う。
+    # support語がヒットした場合は support のみ返して判定を確定する。
+    # supportがない場合のみ prohibit を判定する。
     def matching(text)
       candidates = normalized_match_candidates(text)
       return none if candidates.empty?
 
-      matched_ids = all.filter_map do |filter_term|
-        normalized_term = normalize_for_match(filter_term.term)
-        filter_term.id if normalized_term.present? && candidates.include?(normalized_term)
-      end
+      support_ids = matched_ids_for_action(candidates, "support")
+      return where(id: support_ids) if support_ids.any?
 
+      matched_ids = matched_ids_for_action(candidates, "prohibit")
       where(id: matched_ids)
     end
 
     private
 
+    # 与えられた正規化済み候補集合に含まれる語彙のIDを返す。
+    def matched_ids_for_action(candidates, action)
+      where(action: action).pluck(:id, :term).filter_map do |id, term|
+        normalized_term = normalize_for_match(term)
+        id if normalized_term.present? && candidates.include?(normalized_term)
+      end
+    end
+
+    # 入力文をトークン化し、完全一致判定用の候補集合を作る。
     def normalized_match_candidates(text)
       normalized_text = normalize_for_match(text)
       return [] if normalized_text.blank?
@@ -69,6 +79,7 @@ class FilterTerm < ApplicationRecord
       normalized_text.split(TOKEN_SPLIT_PATTERN).reject(&:blank?).uniq
     end
 
+    # 語彙更新で自動的にキャッシュを切り替える。
     def normalized_terms_cache_key
       latest = maximum(:updated_at)&.utc&.iso8601(6) || "none"
       "filter_terms:normalized_terms_by_action:#{TERMS_CACHE_VERSION}:#{count}:#{latest}"

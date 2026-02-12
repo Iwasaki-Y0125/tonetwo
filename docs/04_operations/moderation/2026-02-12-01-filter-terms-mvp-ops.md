@@ -56,4 +56,3 @@
 - `script/seeds/export_filter_terms_sql.rb`
 - `app/models/filter_term.rb`
 - `db/migrate/20260212090000_create_filter_terms.rb`
-- `db/migrate/20260212110000_change_filter_term_action_reject_to_prohibit.rb`
