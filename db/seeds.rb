@@ -8,7 +8,12 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
+# Load shared seed files tracked in Git.
+load Rails.root.join("db/seeds/matching_exclusion_terms.rb")
+
 # Load local-only seed files (e.g. sensitive moderation terms) if present.
-Dir[Rails.root.join("db/seeds/*.local.rb")].sort.each do |seed_file|
-  load seed_file
+unless Rails.env.production?
+  Dir[Rails.root.join("db/seeds/*.local.rb")].sort.each do |seed_file|
+    load seed_file
+  end
 end
