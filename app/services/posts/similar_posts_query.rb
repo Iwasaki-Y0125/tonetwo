@@ -25,7 +25,7 @@ module Posts
         end
 
       # 除外語（私、ここ、今日など）
-      excluded_terms = MatchingExcludedTerm.enabled.select(:term)
+      excluded_terms = MatchingExclusionTerm.select(:term)
 
       term_ids =
         PostTerm

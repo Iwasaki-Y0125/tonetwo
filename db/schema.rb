@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_12_090000) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_13_093000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -22,6 +22,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_12_090000) do
     t.index ["term"], name: "index_filter_terms_on_term", unique: true
     t.check_constraint "action::text = ANY (ARRAY['prohibit'::character varying::text, 'support'::character varying::text])", name: "chk_filter_terms_action_valid"
     t.check_constraint "char_length(TRIM(BOTH FROM term)) > 0", name: "chk_filter_terms_term_not_blank"
+  end
+
+  create_table "matching_exclusion_terms", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "term", null: false
+    t.datetime "updated_at", null: false
+    t.index ["term"], name: "index_matching_exclusion_terms_on_term", unique: true
+    t.check_constraint "char_length(TRIM(BOTH FROM term)) > 0", name: "chk_matching_exclusion_terms_term_not_blank"
   end
 
   create_table "sessions", force: :cascade do |t|
