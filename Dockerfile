@@ -221,7 +221,7 @@ RUN bundle install && \
 
 # npm設定（本番 build 用）
 COPY package.json package-lock.json ./
-RUN npm ci && npm cache clean --force
+RUN npm ci && rm -rf /root/.npm
 
 # Railsアプリのコードすべて（一個目の./ホスト側のカレントディレクトリ)を
 # コンテナ内(二個目の./コンテナ内のカレントディレクトリ)にコピー = コンテナに載せる
