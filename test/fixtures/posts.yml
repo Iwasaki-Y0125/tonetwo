@@ -1,0 +1,11 @@
+one:
+  user: one
+  body: "fixture post one"
+  sentiment_score: 0.5
+  sentiment_label: pos
+
+two:
+  user: two
+  body: "fixture post two"
+  sentiment_score:
+  sentiment_label:

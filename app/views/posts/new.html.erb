@@ -1,0 +1,27 @@
+<main class="min-h-screen">
+  <section class="max-w-md mx-auto px-6 py-16">
+    <h1 class="text-3xl font-bold mb-8">投稿作成</h1>
+
+    <% if flash[:alert] %>
+      <div class="alert alert-error mb-6">
+        <span><%= flash[:alert] %></span>
+      </div>
+    <% end %>
+
+    <%= form_with model: @post, url: posts_path, class: "space-y-5" do |form| %>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend text-base font-semibold">本文</legend>
+        <%= form.text_area :body,
+                           required: true,
+                           rows: 5,
+                           maxlength: 140,
+                           class: "textarea textarea-plain w-full bg-white",
+                           placeholder: "今どんな感じ？(140字まで)" %>
+      </fieldset>
+
+      <div>
+        <%= form.submit "投稿する", class: "btn btn-brand w-full" %>
+      </div>
+    <% end %>
+  </section>
+</main>

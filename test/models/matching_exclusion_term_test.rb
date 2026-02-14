@@ -15,7 +15,7 @@ class MatchingExclusionTermTest < ActiveSupport::TestCase
     record = MatchingExclusionTerm.new(term: "   ")
 
     assert_not record.valid?
-    assert_includes record.errors[:term], "can't be blank"
+    assert_includes record.errors[:term], "を入力してください"
   end
 
   test "termは一意である" do
@@ -23,6 +23,6 @@ class MatchingExclusionTermTest < ActiveSupport::TestCase
     duplicate = MatchingExclusionTerm.new(term: "ここ")
 
     assert_not duplicate.valid?
-    assert_includes duplicate.errors[:term], "has already been taken"
+    assert_includes duplicate.errors[:term], "はすでに存在します"
   end
 end
