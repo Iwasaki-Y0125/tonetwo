@@ -19,16 +19,6 @@
                            placeholder: "今どんな感じ？(140字まで)" %>
       </fieldset>
 
-      <% if @post.errors.any? %>
-        <div class="alert alert-error">
-          <ul class="list-disc pl-5">
-            <% @post.errors.full_messages.each do |message| %>
-              <li><%= message %></li>
-            <% end %>
-          </ul>
-        </div>
-      <% end %>
-
       <div>
         <%= form.submit "投稿する", class: "btn btn-brand w-full" %>
       </div>

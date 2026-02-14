@@ -1,6 +1,6 @@
 class Post < ApplicationRecord
   SENTIMENT_LABELS = %w[pos neg].freeze
-  PROHIBIT_MESSAGE = "は不適切なワードを含むため投稿できません".freeze
+  PROHIBIT_MESSAGE = "不適切なワードを含むため投稿できません".freeze
   SUPPORT_MESSAGE = "サポートページへ移動します".freeze
 
   belongs_to :user

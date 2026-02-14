@@ -53,7 +53,7 @@ class PostTest < ActiveSupport::TestCase
 
     assert_not post.valid?
     assert post.prohibit_hit?
-    assert_includes post.errors[:body], "は不適切なワードを含むため投稿できません"
+    assert_includes post.errors[:body], "不適切なワードを含むため投稿できません"
   end
 
   test "support語が含まれる場合はsupport_requiredになる" do
