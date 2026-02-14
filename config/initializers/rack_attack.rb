@@ -3,6 +3,8 @@ class Rack::Attack
   Rack::Attack.enabled = Rails.env.production?
 
   # Cloudflare経由の本番では、接続元プロキシIPではなく利用者IPを優先して使う。
+  # 前提: Render側でorigin直アクセスを遮断済みのため、CF-Connecting-IPを信頼する運用。
+  # もし直アクセス許可へ変更する場合は、この実装を見直すこと。
   def self.client_ip(req)
     req.get_header("HTTP_CF_CONNECTING_IP").presence || req.ip
   end
@@ -27,6 +29,10 @@ class Rack::Attack
 
   throttle("auth/sign_up_create/ip", limit: 20, period: 1.minute) do |req|
     client_ip(req) if req.post? && req.path == "/sign_up"
+  end
+
+  throttle("posts/create/ip", limit: 20, period: 1.minute) do |req|
+    client_ip(req) if req.post? && req.path == "/posts"
   end
 
   # Rack::Attackで弾いたときに、監視イベントを記録して429を返す処理

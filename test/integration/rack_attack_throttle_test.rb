@@ -16,6 +16,7 @@ class RackAttackThrottleTest < ActionDispatch::IntegrationTest
     ActionController::Base.cache_store = ActiveSupport::Cache::NullStore.new
     disable_controller_rate_limit_for_middleware_test(SessionsController)
     disable_controller_rate_limit_for_middleware_test(SignUpsController)
+    disable_controller_rate_limit_for_middleware_test(PostsController)
   end
 
   # Rack::Attackテスト終了後、ほかのテストに影響しないようにRack::Attackの有効設定を元の状態に戻す
@@ -82,6 +83,17 @@ class RackAttackThrottleTest < ActionDispatch::IntegrationTest
         password_confirmation: "Password1!"
       }
     }
+    assert_response :too_many_requests
+    assert_equal "Too Many Requests", response.body
+  end
+
+  test "POST /posts は上限超過で429を返す" do
+    20.times do
+      post posts_path, params: { post: { body: "rack attack test" } }
+      assert_redirected_to new_session_path
+    end
+
+    post posts_path, params: { post: { body: "rack attack test over limit" } }
     assert_response :too_many_requests
     assert_equal "Too Many Requests", response.body
   end

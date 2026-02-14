@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_13_093000) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_14_145300) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -32,6 +32,31 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_13_093000) do
     t.check_constraint "char_length(TRIM(BOTH FROM term)) > 0", name: "chk_matching_exclusion_terms_term_not_blank"
   end
 
+  create_table "post_terms", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "post_id", null: false
+    t.bigint "term_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id", "term_id"], name: "index_post_terms_on_post_id_and_term_id", unique: true
+    t.index ["post_id"], name: "index_post_terms_on_post_id"
+    t.index ["term_id", "post_id"], name: "index_post_terms_on_term_id_and_post_id"
+    t.index ["term_id"], name: "index_post_terms_on_term_id"
+  end
+
+  create_table "posts", force: :cascade do |t|
+    t.text "body", null: false
+    t.datetime "created_at", null: false
+    t.string "sentiment_label"
+    t.float "sentiment_score"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id", "created_at"], name: "index_posts_on_user_id_and_created_at"
+    t.index ["user_id"], name: "index_posts_on_user_id"
+    t.check_constraint "char_length(TRIM(BOTH FROM body)) > 0", name: "chk_posts_body_not_blank"
+    t.check_constraint "char_length(body) <= 140", name: "chk_posts_body_max_140"
+    t.check_constraint "sentiment_label IS NULL OR (sentiment_label::text = ANY (ARRAY['pos'::character varying, 'neg'::character varying]::text[]))", name: "chk_posts_sentiment_label_valid"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "ip_address"
@@ -39,6 +64,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_13_093000) do
     t.string "user_agent"
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
+  create_table "terms", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "term", null: false
+    t.datetime "updated_at", null: false
+    t.index ["term"], name: "index_terms_on_term", unique: true
+    t.check_constraint "char_length(TRIM(BOTH FROM term)) > 0", name: "chk_terms_term_not_blank"
   end
 
   create_table "users", force: :cascade do |t|
@@ -55,5 +88,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_13_093000) do
     t.check_constraint "char_length(TRIM(BOTH FROM terms_version)) > 0", name: "chk_users_terms_version_not_blank"
   end
 
+  add_foreign_key "post_terms", "posts"
+  add_foreign_key "post_terms", "terms"
+  add_foreign_key "posts", "users"
   add_foreign_key "sessions", "users"
 end

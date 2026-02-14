@@ -119,4 +119,17 @@
     box-shadow: none !important;
     outline: none !important;
   }
+
+  .textarea-plain {
+    border-color: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+  }
+
+  .textarea-plain:focus,
+  .textarea-plain:focus-visible {
+    border-color: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+  }
 }

@@ -15,6 +15,7 @@ class User < ApplicationRecord
 
   has_secure_password
   has_many :sessions, dependent: :destroy
+  has_many :posts, dependent: :restrict_with_error
 
   def self.human_attribute_name(attribute, options = {})
     ATTRIBUTE_JA_NAMES[attribute.to_sym] || super
