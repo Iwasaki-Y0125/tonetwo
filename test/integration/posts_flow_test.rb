@@ -35,5 +35,4 @@ class PostsFlowTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to support_page_path
   end
-
 end
