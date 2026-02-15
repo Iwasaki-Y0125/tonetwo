@@ -1,0 +1,14 @@
+<header class="fixed inset-x-0 top-0 z-30 bg-white border-b border-base-300">
+  <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+    <%= link_to root_path, class: "inline-flex items-center" do %>
+      <%= image_tag "Logo.svg", alt: "ToneTwo", class: "h-8 w-auto" %>
+    <% end %>
+
+    <% if authenticated? %>
+      <%= link_to "ログアウト",
+                  session_path,
+                  data: { turbo_method: :delete },
+                  class: "btn mr-40 h-10 min-h-10 bg-white border-[#D1D5DB] text-[#6B7280] hover:bg-[#F9FAFB] hover:border-[#D1D5DB] hover:text-[#6B7280] shadow-none" %>
+    <% end %>
+  </div>
+</header>

@@ -1,0 +1,27 @@
+<aside class="fixed left-[max(1.5rem,calc((100vw-72rem)/2+1.5rem))] top-[120px] z-20 hidden w-52 lg:block">
+  <div class="tt-shadow-min rounded-2xl bg-[var(--tt-brand)] p-4">
+    <nav class="space-y-2 text-base font-semibold !text-[#fff]">
+      <%= link_to root_path, class: "side-nav-link flex items-center gap-3 rounded-lg px-4 py-3 !text-[#fff] hover:bg-[#56b8bd] hover:!text-[#fff]" do %>
+        <%= image_tag "icons/home.svg", alt: "", class: "h-5 w-5", aria: { hidden: true } %>
+        <span>ホーム</span>
+      <% end %>
+
+      <div class="flex items-center gap-3 rounded-lg px-4 py-3 !text-[#fff] transition hover:bg-[#56b8bd]">
+        <%= image_tag "icons/account_circle.svg", alt: "", class: "h-5 w-5", aria: { hidden: true } %>
+        <span>投稿一覧</span>
+      </div>
+
+      <div class="flex items-center gap-3 rounded-lg px-4 py-3 !text-[#fff] transition hover:bg-[#56b8bd]">
+        <%= image_tag "icons/chat_bubble.svg", alt: "", class: "h-5 w-5", aria: { hidden: true } %>
+        <span>チャット</span>
+      </div>
+    </nav>
+  </div>
+
+  <%= link_to new_post_path, class: "side-nav-link group mt-16 block w-full !text-[#fff]" do %>
+    <span class="relative block">
+      <%= image_tag "postbtn.svg", alt: "", class: "block w-full h-auto drop-shadow-[0_2px_0_rgba(0,0,0,0.16)] transition group-hover:brightness-95" %>
+      <span class="pointer-events-none absolute right-10 top-[31%] -translate-y-1/2 -rotate-6 text-base font-semibold tracking-wide !text-[#fff]">投稿する？</span>
+    </span>
+  <% end %>
+</aside>
