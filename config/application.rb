@@ -24,5 +24,10 @@ module App
 
     # config.eager_load_paths << ... | 本番で起動時にまとめて全部読み込む対象のディレクトリを増やす
     config.eager_load_paths << Rails.root.join("app/services")
+
+    # 画面表示・アプリ内時刻は日本時間を基準にする。
+    config.time_zone = "Asia/Tokyo"
+    # DBへの保存・DBからの読み出しはUTC基準に統一する。
+    config.active_record.default_timezone = :utc
   end
 end
