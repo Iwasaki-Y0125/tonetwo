@@ -148,4 +148,14 @@
     outline: none !important;
   }
 
+  /* 吹き出し投稿ボタンの影 */
+  .tt-postbtn-sticker {
+    transition: filter 150ms ease;
+    filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.16));
+  }
+
+  .side-nav-link:hover .tt-postbtn-sticker {
+    filter: brightness(0.95) drop-shadow(0 2px 0 rgba(0, 0, 0, 0.16));
+  }
+
 }
