@@ -8,7 +8,18 @@
       </div>
     <% end %>
 
-    <%= form_with model: @post, url: posts_path, class: "space-y-5", data: { controller: "post-body-length", post_body_length_limit_value: 140 } do |form| %>
+    <%= form_with model: @post,
+                  url: posts_path,
+                  class: "space-y-5",
+                  data: {
+                    controller: "post-body-length",
+                    post_body_length_limit_value: 140,
+                    action: "submit->post-body-length#guardSubmit"
+                  } do |form| %>
+      <div class="alert alert-error mb-6 hidden" data-post-body-length-target="alert">
+        <span>140字を超えているため投稿できません</span>
+      </div>
+
       <fieldset class="fieldset">
         <legend class="fieldset-legend text-base font-semibold">本文</legend>
         <%= form.text_area :body,
