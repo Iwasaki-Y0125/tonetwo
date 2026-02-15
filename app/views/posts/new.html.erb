@@ -8,15 +8,30 @@
       </div>
     <% end %>
 
-    <%= form_with model: @post, url: posts_path, class: "space-y-5" do |form| %>
+    <%= form_with model: @post,
+                  url: posts_path,
+                  class: "space-y-5",
+                  data: {
+                    controller: "post-body-length",
+                    post_body_length_limit_value: 140,
+                    action: "submit->post-body-length#guardSubmit"
+                  } do |form| %>
+      <div class="alert alert-error mb-6 hidden" data-post-body-length-target="alert">
+        <span>140字を超えているため投稿できません</span>
+      </div>
+
       <fieldset class="fieldset">
         <legend class="fieldset-legend text-base font-semibold">本文</legend>
         <%= form.text_area :body,
                            required: true,
                            rows: 5,
-                           maxlength: 140,
                            class: "textarea textarea-plain w-full bg-white",
-                           placeholder: "今どんな感じ？(140字まで)" %>
+                           placeholder: "今どんな感じ？(140字まで)",
+                           data: {
+                             post_body_length_target: "input",
+                             action: "input->post-body-length#check"
+                           } %>
+        <p class="text-sm mt-2 min-h-6 text-error invisible" data-post-body-length-target="message" aria-live="polite"></p>
       </fieldset>
 
       <div>
