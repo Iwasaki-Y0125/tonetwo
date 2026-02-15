@@ -22,7 +22,19 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body data-theme="light"  class="min-h-screen">
-    <%= yield %>
+  <% body_classes = ["min-h-screen"] %>
+  <% body_classes << "overflow-hidden" if controller_name == "posts" && action_name == "new" %>
+  <body data-theme="light" class="<%= body_classes.join(" ") %>">
+    <%= render "shared/site_header" %>
+    <div class="pt-20">
+      <% if authenticated? %>
+        <%= render "shared/side_nav" %>
+        <div class="mx-auto w-full max-w-4xl px-8">
+          <%= yield %>
+        </div>
+      <% else %>
+        <%= yield %>
+      <% end %>
+    </div>
   </body>
 </html>

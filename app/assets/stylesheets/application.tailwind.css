@@ -37,6 +37,16 @@
     font-family: "Noto Sans JP", sans-serif;
   }
 
+  /* 固定ヘッダー分を確保し、スクロール時に先頭が隠れないようにする */
+  html {
+    scroll-padding-top: 5rem;
+  }
+
+  /* 固定ヘッダー採用時の基準高さ。main.min-h-screen の過剰分を防ぐ。 */
+  main.min-h-screen {
+    min-height: calc(100dvh - 5rem);
+  }
+
   a {
     color: var(--tt-link);
   }
@@ -49,14 +59,19 @@
     background-color: var(--tt-brand) !important;
     border-color: var(--tt-brand) !important;
     color: #ffffff !important;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12) !important;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.16) !important;
   }
 
   .btn-brand:hover {
     --btn-color: #58bcc0;
     background-color: #58bcc0 !important;
     border-color: #58bcc0 !important;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12) !important;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.16) !important;
+  }
+
+  /* 影の見た目を最小で統一するための共通クラス */
+  .tt-shadow-min {
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.16) !important;
   }
 
   /* btn-brand の !important より強く disabled 見た目を固定する */
@@ -95,7 +110,7 @@
     color: var(--tt-text) !important;
   }
 
-  a:not(.btn) {
+  a:not(.btn):not(.side-nav-link) {
     color: var(--tt-link) !important;
   }
 }
@@ -132,4 +147,5 @@
     box-shadow: none !important;
     outline: none !important;
   }
+
 }

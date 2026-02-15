@@ -66,3 +66,6 @@ script/docs/update_constants_map.rb
 
 # Local-only seeds (sensitive moderation words etc.)
 /db/seeds/*.local.rb
+
+# Windows metadata sidecar files
+*:Zone.Identifier
