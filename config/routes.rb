@@ -2,6 +2,9 @@ Rails.application.routes.draw do
   resource :session, only: %i[new create destroy]
   resource :sign_up, only: %i[new create]
   resources :posts, only: %i[new create]
+  namespace :my do
+    resources :posts, only: %i[index show]
+  end
   get "support" => "support_pages#show", as: :support_page
 
   # TODO(Auth): MVP時点ではパスワードリセットは未実装のため非公開。
