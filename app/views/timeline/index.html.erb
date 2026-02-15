@@ -1,0 +1,73 @@
+<main class="min-h-screen">
+  <section class="mx-auto max-w-xl px-8 py-12">
+    <div class="mb-5">
+      <div role="tablist" class="grid grid-cols-2 gap-1 rounded-2xl border border-white/70 bg-white/65 p-1 backdrop-blur-sm">
+        <%= link_to "全体",
+                    timeline_path,
+                    role: "tab",
+                    class: [
+                      "tt-tab-link flex h-12 items-center justify-center rounded-xl text-base font-semibold no-underline transition",
+                      (@active_tab == :all ? "bg-[#68CBCE] !text-[#FFF] shadow-[0_1.5px_0_rgba(0,0,0,0.16)]" : "bg-transparent text-[#858EA6] hover:bg-[#eef7f8]")
+                    ] %>
+
+        <%= link_to similar_timeline_path,
+                    role: "tab",
+                    class: [
+                      "tt-tab-link flex h-12 items-center justify-center gap-2 rounded-xl text-base font-semibold no-underline transition",
+                      (@active_tab == :similar ? "bg-[#68CBCE] !text-[#FFF] shadow-[0_1.5px_0_rgba(0,0,0,0.16)]" : "bg-transparent text-[#858EA6] hover:bg-[#eef7f8]")
+                    ] do %>
+          <span>おすすめ</span>
+          <% help_icon = (@active_tab == :similar ? "icons/help_white.svg" : "icons/help.svg") %>
+          <span class="tt-help-trigger" aria-label="おすすめ表示の説明">
+            <%= image_tag help_icon, alt: "", class: "h-5 w-5", aria: { hidden: true } %>
+            <span class="tt-help-popover" role="tooltip">
+              あなたの直近の投稿の文章から<br>
+              話題（例：趣味、仕事、勉強など）<br>
+              文の雰囲気（前向き／しんどい など）<br>
+              をもとに、近い投稿をおすすめに表示しています
+            </span>
+          </span>
+        <% end %>
+      </div>
+    </div>
+
+    <%= form_with model: @post,
+                  url: posts_path,
+                  class: "space-y-2",
+                  data: {
+                    controller: "post-body-length auto-grow-textarea",
+                    post_body_length_limit_value: 140,
+                    action: "submit->post-body-length#guardSubmit"
+                  } do |form| %>
+      <div class="hidden" data-post-body-length-target="alert"></div>
+
+      <div class="rounded bg-white p-3">
+        <%= form.text_area :body,
+                           required: true,
+                           rows: 1,
+                           class: "textarea-plain !min-h-0 w-full resize-none overflow-hidden border-0 bg-transparent p-0 text-sm leading-6 text-[#3A486D]",
+                           placeholder: "今どんな感じ？",
+                           data: {
+                             post_body_length_target: "input",
+                             auto_grow_textarea_target: "field",
+                             action: "input->post-body-length#check input->auto-grow-textarea#resize"
+                           } %>
+        <div class="mt-2 flex justify-end">
+          <%= form.submit "投稿", class: "inline-flex h-8 min-h-0 items-center rounded-full border-0 bg-[#68CBCE] px-8 text-base font-normal text-white hover:bg-[#58bcc0]" %>
+        </div>
+      </div>
+
+      <p class="min-h-6 text-sm text-[#E86572] invisible" data-post-body-length-target="message" aria-live="polite"></p>
+    <% end %>
+
+    <% if @posts.any? %>
+      <div class="tt-shadow-min mt-6 overflow-hidden rounded-lg bg-white">
+        <%= render "timeline/feed_page", posts: @posts, has_next: @has_next, next_path: @next_path %>
+      </div>
+    <% else %>
+      <div class="tt-shadow-min mt-6 rounded-lg bg-white p-10 text-center text-lg text-[#8392AE]">
+        投稿はまだありません。
+      </div>
+    <% end %>
+  </section>
+</main>

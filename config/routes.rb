@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   resource :session, only: %i[new create destroy]
   resource :sign_up, only: %i[new create]
+  get "timeline", to: "timeline#index", as: :timeline
+  get "timeline/similar", to: "timeline#similar", as: :similar_timeline
   resources :posts, only: %i[new create]
   namespace :my do
     resources :posts, only: %i[index show]

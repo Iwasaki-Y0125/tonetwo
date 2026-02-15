@@ -1,0 +1,3 @@
+<%= turbo_frame_tag "my_posts_next" do %>
+  <%= render "my/posts/feed_page", posts: posts, has_next: has_next, next_path: next_path %>
+<% end %>
