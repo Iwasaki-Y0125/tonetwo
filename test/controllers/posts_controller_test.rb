@@ -19,7 +19,7 @@ class PostsControllerTest < ActionController::TestCase
 
     5.times do |index|
       post :create, params: { post: { body: "通常投稿#{index}" } }
-      assert_redirected_to root_path
+      assert_redirected_to timeline_path
     end
 
     post :create, params: { post: { body: "通常投稿6回目" } }
@@ -35,7 +35,7 @@ class PostsControllerTest < ActionController::TestCase
   test "3分経過後はPOST /postsのrate_limitが解除される" do
     5.times do |index|
       post :create, params: { post: { body: "制限テスト#{index}" } }
-      assert_redirected_to root_path
+      assert_redirected_to timeline_path
     end
 
     post :create, params: { post: { body: "制限中投稿" } }
@@ -44,7 +44,7 @@ class PostsControllerTest < ActionController::TestCase
 
     travel 3.minutes + 1.second do
       post :create, params: { post: { body: "解除後投稿" } }
-      assert_redirected_to root_path
+      assert_redirected_to timeline_path
     end
   end
 

@@ -1,0 +1,4 @@
+<%# 次ページを自動で読み込む仕掛け　%>
+<% if has_next && next_path.present? %>
+  <%= turbo_frame_tag "timeline_next", src: next_path, loading: :lazy %>
+<% end %>

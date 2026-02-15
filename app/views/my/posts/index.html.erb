@@ -4,20 +4,7 @@
 
     <% if @posts.any? %>
       <div class="tt-shadow-min overflow-hidden rounded-lg bg-white">
-        <% @posts.each do |post| %>
-          <% posted_at = post.created_at.in_time_zone("Asia/Tokyo") %>
-          <% posted_at_label = posted_at.today? ? posted_at.strftime("%H:%M Today") : posted_at.strftime("%Y/%m/%d %H:%M") %>
-          <%= link_to my_post_path(post), class: "group flex items-end gap-4 border-b border-[#EEF2F7] px-8 py-8 last:border-b-0 transition-colors hover:bg-[#F9FBFD]", aria: { label: "投稿詳細へ" } do %>
-            <div class="min-w-0 flex-1">
-              <p class="text-right text-xs tracking-wide text-[#8896B2]"><%= posted_at_label %></p>
-              <p class="mt-3 whitespace-pre-wrap break-words text-sm leading-6 text-[#3A486D]"><%= post.body.to_s.strip %></p>
-            </div>
-
-            <span class="shrink-0">
-              <%= image_tag "icons/arrow_circle_right.svg", alt: "", class: "h-8 w-8", aria: { hidden: true } %>
-            </span>
-          <% end %>
-        <% end %>
+        <%= render "my/posts/feed_page", posts: @posts, has_next: @has_next, next_path: @next_path %>
       </div>
     <% else %>
       <div class="tt-shadow-min rounded-lg bg-white p-10 text-center text-lg text-[#8392AE]">

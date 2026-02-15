@@ -59,19 +59,19 @@
     background-color: var(--tt-brand) !important;
     border-color: var(--tt-brand) !important;
     color: #ffffff !important;
-    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.16) !important;
+    box-shadow: 0 1.5px 0 rgba(0, 0, 0, 0.16) !important;
   }
 
   .btn-brand:hover {
     --btn-color: #58bcc0;
     background-color: #58bcc0 !important;
     border-color: #58bcc0 !important;
-    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.16) !important;
+    box-shadow: 0 1.5px 0 rgba(0, 0, 0, 0.16) !important;
   }
 
   /* 影の見た目を最小で統一するための共通クラス */
   .tt-shadow-min {
-    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.16) !important;
+    box-shadow: 0 1.5px 0 rgba(0, 0, 0, 0.16) !important;
   }
 
   /* btn-brand の !important より強く disabled 見た目を固定する */
@@ -110,7 +110,7 @@
     color: var(--tt-text) !important;
   }
 
-  a:not(.btn):not(.side-nav-link) {
+  a:not(.btn):not(.side-nav-link):not(.tt-tab-link) {
     color: var(--tt-link) !important;
   }
 }
@@ -151,11 +151,60 @@
   /* 吹き出し投稿ボタンの影 */
   .tt-postbtn-sticker {
     transition: filter 150ms ease;
-    filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.16));
+    filter: drop-shadow(0 1.5px 0 rgba(0, 0, 0, 0.16));
   }
 
   .side-nav-link:hover .tt-postbtn-sticker {
-    filter: brightness(0.95) drop-shadow(0 2px 0 rgba(0, 0, 0, 0.16));
+    filter: brightness(0.95) drop-shadow(0 1.5px 0 rgba(0, 0, 0, 0.16));
+  }
+
+  /* ヘルプアイコン上だけで説明吹き出しを出し、タブ全体hoverでは出さない。 */
+  .tt-help-trigger {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tt-help-popover {
+    position: absolute;
+    right: -0.5rem;
+    top: calc(100% + 0.5rem);
+    width: 19rem;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid #D9E3EA;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    color: #3A486D;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    box-shadow: 0 4px 16px rgba(58, 72, 109, 0.18);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.25rem);
+    transition: opacity 120ms ease, transform 120ms ease, visibility 120ms ease;
+    white-space: normal;
+    pointer-events: none;
+    z-index: 60;
+  }
+
+  .tt-help-popover::after {
+    content: "";
+    position: absolute;
+    right: 0.6rem;
+    bottom: 100%;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 7px solid #ffffff;
+  }
+
+  .tt-help-trigger:hover .tt-help-popover,
+  .tt-help-trigger:focus-within .tt-help-popover {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
   }
 
 }

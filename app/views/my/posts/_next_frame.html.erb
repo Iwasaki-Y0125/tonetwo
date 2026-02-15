@@ -1,0 +1,3 @@
+<% if has_next && next_path.present? %>
+  <%= turbo_frame_tag "my_posts_next", src: next_path, loading: :lazy %>
+<% end %>

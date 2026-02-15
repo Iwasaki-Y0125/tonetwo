@@ -12,7 +12,7 @@
                   url: posts_path,
                   class: "space-y-5",
                   data: {
-                    controller: "post-body-length",
+                    controller: "post-body-length auto-grow-textarea",
                     post_body_length_limit_value: 140,
                     action: "submit->post-body-length#guardSubmit"
                   } do |form| %>
@@ -25,11 +25,12 @@
         <%= form.text_area :body,
                            required: true,
                            rows: 5,
-                           class: "textarea textarea-plain w-full bg-white",
+                           class: "textarea textarea-plain w-full resize-none overflow-hidden bg-white",
                            placeholder: "今どんな感じ？(140字まで)",
                            data: {
                              post_body_length_target: "input",
-                             action: "input->post-body-length#check"
+                             auto_grow_textarea_target: "field",
+                             action: "input->post-body-length#check input->auto-grow-textarea#resize"
                            } %>
         <p class="text-sm mt-2 min-h-6 text-error invisible" data-post-body-length-target="message" aria-live="polite"></p>
       </fieldset>

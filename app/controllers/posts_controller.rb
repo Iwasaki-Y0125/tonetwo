@@ -10,7 +10,7 @@ class PostsController < ApplicationController
     @post = Current.user.posts.new(post_params)
 
     if @post.save
-      redirect_to root_path, notice: "投稿しました。"
+      redirect_to timeline_path, notice: "投稿しました。"
     elsif @post.support_required?
       redirect_to support_page_path, notice: Post::SUPPORT_MESSAGE
     else
