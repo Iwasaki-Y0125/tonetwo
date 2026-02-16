@@ -1,4 +1,11 @@
 <%# 次ページを自動で読み込む仕掛け　%>
+
+<%# フラグがある場合のみ、以下のHTMLが生成される
+<turbo-frame id="timeline_next" src="...next_path..." loading="lazy"></turbo-frame>　%>
+
 <% if has_next && next_path.present? %>
   <%= turbo_frame_tag "timeline_next", src: next_path, loading: :lazy %>
 <% end %>
+
+<%# loading: :lazy
+ページ初期表示のタイミングではすぐ読み込まず、Frameが画面内に見えた時点で読み込む　%>

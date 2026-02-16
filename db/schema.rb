@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_14_145300) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_16_074136) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -50,11 +50,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_14_145300) do
     t.float "sentiment_score"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
+    t.index ["created_at", "id"], name: "index_posts_on_created_at_and_id"
     t.index ["user_id", "created_at"], name: "index_posts_on_user_id_and_created_at"
     t.index ["user_id"], name: "index_posts_on_user_id"
     t.check_constraint "char_length(TRIM(BOTH FROM body)) > 0", name: "chk_posts_body_not_blank"
     t.check_constraint "char_length(body) <= 140", name: "chk_posts_body_max_140"
-    t.check_constraint "sentiment_label IS NULL OR (sentiment_label::text = ANY (ARRAY['pos'::character varying, 'neg'::character varying]::text[]))", name: "chk_posts_sentiment_label_valid"
+    t.check_constraint "sentiment_label IS NULL OR (sentiment_label::text = ANY (ARRAY['pos'::character varying::text, 'neg'::character varying::text]))", name: "chk_posts_sentiment_label_valid"
   end
 
   create_table "sessions", force: :cascade do |t|

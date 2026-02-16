@@ -1,15 +1,19 @@
 <% posts.each do |post| %>
+  <%# 表示はJST基準。今日の投稿だけ時刻のみを出す。 %>
   <% posted_at = post.created_at.in_time_zone("Asia/Tokyo") %>
   <% posted_at_label = posted_at.today? ? posted_at.strftime("%H:%M Today") : posted_at.strftime("%Y/%m/%d %H:%M") %>
+
+  <%# 自分の投稿だけ詳細ページへ遷移できるようにする。 %>
   <% if post.user_id == Current.user.id %>
-    <%= link_to my_post_path(post), class: "group block border-b border-[#EEF2F7] px-8 py-8 last:border-b-0 transition-colors hover:bg-[#F9FBFD]", aria: { label: "自分の投稿詳細へ" } do %>
-      <p class="text-right text-xs tracking-wide text-[#8896B2]"><%= posted_at_label %></p>
-      <p class="mt-3 whitespace-pre-wrap break-words text-sm leading-6 text-[#3A486D]"><%= post.body.to_s.strip %></p>
+    <%= link_to my_post_path(post), class: "tt-post-row tt-post-row-link group block", aria: { label: "自分の投稿詳細へ" } do %>
+      <p class="tt-post-meta"><%= posted_at_label %></p>
+      <p class="tt-post-body"><%= post.body.to_s.strip %></p>
     <% end %>
   <% else %>
-    <article class="border-b border-[#EEF2F7] px-8 py-8 last:border-b-0">
-      <p class="text-right text-xs tracking-wide text-[#8896B2]"><%= posted_at_label %></p>
-      <p class="mt-3 whitespace-pre-wrap break-words text-sm leading-6 text-[#3A486D]"><%= post.body.to_s.strip %></p>
+    <%# 他ユーザー投稿は閲覧のみ（リンクなし）。 %>
+    <article class="tt-post-row">
+      <p class="tt-post-meta"><%= posted_at_label %></p>
+      <p class="tt-post-body"><%= post.body.to_s.strip %></p>
     </article>
   <% end %>
 <% end %>
