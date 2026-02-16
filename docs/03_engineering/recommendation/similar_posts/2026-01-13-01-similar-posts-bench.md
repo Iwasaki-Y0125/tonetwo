@@ -1,5 +1,8 @@
 # SimilarPostsQuery / AnalyzePost ベンチ結果
 
+> 注記: 本ドキュメントは旧実装（`SimilarPostsQuery`）時点の計測記録です。  
+> 現行のSimilar TL取得は仕様変更により `app/services/posts/similar_timeline_query.rb` を使用します。
+
 ## 目的
 - Issue #7: 「名詞一致 + 極性 + 直近投稿」で類似投稿が実用速度で返るか確認する
 - Issue #8: 投稿解析（名詞抽出/スコア計算/保存）を非同期化する必要性の判断材料を得る

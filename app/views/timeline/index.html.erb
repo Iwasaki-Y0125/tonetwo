@@ -67,7 +67,13 @@
       </div>
     <% else %>
       <div class="tt-shadow-min tt-empty-state mt-6">
-        投稿はまだありません。
+        <% Array(@empty_state_lines.presence || ["投稿はまだありません。"]).each do |line| %>
+          <% if line.blank? %>
+            <br>
+          <% else %>
+            <p><%= line %></p>
+          <% end %>
+        <% end %>
       </div>
     <% end %>
   </section>

@@ -19,7 +19,7 @@
   - `normalizes :term` で前後空白のみ除去
   - `validates :term, presence: true, uniqueness: true`
 - マッチング参照:
-  - `app/services/posts/similar_posts_query.rb`
+  - `app/services/posts/similar_timeline_query.rb`
   - `MatchingExclusionTerm.select(:term)` を使い、存在語をそのまま除外
 - DB定義:
   - `db/migrate/20260213093000_create_matching_exclusion_terms.rb`
@@ -58,6 +58,6 @@
 - `db/seeds/matching_exclusion_terms.rb`
 - `db/seeds.rb`
 - `app/models/matching_exclusion_term.rb`
-- `app/services/posts/similar_posts_query.rb`
+- `app/services/posts/similar_timeline_query.rb`
 - `db/migrate/20260213093000_create_matching_exclusion_terms.rb`
 - `Makefile`
