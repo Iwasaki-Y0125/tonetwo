@@ -88,6 +88,20 @@ class TimelineFlowTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_includes @response.body, "※おすすめを解析中です。反映までしばらくお待ちください。"
+    assert_includes @response.body, "data-controller=\"similar-feed-poll\""
+    assert_includes @response.body, "data-similar-feed-poll-enabled-value=\"true\""
+  end
+
+  test "おすすめTLはtimeline_feedフレーム要求でfeed部分を返す" do
+    user = build_user(email: "similar-feed-frame@example.com")
+    sign_in_as(user)
+    user.posts.create!(body: "解析中", created_at: Time.current)
+
+    get similar_timeline_path, headers: { "Turbo-Frame" => "timeline_feed" }
+
+    assert_response :success
+    assert_includes @response.body, "id=\"timeline_feed\""
+    assert_not_includes @response.body, "<main"
   end
 
   test "おすすめTLは解析済みseedなしメッセージを表示する" do

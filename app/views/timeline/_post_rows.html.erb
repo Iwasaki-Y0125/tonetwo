@@ -1,3 +1,4 @@
+<%# 投稿を表示する本体 %>
 <% posts.each do |post| %>
   <%# 表示はJST基準。今日の投稿だけ時刻のみを出す。 %>
   <% posted_at = post.created_at.in_time_zone("Asia/Tokyo") %>

@@ -60,21 +60,13 @@
       <p class="tt-form-error-inline invisible" data-post-body-length-target="message" aria-live="polite"></p>
     <% end %>
 
-    <% if @posts.any? %>
-      <div class="tt-shadow-min mt-6 overflow-hidden rounded-lg bg-white">
-        <%= render "timeline/post_rows", posts: @posts %>
-        <%= render "timeline/next_frame", has_next: @has_next, next_path: @next_path %>
-      </div>
-    <% else %>
-      <div class="tt-shadow-min tt-empty-state mt-6">
-        <% Array(@empty_state_lines.presence || ["投稿はまだありません。"]).each do |line| %>
-          <% if line.blank? %>
-            <br>
-          <% else %>
-            <p><%= line %></p>
-          <% end %>
-        <% end %>
-      </div>
-    <% end %>
+    <%= render "timeline/feed",
+               posts: @posts,
+               has_next: @has_next,
+               next_path: @next_path,
+               active_tab: @active_tab,
+               empty_state_lines: @empty_state_lines,
+               similar_state: @similar_state,
+               similar_polling_interval_ms: TimelineController::SIMILAR_POLLING_INTERVAL_MS %>
   </section>
 </main>

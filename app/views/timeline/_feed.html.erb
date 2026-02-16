@@ -1,0 +1,29 @@
+<% polling_enabled = (active_tab == :similar && similar_state == :analyzing) %>
+
+<%# timeline_feedのみを差し替え自動更新できるようにする %>
+<%= turbo_frame_tag "timeline_feed",
+                    data: {
+                      controller: ("similar-feed-poll" if active_tab == :similar),
+                      similar_feed_poll_url_value: similar_timeline_path,
+                      similar_feed_poll_enabled_value: polling_enabled,
+                      similar_feed_poll_interval_value: similar_polling_interval_ms
+                    }.compact do %>
+  <%# ポストがある場合のパーシャル呼び出し %>
+  <% if posts.any? %>
+    <div class="tt-shadow-min mt-6 overflow-hidden rounded-lg bg-white">
+      <%= render "timeline/post_rows", posts: posts %>
+      <%= render "timeline/next_frame", has_next: has_next, next_path: next_path %>
+    </div>
+  <% else %>
+    <%# ポストがない場合の空状態表示。empty_state_linesごとに文章を表示する %>
+    <div class="tt-shadow-min tt-empty-state mt-6">
+      <% Array(empty_state_lines.presence || ["投稿はまだありません。"]).each do |line| %>
+        <% if line.blank? %>
+          <br>
+        <% else %>
+          <p><%= line %></p>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>
