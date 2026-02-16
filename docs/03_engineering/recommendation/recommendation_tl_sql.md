@@ -85,3 +85,4 @@ result = Posts::CursorPaginator.call(
 ## 補足
 - seedが空なら候補も0件になるため、上記のケース別案内文を出す。
 - `post_terms` に `sentiment_label` は持たせない（将来の再解析時の不整合回避）。
+- `analyzing` 状態のときは `timeline_feed` を5秒間隔で再取得し、自動で表示更新する。

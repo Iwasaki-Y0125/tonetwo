@@ -1,6 +1,7 @@
 class TimelineController < ApplicationController
   # 初回表示は20件、21件目があれば「次ページあり」と判定する。
-  PER_PAGE = 20
+  PER_PAGE = 20     # 投稿の取得件数
+  SIMILAR_POLLING_INTERVAL_MS = 5000  # おすすめTLの解析中状態をポーリングで監視する間隔（ミリ秒）
   SIMILAR_EMPTY_MESSAGES = {
     no_recent_posts: [
       "ここにはあなたの直近の投稿をもとに",
@@ -90,8 +91,15 @@ class TimelineController < ApplicationController
   def render_feed_chunk_if_turbo_frame!
     return false unless turbo_frame_request?
 
-    render partial: "timeline/feed_chunk",
-           locals: { posts: @posts, has_next: @has_next, next_path: @next_path }
+    # turbo frame経由のアクセスなら、投稿一覧部分のHTMLを返す。
+    # どのpartialを使うかは、リクエストヘッダのTurbo-Frameで判断する。
+    partial_name = request.headers["Turbo-Frame"] == "timeline_feed" ? "timeline/feed" : "timeline/feed_chunk"
+    render partial: partial_name,
+           locals: { posts: @posts, has_next: @has_next, next_path: @next_path, active_tab: @active_tab,
+                     #  おすすめTL用の状態表示に必要なローカル変数も渡す
+                     empty_state_lines: @empty_state_lines, similar_state: @similar_state,
+                     #  おすすめTLの解析中状態をポーリングで監視するためのインターバル値も渡す
+                     similar_polling_interval_ms: SIMILAR_POLLING_INTERVAL_MS }
     true
   end
 
