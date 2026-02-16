@@ -71,7 +71,7 @@ module Posts
       result = SimilarTimelineQuery.call(user: user, now: now)
 
       assert_equal :ready, result.state
-      assert_equal [newer_candidate.id, older_candidate.id], result.scope.pluck(:id)
+      assert_equal [ newer_candidate.id, older_candidate.id ], result.scope.pluck(:id)
     end
 
     test "直近投稿がない場合は no_recent_posts を返す" do

@@ -123,7 +123,7 @@ class TimelineFlowTest < ActionDispatch::IntegrationTest
       candidates << post
     end
 
-    expected_ids = candidates.sort_by { |post| [post.created_at, post.id] }.reverse.map(&:id)
+    expected_ids = candidates.sort_by { |post| [ post.created_at, post.id ] }.reverse.map(&:id)
     first_page_last_id = expected_ids[19]
     first_page_last = Post.find(first_page_last_id)
 
