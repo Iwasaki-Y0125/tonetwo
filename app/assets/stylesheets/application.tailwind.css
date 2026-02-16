@@ -207,4 +207,129 @@
     transform: translateY(0);
   }
 
+  /* 投稿一覧/詳細で共通利用する表示スタイル */
+  .tt-post-row {
+    border-bottom: 1px solid #EEF2F7;
+    padding: 2rem;
+  }
+
+  .tt-post-row:last-child {
+    border-bottom: 0;
+  }
+
+  .tt-post-row-link {
+    transition: background-color 150ms ease;
+  }
+
+  .tt-post-row-link:hover {
+    background-color: #F9FBFD;
+  }
+
+  .tt-post-meta {
+    text-align: right;
+    font-size: 0.75rem;
+    letter-spacing: 0.025em;
+    color: #8896B2;
+  }
+
+  .tt-post-body {
+    margin-top: 0.75rem;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+    color: #3A486D;
+  }
+
+  /* タイムライン画面のタブ/投稿フォームの共通スタイル */
+  .tt-tab-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 1rem;
+    background-color: rgba(255, 255, 255, 0.65);
+    padding: 0.25rem;
+    backdrop-filter: blur(4px);
+  }
+
+  .tt-tab-base {
+    display: flex;
+    height: 3rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 150ms ease, color 150ms ease;
+  }
+
+  .tt-tab-active {
+    background-color: #68CBCE;
+    color: #ffffff !important;
+    box-shadow: 0 1.5px 0 rgba(0, 0, 0, 0.16);
+  }
+
+  .tt-tab-inactive {
+    background-color: transparent;
+    color: #858EA6;
+  }
+
+  .tt-tab-inactive:hover {
+    background-color: #eef7f8;
+  }
+
+  .tt-post-form-card {
+    border-radius: 0.25rem;
+    background-color: #ffffff;
+    padding: 0.75rem;
+  }
+
+  .tt-post-textarea {
+    min-height: 0 !important;
+    width: 100%;
+    resize: none;
+    overflow: hidden;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+    color: #3A486D;
+  }
+
+  .tt-post-submit {
+    display: inline-flex;
+    height: 2rem;
+    min-height: 0;
+    align-items: center;
+    border: 0;
+    border-radius: 9999px;
+    background-color: #68CBCE;
+    padding: 0 2rem;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #ffffff;
+  }
+
+  .tt-post-submit:hover {
+    background-color: #58bcc0;
+  }
+
+  .tt-form-error-inline {
+    min-height: 1.5rem;
+    font-size: 0.875rem;
+    color: #E86572;
+  }
+
+  .tt-empty-state {
+    border-radius: 0.5rem;
+    background-color: #ffffff;
+    padding: 2.5rem;
+    text-align: center;
+    font-size: 1.125rem;
+    color: #8392AE;
+  }
+
 }

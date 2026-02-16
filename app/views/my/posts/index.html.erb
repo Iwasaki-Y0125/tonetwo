@@ -4,10 +4,11 @@
 
     <% if @posts.any? %>
       <div class="tt-shadow-min overflow-hidden rounded-lg bg-white">
-        <%= render "my/posts/feed_page", posts: @posts, has_next: @has_next, next_path: @next_path %>
+        <%= render "my/posts/post_rows", posts: @posts %>
+        <%= render "my/posts/next_frame", has_next: @has_next, next_path: @next_path %>
       </div>
     <% else %>
-      <div class="tt-shadow-min rounded-lg bg-white p-10 text-center text-lg text-[#8392AE]">
+      <div class="tt-shadow-min tt-empty-state">
         投稿はまだありません。
       </div>
     <% end %>

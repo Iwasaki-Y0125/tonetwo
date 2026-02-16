@@ -1,3 +1,7 @@
+<%# タグがturbo_frame時に、投稿行と次ページトリガーだけ返す %>
+<%# つまり、2回目以降にpost_rowsでポストを描写し、次の読み込みのnext_frameを呼び出す %>
+
 <%= turbo_frame_tag "timeline_next" do %>
-  <%= render "timeline/feed_page", posts: posts, has_next: has_next, next_path: next_path %>
+  <%= render "timeline/post_rows", posts: posts %>
+  <%= render "timeline/next_frame", has_next: has_next, next_path: next_path %>
 <% end %>
