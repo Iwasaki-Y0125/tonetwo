@@ -1,57 +1,87 @@
-雑記
+# おすすめTL仕様メモ
 
-おすすめTL表示方法検討
+## MVP仕様
+- クエリ名は `SimilarTimelineQuery` とする。
+- 呼び出し元は `TimelineController#similar`。
+- おすすめ投稿の対象期間は自分/相手両方とも直近7日（処理の重さを考慮）
+- `visibility / reply_mode / share_scope / moderation_state` 条件は使わない（MVP未実装）
+- 候補条件は「1語以上一致 + sentiment_label一致」
+- 最終並びは `created_at DESC, id DESC`（新しい投稿が上、同時刻であればidが新しいほう）
+- termの一致語数は、おすすめTLへの仕様変更のため、現時点では保持しない。
 
-1. 直近7日・最新10件の自分の投稿を取る
-2. その10件と紐づくpost_termsからterms取り出す。termsにその投稿ごとのsentiment_labelをくっつける → seed は (term_id, sentiment_label) の集合になる
-3. seedのterm_idと一致する他ユーザーのpost_idをpost_termsから引き出す。その際にpostsからsentiment_labelも参照し、seedと一致するもののみcandidatesに格納する
-4. 新しい投稿順に並べる。
+## seed 空時の表示文言
+ケース別に表示文言を分ける。
 
-なんかもっとすっきりできる気もするが、スクール卒業日まで時間ないので、一旦これを前提のテーブル構成で行く。
+```text
+<!-- 直近7日投稿なし -->
+ここにはあなたの直近の投稿をもとに
+ほかユーザーの投稿表示がされます。
 
-SQL案メモ　未精査
-```sql
--- おすすめTL（単語×ポジネガ一致で候補抽出 → 新しい投稿順）
-WITH recent_posts AS (
-  -- 1. 直近7日・最新10件の自分の投稿
-  SELECT id, sentiment_label
-  FROM posts
-  WHERE user_id = :me
-    AND created_at >= (now() - interval '7 days')
-    AND moderation_state = 'visible'
-  ORDER BY created_at DESC
-  LIMIT 10
-),
-seed AS (
-  -- 2. 10件に含まれる term を取り出し、(term_id, sentiment_label) の集合にする
-  SELECT DISTINCT pt.term_id, rp.sentiment_label
-  FROM post_terms pt
-  JOIN recent_posts rp ON rp.id = pt.post_id
-),
-candidates AS (
-  -- 3. seed と term_id が一致する他ユーザー投稿を拾い、
-  --    posts.sentiment_label も seed と一致するものだけ候補にする
-  SELECT DISTINCT p.id AS post_id, p.created_at
-  FROM seed s
-  JOIN post_terms pt2
-    ON pt2.term_id = s.term_id
-  JOIN posts p
-    ON p.id = pt2.post_id
-   AND p.sentiment_label = s.sentiment_label
-  WHERE p.user_id <> :me
-    AND p.moderation_state = 'visible'
-    AND p.share_scope = 'all'
-    AND p.created_at >= (now() - interval '7 days')
-)
--- 4. 新しい投稿順に並べる
-SELECT post_id
-FROM candidates
-ORDER BY created_at DESC
-LIMIT 50;
+※直近の投稿がありません。
 
+<!-- 解析中: sentiment_label / post_terms 未確定の一時状態 -->
+ここにはあなたの直近の投稿をもとに
+ほかユーザーの投稿が表示されます。
+
+※おすすめを解析中です。反映までしばらくお待ちください。
+
+<!-- 解析済みだが seed なし -->
+ここにはあなたの直近の投稿をもとに
+ほかユーザーの投稿が表示されます。
+
+※投稿数が少ないため、おすすめを作成できません。
 ```
 
-  インデックス貼るか迷う。たぶん要らない。どうしても遅かったら試す。
-  - `index_posts_on_sentiment_label_share_scope_and_moderation_state_and_created_at`（おすすめTL表示用）
+## ActiveRecord案（現行スキーマ準拠）
+```ruby
+# similar TL（1語以上一致 + sentiment_label一致、新着順）
+window_from = 7.days.ago
 
-  post_termsにsentiment_labelを持たせることも考えたが、将来ポジネガ値調整後に再集計する場合に不整合がおこりそうなのでやめる。
+# recent_posts（自分の直近投稿）
+recent_posts = Post
+  .select(:id, :sentiment_label)
+  .where(user_id: me_id)
+  .where("posts.created_at >= ?", window_from)
+  .where.not(sentiment_label: nil)
+  .order(created_at: :desc, id: :desc)
+  .limit(10)
+
+# seedに中間テーブルを結合し、sentiment_label込みで集合を作る
+seed = PostTerm
+  # recent_posts（自分の直近投稿）に紐づく post_terms を結合して取る
+  .joins("INNER JOIN (#{recent_posts.to_sql}) recent_posts ON recent_posts.id = post_terms.post_id")
+  # (term_id, sentiment_label) の seed 集合を作る
+  .select("DISTINCT post_terms.term_id, recent_posts.sentiment_label AS sentiment_label")
+
+# seedと一致する中間テーブルと結合し、その中からsentiment_labelが一致、7日以内、自分を含めない投稿を新着順で取得
+candidates = Post
+  .joins(:post_terms)
+  .joins("INNER JOIN (#{seed.to_sql}) seed ON seed.term_id = post_terms.term_id")
+  .where("posts.sentiment_label = seed.sentiment_label")
+  .where.not(user_id: me_id)
+  .where("posts.created_at >= ?", window_from)
+  .select("DISTINCT posts.id, posts.created_at")
+  .order(created_at: :desc, id: :desc)
+
+# 候補IDのRelationを作る（重複投稿を除外）
+candidate_ids = candidates.select(:id).distinct
+
+# Post本体をIDで取り直し、TL順でページネータへ渡す
+scope = Post.where(id: candidate_ids).order(created_at: :desc, id: :desc)
+
+result = Posts::CursorPaginator.call(
+  scope: scope,
+  before_created_at: params[:before_created_at],
+  before_id: params[:before_id],
+  per_page: 20
+)
+```
+
+### 補足（ARとSQLの関係）
+- ARで書いても、最終的にはSQLに変換されてDBで実行される。
+- 性能は「生成されるSQL」が同じならほぼ同じ。
+- 実装時は `to_sql` と `EXPLAIN (ANALYZE, BUFFERS)` で確認する。
+
+## 補足
+- seedが空なら候補も0件になるため、上記のケース別案内文を出す。
+- `post_terms` に `sentiment_label` は持たせない（将来の再解析時の不整合回避）。

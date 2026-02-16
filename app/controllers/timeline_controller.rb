@@ -1,6 +1,26 @@
 class TimelineController < ApplicationController
   # 初回表示は20件、21件目があれば「次ページあり」と判定する。
   PER_PAGE = 20
+  SIMILAR_EMPTY_MESSAGES = {
+    no_recent_posts: [
+      "ここにはあなたの直近の投稿をもとに",
+      "ほかユーザーの投稿表示がされます。",
+      "",
+      "※直近の投稿がありません。"
+    ],
+    analyzing: [
+      "ここにはあなたの直近の投稿をもとに",
+      "ほかユーザーの投稿が表示されます。",
+      "",
+      "※おすすめを解析中です。反映までしばらくお待ちください。"
+    ],
+    no_seed: [
+      "ここにはあなたの直近の投稿をもとに",
+      "ほかユーザーの投稿が表示されます。",
+      "",
+      "※投稿数が少ないため、おすすめを作成できません。"
+    ]
+  }.freeze
 
   def index
     # 「今は全体タブがアクティブ」というビュー向けの状態フラグ
@@ -8,26 +28,20 @@ class TimelineController < ApplicationController
     # タイムラインに必要な投稿データを取得してインスタンス変数へセットする。
     load_feed!
 
-    # _next_frame.html.erb からのturbo_frameでリクエストされてるかチェック
-    return unless turbo_frame_request?
-
-    # 次ページのturbo_frameリクエストの場合は、部分テンプレートを返す。
-    render partial: "timeline/feed_chunk",
-           locals: { posts: @posts, has_next: @has_next, next_path: @next_path }
+    # turbo frame経由の追加読み込み時は、一覧部分だけ返す。def indexの場合は暗黙的にindexビューが呼ばれるため、return if は不要。
+    render_feed_chunk_if_turbo_frame!
   end
 
   def similar
-    # Issue #19時点ではUI先行のため、取得ロジックは全体TLと共通にしている。
-    # todo: おすすめTLのアルゴリズムができたら、ここを分岐させる。
+    # 「今はおすすめタブがアクティブ」というビュー向けの状態フラグ
     @active_tab = :similar
+    # タイムラインに必要な投稿データを取得してインスタンス変数へセットする。
     load_feed!
 
-    if turbo_frame_request?
-      render partial: "timeline/feed_chunk",
-             locals: { posts: @posts, has_next: @has_next, next_path: @next_path }
-    else
-      render :index
-    end
+    # turbo frame経由の追加読み込み時は、一覧部分だけ返す。（ render :index を明示しているので、return if が必要 ）
+    return if render_feed_chunk_if_turbo_frame!
+    # 初回にindexと同じビューを使うため明示
+    render :index
   end
 
   private
@@ -39,8 +53,8 @@ class TimelineController < ApplicationController
     # app/services/posts/cursor_paginator.rb を呼び出して、投稿のページネーションを行う。
     # created_at降順 + id降順を固定。同時刻投稿でも順序がぶれないようにする。
     result = Posts::CursorPaginator.call(
-      # タイムライン全体の投稿を対象にする（実際のpostが入っているわけではなく、クエリのための範囲指定の指示だけがはいっているイメージ。なので、処理重くならない）
-      scope: Post.order(created_at: :desc, id: :desc),
+      # 一覧の取得条件はタブごとに切り替える。
+      scope: feed_scope,
       # 次ページの取得に必要なカーソル時刻を前回のリクエストから取得する（初回はnil）
       before_created_at: params[:before_created_at],
       # 次ページの取得に必要なカーソルIDを前回のリクエストから取得する（初回はnil）
@@ -58,6 +72,27 @@ class TimelineController < ApplicationController
     @posts = result.posts
     @has_next = result.has_next
     @next_path = build_next_path(result.last_post) if @has_next && result.last_post.present?
+  end
+
+  # 投稿の取得条件を返す。タブごとに条件が異なるため、現在のアクティブタブに応じて切り替える。
+  def feed_scope
+    # 全体タイムラインは全ユーザーの投稿を取得するスコープを返す。
+    return Post.order(created_at: :desc, id: :desc) unless @active_tab == :similar
+
+    # おすすめタイムラインは Posts::SimilarTimelineQuery を呼び出して、状態と投稿のスコープを取得する。
+    similar_result = Posts::SimilarTimelineQuery.call(user: Current.user)
+    @similar_state = similar_result.state
+    @empty_state_lines = SIMILAR_EMPTY_MESSAGES[@similar_state]
+    similar_result.scope
+  end
+
+  # turbo frame経由のアクセスかどうかを判定し、turbo frameなら投稿一覧部分のHTMLを返す。通常アクセスなら何もしない。
+  def render_feed_chunk_if_turbo_frame!
+    return false unless turbo_frame_request?
+
+    render partial: "timeline/feed_chunk",
+           locals: { posts: @posts, has_next: @has_next, next_path: @next_path }
+    true
   end
 
   # 次ページのURLを生成する。現在のタブに応じてパスを切り替える。
