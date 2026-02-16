@@ -96,9 +96,9 @@ class TimelineController < ApplicationController
     partial_name = request.headers["Turbo-Frame"] == "timeline_feed" ? "timeline/feed" : "timeline/feed_chunk"
     render partial: partial_name,
            locals: { posts: @posts, has_next: @has_next, next_path: @next_path, active_tab: @active_tab,
-                    #  おすすめTL用の状態表示に必要なローカル変数も渡す
+                     #  おすすめTL用の状態表示に必要なローカル変数も渡す
                      empty_state_lines: @empty_state_lines, similar_state: @similar_state,
-                    #  おすすめTLの解析中状態をポーリングで監視するためのインターバル値も渡す
+                     #  おすすめTLの解析中状態をポーリングで監視するためのインターバル値も渡す
                      similar_polling_interval_ms: SIMILAR_POLLING_INTERVAL_MS }
     true
   end
