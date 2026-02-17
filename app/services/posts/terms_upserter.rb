@@ -4,6 +4,8 @@ module Posts
   class TermsUpserter
     def self.call(post_id:, terms:)
       terms = Array(terms).map(&:to_s).map(&:strip).reject(&:empty?).uniq
+      excluded_terms = MatchingExclusionTerm.where(term: terms).pluck(:term)
+      terms -= excluded_terms
       return if terms.empty?
 
       now = Time.current

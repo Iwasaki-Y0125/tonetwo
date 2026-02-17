@@ -1,17 +1,17 @@
-# script/backfill_post_terms.rb
+# script/backfill/backfill_post_terms.rb
 # frozen_string_literal: true
 
 # ---------- 使用コマンド例 ----------
 # make exec
 
 # *試運転
-# DRY_RUN=1 BATCH=500 bin/rails runner script/backfill_post_terms.rb
+# DRY_RUN=1 BATCH=500 bin/rails runner script/backfill/backfill_post_terms.rb
 
 # *本番
-# BATCH=500 bin/rails runner script/backfill_post_terms.rb
+# BATCH=500 bin/rails runner script/backfill/backfill_post_terms.rb
 
 # *途中から再開するとき
-# FROM_ID=10001 BATCH=500 bin/rails runner script/backfill_post_terms.rb
+# FROM_ID=10001 BATCH=500 bin/rails runner script/backfill/backfill_post_terms.rb
 
 #------------------------------------
 
@@ -20,13 +20,15 @@
 require "set"
 
 BATCH = ENV.fetch("BATCH", "500").to_i
-FROM_ID = ENV["FROM_ID"]&.to_i
-TO_ID   = ENV["TO_ID"]&.to_i
+FROM_ID = ENV["FROM_ID"].presence&.to_i
+TO_ID   = ENV["TO_ID"].presence&.to_i
 DRY_RUN = ENV["DRY_RUN"].present?
 
 puts "[backfill] start BATCH=#{BATCH} FROM_ID=#{FROM_ID.inspect} TO_ID=#{TO_ID.inspect} DRY_RUN=#{DRY_RUN}"
 
-extractor = Mecab::NounExtractor.new
+analyzer = Mecab::Analyzer.new
+extractor = Mecab::NounExtractor.new(analyzer: analyzer)
+excluded_terms = MatchingExclusionTerm.pluck(:term).to_set
 
 scope = Post.order(:id)
 scope = scope.where("id >= ?", FROM_ID) if FROM_ID
@@ -44,7 +46,12 @@ scope.in_batches(of: BATCH) do |rel|
   all_terms = Set.new
 
   rows.each do |post_id, body|
-    nouns = extractor.call(body).uniq
+    nouns = extractor.call(body)
+                     .map(&:to_s)
+                     .map(&:strip)
+                     .reject(&:empty?)
+                     .reject { |term| excluded_terms.include?(term) }
+                     .uniq
     noun_by_post[post_id] = nouns
     nouns.each { |t| all_terms << t }
   end
