@@ -6,7 +6,7 @@ module Sentiment
 
     # 否定の基本形 (否定検出は tokens 全体を見る)
     NEGATION_BASES = %w[
-      ない ぬ ず ん
+      ない ぬ ず
       ません ないです ないだ
       ないだろ ないだろう ないでしょう
       まい
@@ -160,12 +160,7 @@ module Sentiment
     def negation_token?(t)
       base = t[:base].to_s
       surf = t[:surface].to_s
-      pos  = t[:pos].to_s
-
       NEGATION_BASES.include?(base) || NEGATION_BASES.include?(surf)
-
-      # 「ん」は助動詞のときだけ否定扱い
-      (base == "ん" || surf == "ん") && pos == "助動詞"
     end
 
     # 否定反転処理（フレーズ対応）

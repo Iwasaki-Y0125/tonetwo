@@ -52,6 +52,41 @@ class Posts::AnalyzePostTest < ActiveSupport::TestCase
     end
   end
 
+  test "matching_exclusion_terms に含まれる語はtermsに保存しない" do
+    post = Post.create!(user: users(:one), body: "今日は映画が楽しい")
+    MatchingExclusionTerm.create!(term: "映画")
+
+    analyzer = Class.new do
+      def tokens(_text)
+        [
+          { surface: "今日", base: "今日", pos: "名詞" },
+          { surface: "楽しい", base: "楽しい", pos: "形容詞" }
+        ]
+      end
+    end.new
+    noun_extractor = Struct.new(:nouns) do
+      def call(_text)
+        nouns
+      end
+    end.new([ "今日", "映画" ])
+    sentiment_scorer = Struct.new(:result) do
+      def score_tokens(_tokens)
+        result
+      end
+    end.new({ mean: 0.1 })
+
+    with_singleton_method_stub(Mecab::Analyzer, :new, analyzer) do
+      with_singleton_method_stub(Mecab::NounExtractor, :new, noun_extractor) do
+        with_replaced_constant(:SENTIMENT_SCORER, sentiment_scorer) do
+          Posts::AnalyzePost.call(post_id: post.id)
+
+          post.reload
+          assert_equal [ "今日" ], post.terms.order(:term).pluck(:term)
+        end
+      end
+    end
+  end
+
   private
 
   def with_replaced_constant(name, value)
