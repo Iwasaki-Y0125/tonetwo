@@ -8,13 +8,13 @@ class PostsFlowTest < ActionDispatch::IntegrationTest
     FilterTerm.delete_all
   end
 
-  test "ログイン済みユーザーは投稿画面を表示できる" do
+  test "ログイン済みユーザーはタイムラインで投稿フォームを表示できる" do
     sign_in_as(users(:one))
 
-    get new_post_path
+    get timeline_path
 
     assert_response :success
-    assert_select "h1", "投稿作成"
+    assert_select "form[action='#{posts_path}'] textarea[name='post[body]']"
   end
 
   test "prohibit語が含まれる場合は投稿できずエラーを表示する" do
