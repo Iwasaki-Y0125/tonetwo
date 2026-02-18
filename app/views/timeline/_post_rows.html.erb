@@ -6,15 +6,28 @@
 
   <%# 自分の投稿だけ詳細ページへ遷移できるようにする。 %>
   <% if post.user_id == Current.user.id %>
-    <%= link_to my_post_path(post), class: "tt-post-row tt-post-row-link group block", aria: { label: "自分の投稿詳細へ" } do %>
-      <p class="tt-post-meta"><%= posted_at_label %></p>
-      <p class="tt-post-body"><%= post.body.to_s.strip %></p>
+    <%= link_to my_post_path(post),
+                class: "tt-post-row tt-post-row-link group",
+                data: { turbo_frame: "_top" },
+                aria: { label: "自分の投稿詳細へ" } do %>
+      <div class="min-w-0 flex-1">
+        <p class="tt-post-meta"><%= posted_at_label %></p>
+        <p class="tt-post-body"><%= post.body.to_s.strip %></p>
+      </div>
+
+      <span class="tt-post-row-icon shrink-0">
+        <%= image_tag "icons/arrow_circle_right.svg", alt: "", class: "h-8 w-8 tt-post-arrow-icon", aria: { hidden: true } %>
+      </span>
     <% end %>
   <% else %>
     <%# 他ユーザー投稿は閲覧のみ（リンクなし）。 %>
     <article class="tt-post-row">
-      <p class="tt-post-meta"><%= posted_at_label %></p>
-      <p class="tt-post-body"><%= post.body.to_s.strip %></p>
+      <div class="min-w-0 flex-1">
+        <p class="tt-post-meta"><%= posted_at_label %></p>
+        <p class="tt-post-body"><%= post.body.to_s.strip %></p>
+      </div>
+
+      <span class="tt-post-row-icon h-8 w-8 shrink-0" aria-hidden="true"></span>
     </article>
   <% end %>
 <% end %>

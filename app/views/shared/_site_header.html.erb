@@ -1,14 +1,39 @@
-<header class="fixed inset-x-0 top-0 z-30 bg-white border-b border-base-300">
-  <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-    <%= link_to root_path, class: "inline-flex items-center" do %>
-      <%= image_tag "Logo.svg", alt: "ToneTwo", class: "h-8 w-auto" %>
-    <% end %>
+<header class="fixed inset-x-0 top-0 z-30 bg-white">
+  <div class="tt-shell">
+    <div class="flex h-[56px] items-center justify-between lg:hidden">
+      <%= link_to root_path, class: "inline-flex h-9 items-center justify-center" do %>
+        <%= image_tag "Logo.svg", alt: "ToneTwo", class: "block h-6 w-auto" %>
+      <% end %>
 
-    <% if authenticated? %>
-      <%= link_to "ログアウト",
-                  session_path,
-                  data: { turbo_method: :delete },
-                  class: "btn mr-40 h-10 min-h-10 bg-white border-[#D1D5DB] text-[#6B7280] hover:bg-[#F9FAFB] hover:border-[#D1D5DB] hover:text-[#6B7280] shadow-none" %>
-    <% end %>
+      <% if authenticated? %>
+        <%= link_to "ログアウト",
+                    session_path,
+                    data: { turbo_method: :delete },
+                    class: "btn btn-outline h-8 min-h-8 px-3 border border-[#D7DCE3] text-[#A5ACB8] hover:border-[#C2C9D2] hover:bg-[#C2C9D2] hover:text-[#ffffff]" %>
+      <% end %>
+    </div>
+
+    <div class="hidden h-[56px] lg:grid lg:grid-cols-12 lg:gap-8">
+      <div class="lg:col-span-3 lg:flex lg:items-center">
+        <div class="ml-auto w-[200px]">
+          <%= link_to root_path, class: "inline-flex h-9 items-center justify-center" do %>
+            <%= image_tag "Logo.svg", alt: "ToneTwo", class: "block h-6 w-auto" %>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="lg:col-span-9 lg:flex lg:items-center">
+        <div class="w-full max-w-[540px]">
+          <% if authenticated? %>
+            <div class="flex justify-end">
+              <%= link_to "ログアウト",
+                          session_path,
+                          data: { turbo_method: :delete },
+                          class: "btn btn-outline h-8 min-h-8 px-3 border border-[#D7DCE3] text-[#A5ACB8] hover:border-[#C2C9D2] hover:bg-[#C2C9D2] hover:text-[#ffffff]" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
   </div>
 </header>

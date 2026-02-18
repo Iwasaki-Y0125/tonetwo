@@ -19,11 +19,11 @@ class PostsControllerTest < ActionController::TestCase
 
     5.times do |index|
       post :create, params: { post: { body: "通常投稿#{index}" } }
-      assert_redirected_to timeline_path
+      assert_redirected_to similar_timeline_path
     end
 
     post :create, params: { post: { body: "通常投稿6回目" } }
-    assert_redirected_to new_post_path
+    assert_redirected_to similar_timeline_path
     assert_equal "投稿回数が上限に達しました。時間をおいて再度お試しください。", flash[:alert]
     assert_equal 1, throttle_events.size
     assert_equal "rails_rate_limit", throttle_events.first[:layer]
@@ -35,16 +35,16 @@ class PostsControllerTest < ActionController::TestCase
   test "3分経過後はPOST /postsのrate_limitが解除される" do
     5.times do |index|
       post :create, params: { post: { body: "制限テスト#{index}" } }
-      assert_redirected_to timeline_path
+      assert_redirected_to similar_timeline_path
     end
 
     post :create, params: { post: { body: "制限中投稿" } }
-    assert_redirected_to new_post_path
+    assert_redirected_to similar_timeline_path
     assert_equal "投稿回数が上限に達しました。時間をおいて再度お試しください。", flash[:alert]
 
     travel 3.minutes + 1.second do
       post :create, params: { post: { body: "解除後投稿" } }
-      assert_redirected_to timeline_path
+      assert_redirected_to similar_timeline_path
     end
   end
 

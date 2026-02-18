@@ -3,7 +3,9 @@ Rails.application.routes.draw do
   resource :sign_up, only: %i[new create]
   get "timeline", to: "timeline#index", as: :timeline
   get "timeline/similar", to: "timeline#similar", as: :similar_timeline
-  resources :posts, only: %i[new create]
+  # TODO(UI): 将来的に個別投稿ページを再導入する場合は :new を戻す。
+  # resources :posts, only: %i[new create]
+  resources :posts, only: %i[create]
   namespace :my do
     resources :posts, only: %i[index show]
   end

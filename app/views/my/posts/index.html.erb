@@ -1,14 +1,14 @@
 <main class="min-h-screen">
-  <section class="max-w-xl mx-auto px-8 py-16">
-    <h1 class="text-3xl font-bold mb-8 text-[#3A486D]">自分の投稿一覧</h1>
+  <section class="w-full max-w-[540px] pt-0 pb-12">
+    <h1 class="text-xl font-medium mb-6 text-[#3A486D]">自分の投稿一覧</h1>
 
     <% if @posts.any? %>
-      <div class="tt-shadow-min overflow-hidden rounded-lg bg-white">
+      <div class="tt-surface overflow-hidden">
         <%= render "my/posts/post_rows", posts: @posts %>
         <%= render "my/posts/next_frame", has_next: @has_next, next_path: @next_path %>
       </div>
     <% else %>
-      <div class="tt-shadow-min tt-empty-state">
+      <div class="tt-empty-state">
         投稿はまだありません。
       </div>
     <% end %>
