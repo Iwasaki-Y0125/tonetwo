@@ -1,6 +1,6 @@
 <main class="min-h-screen">
   <section class="max-w-md mx-auto px-6 py-16">
-    <h1 class="text-4xl font-bold mb-10">ユーザー登録</h1>
+    <h1 class="text-4xl font-medium mb-10">ユーザー登録</h1>
 
     <% if flash[:alert] %>
       <div class="alert alert-error mb-6">
@@ -74,7 +74,7 @@
                              },
                              "1",
                              "0" %>
-          <span class="label-text text-sm text-left leading-relaxed">
+          <span class="label-text text-sm text-left leading-relaxed font-semibold">
             利用規約およびプライバシーポリシーに同意する
           </span>
         </label>
@@ -99,7 +99,7 @@
       <div class="pt-2 flex justify-center">
         <%= form.submit "登録する",
                         disabled: true,
-                        class: "btn btn-brand btn-sign-up-submit w-36 h-48px px-6",
+                        class: "btn btn-primary w-36 h-48px px-6",
                         data: { sign_up_submit_target: "submit" } %>
       </div>
     <% end %>

@@ -1,20 +1,273 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
-@font-face {
-  font-family: "Noto Sans JP";
-  src: url("NotoSansJP-Regular.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+@plugin "daisyui/theme" {
+  name: "pastel";
+  default: false;
+  prefersdark: false;
+  color-scheme: "light";
+  --color-base-100: oklch(100% 0 0);
+  --color-base-200: oklch(98% 0 0);
+  --color-base-300: oklch(92% 0.013 255.508);
+  --color-base-content: oklch(37% 0.044 257.287);
+  --color-primary: #68CBCE;
+  --color-primary-content: #ffffff;
+  --color-secondary: oklch(89% 0.058 10.001);
+  --color-secondary-content: oklch(51% 0.222 16.935);
+  --color-accent: oklch(94% 0.129 101.54);
+  --color-accent-content: oklch(50% 0.118 165.612);
+  --color-neutral: oklch(55% 0.046 257.417);
+  --color-neutral-content: oklch(96% 0.007 247.896);
+  --color-info: oklch(91% 0.08 205.041);
+  --color-info-content: oklch(52% 0.105 223.128);
+  --color-success: oklch(77% 0.152 181.912);
+  --color-success-content: oklch(38% 0.063 188.416);
+  --color-warning: oklch(75% 0.183 55.934);
+  --color-warning-content: oklch(40% 0.123 38.172);
+  --color-error: oklch(70% 0.191 22.216);
+  --color-error-content: oklch(39% 0.141 25.723);
+  --radius-selector: 1rem;
+  --radius-field: 2rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1.5px;
+  --depth: 0;
+  --noise: 0;
 }
 
-@font-face {
-  font-family: "Noto Sans JP";
-  src: url("NotoSansJP-Bold.ttf") format("truetype");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 400 !important;
+  }
+
+  a {
+    color: #6AA4CF;
+    transition: color 300ms ease, background-color 300ms ease, border-color 300ms ease;
+  }
+}
+
+@layer components {
+  .alert.alert-error {
+    color: #ffffff;
+  }
+
+  .alert.alert-error :is(span, p, li, a, button) {
+    color: inherit;
+  }
+
+  .tt-shell {
+    @apply mx-auto w-full max-w-[1120px] px-4 lg:px-6;
+  }
+
+  .tt-surface {
+    @apply rounded-[1rem] border border-base-300 bg-base-100;
+  }
+
+  .tt-empty-state {
+    @apply rounded-[1rem] border border-base-300 bg-base-100 px-8 py-10 text-base text-base-content/70;
+  }
+
+  .tt-post-form-card {
+    @apply rounded-[1rem] border border-base-300 bg-base-100 px-5 py-4;
+  }
+
+  .tt-post-textarea {
+    @apply block min-h-0 w-full resize-none overflow-y-hidden overflow-x-visible border-0 bg-transparent px-0 py-1 text-sm text-base-content leading-6 placeholder:text-base-content/40 focus:outline-none;
+    max-inline-size: min(27em, 100%);
+  }
+
+  .tt-form-error-inline {
+    @apply min-h-6 text-sm text-secondary-content;
+  }
+
+  .tt-form-counter {
+    @apply text-xs text-base-content/55 tabular-nums;
+    line-height: 1;
+  }
+
+  .tt-form-counter-over {
+    @apply text-error;
+  }
+
+  .tt-post-row {
+    @apply relative flex items-start gap-4 px-6 pt-6 pb-10 pr-16;
+  }
+
+  .tt-post-row + .tt-post-row {
+    @apply border-t border-base-300;
+  }
+
+  .tt-post-row-link {
+    @apply transition-colors duration-300 ease-out;
+  }
+
+  .tt-post-row-link:hover {
+    background-color: color-mix(in oklab, var(--color-base-content) 4%, transparent);
+  }
+
+  .tt-post-row-link:active {
+    background-color: color-mix(in oklab, var(--color-base-content) 7%, transparent);
+  }
+
+  .tt-post-row-link:focus-visible {
+    outline: 1px solid color-mix(in oklab, var(--color-base-content) 14%, transparent);
+    outline-offset: -1px;
+  }
+
+  .tt-post-row-icon {
+    @apply absolute right-8 bottom-6;
+  }
+
+  .tt-post-arrow-icon {
+    filter: grayscale(1) brightness(1.02);
+  }
+
+  .tt-post-meta {
+    @apply text-right text-xs text-base-content/55;
+    position: relative;
+    right: -1.5rem;
+  }
+
+  .tt-post-body {
+    @apply mt-2 whitespace-pre-wrap break-words text-sm leading-6 text-base-content;
+    max-inline-size: min(27em, 100%);
+  }
+
+  .tt-side-nav-link:active {
+    color: inherit !important;
+    background-color: color-mix(in oklab, var(--color-base-content) 10%, transparent) !important;
+    background-image: none !important;
+    box-shadow: none !important;
+  }
+
+  .tt-side-nav-link {
+    color: inherit !important;
+    transition: color 300ms ease, background-color 300ms ease, box-shadow 300ms ease;
+    border-radius: 0.75rem !important;
+    padding-inline: 1rem !important;
+    padding-block: 0.625rem !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    line-height: normal;
+  }
+
+  .tt-side-nav-link-active {
+    color: color-mix(in oklab, var(--color-base-content) 70%, transparent) !important;
+    background-color: var(--color-base-100) !important;
+  }
+
+  .tt-nav-soft {
+    background-color: color-mix(in oklab, var(--color-base-content) 8%, var(--color-base-100));
+    border-radius: 1rem;
+    padding: 0.25rem;
+  }
+
+  .tt-nav-soft > .menu {
+    padding: 0;
+  }
+
+  .tt-help-trigger {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .tt-subtle-outline-btn {
+    border-width: 1px !important;
+    border-color: #c5cdd9 !important;
+    color: #8d97a8 !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    transition: color 300ms ease, background-color 300ms ease, border-color 300ms ease !important;
+  }
+
+  .tt-subtle-outline-btn:hover {
+    border-color: #b2bbca !important;
+    background-color: #b2bbca !important;
+    color: #ffffff !important;
+  }
+
+  .tt-tabs-soft {
+    background-color: color-mix(in oklab, var(--color-base-content) 8%, var(--color-base-100)) !important;
+    border-radius: 1rem;
+    padding: 0.25rem;
+    align-items: center;
+    overflow: hidden;
+    box-shadow: none !important;
+    --tab-height: 2.25rem;
+  }
+
+  .tt-tabs-soft > .tab {
+    border-radius: 9999px;
+    height: 2.25rem;
+    min-height: 2.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin: 0;
+    transition: none;
+    background-color: transparent;
+    box-shadow: none !important;
+  }
+
+  .tt-tabs-soft > .tab:is(.tab-active, [aria-selected="true"], [aria-current="true"], [aria-current="page"], input:checked, label:has(:checked)) {
+    background-color: var(--color-base-100) !important;
+    box-shadow: none !important;
+    color: var(--color-base-content);
+  }
+
+  .tt-help-badge {
+    background-color: var(--color-base-100);
+    border: 1px solid color-mix(in oklab, var(--color-base-content) 10%, var(--color-base-100));
+    color: color-mix(in oklab, var(--color-base-content) 45%, var(--color-base-100));
+  }
+
+  .tt-help-popover {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 50%;
+    z-index: 20;
+    width: max-content;
+    max-width: 20rem;
+    transform: translateX(-50%);
+    border-radius: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: #45566f;
+    color: #ffffff;
+    text-align: left;
+    white-space: normal;
+    font-weight: 400;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+  }
+
+  .tt-help-popover::before {
+    content: "";
+    position: absolute;
+    top: -0.35rem;
+    left: 50%;
+    width: 0.7rem;
+    height: 0.7rem;
+    transform: translateX(-50%) rotate(45deg);
+    background: #45566f;
+  }
+
+  .tt-help-trigger:hover .tt-help-popover,
+  .tt-help-trigger:focus-visible .tt-help-popover,
+  .tt-help-trigger:focus-within .tt-help-popover {
+    opacity: 1;
+    visibility: visible;
+  }
 }
 
 /* ここでスキャン対象を明示 */
@@ -22,314 +275,3 @@
 @source "../helpers/**/*.rb";
 @source "../javascript/**/*.js";
 @source "../assets/stylesheets/**/*.css";
-
-@layer base {
-  :root {
-    --tt-bg: #F0EEE9;
-    --tt-text: #3A486D;
-    --tt-link: #4E90C2;
-    --tt-brand: #68CBCE;
-  }
-
-  body {
-    background-color: var(--tt-bg);
-    color: var(--tt-text);
-    font-family: "Noto Sans JP", sans-serif;
-  }
-
-  /* 固定ヘッダー分を確保し、スクロール時に先頭が隠れないようにする */
-  html {
-    scroll-padding-top: 5rem;
-  }
-
-  /* 固定ヘッダー採用時の基準高さ。main.min-h-screen の過剰分を防ぐ。 */
-  main.min-h-screen {
-    min-height: calc(100dvh - 5rem);
-  }
-
-  a {
-    color: var(--tt-link);
-  }
-}
-
-@layer components {
-  .btn-brand {
-    --btn-color: var(--tt-brand);
-    --btn-fg: #ffffff;
-    background-color: var(--tt-brand) !important;
-    border-color: var(--tt-brand) !important;
-    color: #ffffff !important;
-    box-shadow: 0 1.5px 0 rgba(0, 0, 0, 0.16) !important;
-  }
-
-  .btn-brand:hover {
-    --btn-color: #58bcc0;
-    background-color: #58bcc0 !important;
-    border-color: #58bcc0 !important;
-    box-shadow: 0 1.5px 0 rgba(0, 0, 0, 0.16) !important;
-  }
-
-  /* 影の見た目を最小で統一するための共通クラス */
-  .tt-shadow-min {
-    box-shadow: 0 1.5px 0 rgba(0, 0, 0, 0.16) !important;
-  }
-
-  /* btn-brand の !important より強く disabled 見た目を固定する */
-  .btn-sign-up-submit:disabled,
-  .btn-sign-up-submit[disabled] {
-    background-color: #D1D5DB !important;
-    border-color: #D1D5DB !important;
-    color: rgba(58, 72, 109, 0.55) !important;
-    box-shadow: none !important;
-    pointer-events: auto !important;
-    cursor: not-allowed !important;
-  }
-
-  .btn-sign-up-submit:disabled:hover,
-  .btn-sign-up-submit:disabled:active,
-  .btn-sign-up-submit[disabled]:hover,
-  .btn-sign-up-submit[disabled]:active {
-    transform: none !important;
-    translate: 0 0 !important;
-    box-shadow: none !important;
-  }
-}
-
-/* DaisyUI(light) の既定色を上書きして、全ページで同じ4色を再利用する */
-@layer utilities {
-  :root,
-  [data-theme="light"] {
-    --color-base-100: #F0EEE9;
-    --color-base-content: #3A486D;
-    --color-primary: #68CBCE;
-    --color-primary-content: #ffffff;
-  }
-
-  body {
-    background-color: var(--tt-bg) !important;
-    color: var(--tt-text) !important;
-  }
-
-  a:not(.btn):not(.side-nav-link):not(.tt-tab-link) {
-    color: var(--tt-link) !important;
-  }
-}
-
-@layer components {
-  .alert-error {
-    background-color: #ffd7de !important;
-    border-color: #f3a9b6 !important;
-    color: var(--tt-text) !important;
-  }
-
-  .input-plain {
-    border-color: transparent !important;
-    box-shadow: none !important;
-    outline: none !important;
-  }
-
-  .input-plain:focus,
-  .input-plain:focus-visible {
-    border-color: transparent !important;
-    box-shadow: none !important;
-    outline: none !important;
-  }
-
-  .textarea-plain {
-    border-color: transparent !important;
-    box-shadow: none !important;
-    outline: none !important;
-  }
-
-  .textarea-plain:focus,
-  .textarea-plain:focus-visible {
-    border-color: transparent !important;
-    box-shadow: none !important;
-    outline: none !important;
-  }
-
-  /* 吹き出し投稿ボタンの影 */
-  .tt-postbtn-sticker {
-    transition: filter 150ms ease;
-    filter: drop-shadow(0 1.5px 0 rgba(0, 0, 0, 0.16));
-  }
-
-  .side-nav-link:hover .tt-postbtn-sticker {
-    filter: brightness(0.95) drop-shadow(0 1.5px 0 rgba(0, 0, 0, 0.16));
-  }
-
-  /* ヘルプアイコン上だけで説明吹き出しを出し、タブ全体hoverでは出さない。 */
-  .tt-help-trigger {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .tt-help-popover {
-    position: absolute;
-    right: -0.5rem;
-    top: calc(100% + 0.5rem);
-    width: 19rem;
-    padding: 0.65rem 0.75rem;
-    border: 1px solid #D9E3EA;
-    border-radius: 0.5rem;
-    background: #ffffff;
-    color: #3A486D;
-    font-size: 0.75rem;
-    line-height: 1.5;
-    box-shadow: 0 4px 16px rgba(58, 72, 109, 0.18);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(0.25rem);
-    transition: opacity 120ms ease, transform 120ms ease, visibility 120ms ease;
-    white-space: normal;
-    pointer-events: none;
-    z-index: 60;
-  }
-
-  .tt-help-popover::after {
-    content: "";
-    position: absolute;
-    right: 0.6rem;
-    bottom: 100%;
-    width: 0;
-    height: 0;
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
-    border-bottom: 7px solid #ffffff;
-  }
-
-  .tt-help-trigger:hover .tt-help-popover,
-  .tt-help-trigger:focus-within .tt-help-popover {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-  }
-
-  /* 投稿一覧/詳細で共通利用する表示スタイル */
-  .tt-post-row {
-    border-bottom: 1px solid #EEF2F7;
-    padding: 2rem;
-  }
-
-  .tt-post-row:last-child {
-    border-bottom: 0;
-  }
-
-  .tt-post-row-link {
-    transition: background-color 150ms ease;
-  }
-
-  .tt-post-row-link:hover {
-    background-color: #F9FBFD;
-  }
-
-  .tt-post-meta {
-    text-align: right;
-    font-size: 0.75rem;
-    letter-spacing: 0.025em;
-    color: #8896B2;
-  }
-
-  .tt-post-body {
-    margin-top: 0.75rem;
-    white-space: pre-wrap;
-    overflow-wrap: break-word;
-    font-size: 0.875rem;
-    line-height: 1.5rem;
-    color: #3A486D;
-  }
-
-  /* タイムライン画面のタブ/投稿フォームの共通スタイル */
-  .tt-tab-list {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.25rem;
-    border: 1px solid rgba(255, 255, 255, 0.7);
-    border-radius: 1rem;
-    background-color: rgba(255, 255, 255, 0.65);
-    padding: 0.25rem;
-    backdrop-filter: blur(4px);
-  }
-
-  .tt-tab-base {
-    display: flex;
-    height: 3rem;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.75rem;
-    font-size: 1rem;
-    font-weight: 600;
-    text-decoration: none;
-    transition: background-color 150ms ease, color 150ms ease;
-  }
-
-  .tt-tab-active {
-    background-color: #68CBCE;
-    color: #ffffff !important;
-    box-shadow: 0 1.5px 0 rgba(0, 0, 0, 0.16);
-  }
-
-  .tt-tab-inactive {
-    background-color: transparent;
-    color: #858EA6;
-  }
-
-  .tt-tab-inactive:hover {
-    background-color: #eef7f8;
-  }
-
-  .tt-post-form-card {
-    border-radius: 0.25rem;
-    background-color: #ffffff;
-    padding: 0.75rem;
-  }
-
-  .tt-post-textarea {
-    min-height: 0 !important;
-    width: 100%;
-    resize: none;
-    overflow: hidden;
-    border: 0;
-    background: transparent;
-    padding: 0;
-    font-size: 0.875rem;
-    line-height: 1.5rem;
-    color: #3A486D;
-  }
-
-  .tt-post-submit {
-    display: inline-flex;
-    height: 2rem;
-    min-height: 0;
-    align-items: center;
-    border: 0;
-    border-radius: 9999px;
-    background-color: #68CBCE;
-    padding: 0 2rem;
-    font-size: 1rem;
-    font-weight: 400;
-    color: #ffffff;
-  }
-
-  .tt-post-submit:hover {
-    background-color: #58bcc0;
-  }
-
-  .tt-form-error-inline {
-    min-height: 1.5rem;
-    font-size: 0.875rem;
-    color: #E86572;
-  }
-
-  .tt-empty-state {
-    border-radius: 0.5rem;
-    background-color: #ffffff;
-    padding: 2.5rem;
-    text-align: center;
-    font-size: 1.125rem;
-    color: #8392AE;
-  }
-
-}

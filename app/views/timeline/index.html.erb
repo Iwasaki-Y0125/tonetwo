@@ -1,25 +1,26 @@
 <main class="min-h-screen">
-  <section class="mx-auto max-w-xl px-8 py-12">
+  <section class="w-full max-w-[540px] pt-0 pb-12">
     <div class="mb-5">
-      <div role="tablist" class="tt-tab-list">
+      <div role="tablist" class="tabs tabs-box tt-tabs-soft w-full overflow-visible">
         <%= link_to "全体",
                     timeline_path,
                     role: "tab",
+                    "aria-selected": (@active_tab == :all).to_s,
                     class: [
-                      "tt-tab-link tt-tab-base",
-                      (@active_tab == :all ? "tt-tab-active" : "tt-tab-inactive")
+                      "tab flex-1 justify-center gap-2 overflow-visible font-medium text-base-content/70",
+                      (@active_tab == :all ? "tab-active" : nil)
                     ] %>
 
         <%= link_to similar_timeline_path,
                     role: "tab",
+                    "aria-selected": (@active_tab == :similar).to_s,
                     class: [
-                      "tt-tab-link tt-tab-base gap-2",
-                      (@active_tab == :similar ? "tt-tab-active" : "tt-tab-inactive")
+                      "tab flex-1 justify-center gap-2 overflow-visible font-medium text-base-content/70",
+                      (@active_tab == :similar ? "tab-active" : nil)
                     ] do %>
           <span>おすすめ</span>
-          <% help_icon = (@active_tab == :similar ? "icons/help_white.svg" : "icons/help.svg") %>
-          <span class="tt-help-trigger" aria-label="おすすめ表示の説明">
-            <%= image_tag help_icon, alt: "", class: "h-5 w-5", aria: { hidden: true } %>
+          <span class="tt-help-trigger" aria-label="おすすめ表示の説明" tabindex="0">
+            <span class="tt-help-badge inline-flex size-5 items-center justify-center rounded-full text-[11px] leading-none">?</span>
             <span class="tt-help-popover" role="tooltip">
               あなたの直近の投稿の文章から<br>
               話題（例：趣味、仕事、勉強など）<br>
@@ -46,18 +47,18 @@
                            required: true,
                            rows: 1,
                            class: "textarea-plain tt-post-textarea",
-                           placeholder: "今どんな感じ？",
+                           placeholder: "今どんな感じ？（140字以内）",
                            data: {
                              post_body_length_target: "input",
                              auto_grow_textarea_target: "field",
                              action: "input->post-body-length#check input->auto-grow-textarea#resize"
                            } %>
-        <div class="mt-2 flex justify-end">
-          <%= form.submit "投稿", class: "tt-post-submit" %>
+        <div class="mt-2 flex items-end gap-3">
+          <p class="tt-form-error-inline invisible flex-1" data-post-body-length-target="message" aria-live="polite"></p>
+          <p class="tt-form-counter" data-post-body-length-target="counter" aria-live="polite">0/140</p>
+          <%= form.submit "投稿", class: "btn btn-primary", data: { post_body_length_target: "submit" } %>
         </div>
       </div>
-
-      <p class="tt-form-error-inline invisible" data-post-body-length-target="message" aria-live="polite"></p>
     <% end %>
 
     <%= render "timeline/feed",
