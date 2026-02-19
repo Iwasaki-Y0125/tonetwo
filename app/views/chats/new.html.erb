@@ -1,0 +1,18 @@
+<main class="tt-page-main">
+  <section class="tt-page-section-feed">
+    <h1 class="tt-page-heading-feed-plain">チャット</h1>
+
+    <div class="mt-4 rounded-2xl bg-info/20 p-5 md:p-6"
+         data-controller="compose-focus"
+         data-action="pointerdown->compose-focus#activate click->compose-focus#activate">
+      <div class="mb-4">
+        <%= render "chats/seed_post_bubble", post: @post, current_user: Current.user %>
+      </div>
+
+      <%= render "chats/composer_form",
+                 model: @chat_message,
+                 url: post_chat_path(@post),
+                 margin_class: nil %>
+    </div>
+  </section>
+</main>

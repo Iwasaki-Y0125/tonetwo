@@ -67,6 +67,21 @@ class MyPostsFlowTest < ActionDispatch::IntegrationTest
     assert_includes @response.body, own_post.body
   end
 
+  test "自分の投稿詳細に紐づきチャット一覧を表示できる" do
+    owner = users(:one)
+    replier = users(:two)
+    sign_in_as(owner)
+    own_post = owner.posts.create!(body: "チャット一覧確認用の投稿")
+    chatroom = Chatroom.create!(post: own_post, reply_user: replier)
+    chatroom.chat_messages.create!(user: replier, body: "最新メッセージです")
+
+    get my_post_path(own_post)
+
+    assert_response :success
+    assert_includes @response.body, "紐づいてるチャット一覧"
+    assert_includes @response.body, "最新メッセージです"
+  end
+
   test "ログイン済みユーザーでも他人の投稿詳細は表示できない" do
     sign_in_as(users(:one))
     others_post = posts(:two)

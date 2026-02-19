@@ -9,6 +9,7 @@
         <% timeline_active = current_page?(timeline_path) %>
         <% similar_active = current_page?(similar_timeline_path) %>
         <% my_posts_active = current_page?(my_posts_path) %>
+        <% chats_active = current_page?(chats_path) || controller_name == "chats" %>
         <nav class="min-w-0 overflow-visible">
           <ul class="tt-header-nav-strip flex items-center gap-2 whitespace-nowrap">
             <li>
@@ -34,10 +35,10 @@
               <% end %>
             </li>
             <li>
-              <a class="tt-header-nav-link cursor-default">
+              <%= link_to chats_path, class: ["tt-header-nav-link", (chats_active ? "tt-header-nav-link-active" : nil)] do %>
                 <%= tt_header_icon("icons/chat_bubble.svg") %>
                 <span class="tt-header-nav-text">チャット</span>
-              </a>
+              <% end %>
             </li>
             <li>
               <%= link_to my_posts_path, class: ["tt-header-nav-link", (my_posts_active ? "tt-header-nav-link-active" : nil)] do %>
@@ -52,6 +53,12 @@
                     session_path,
                     data: { turbo_method: :delete },
                     class: "btn btn-outline tt-subtle-outline-btn h-9 min-h-9 justify-self-end px-4" %>
+      <% else %>
+        <div aria-hidden="true"></div>
+        <div class="justify-self-end flex items-center gap-2 pr-24">
+          <%= link_to "ユーザー登録", new_sign_up_path, class: "btn btn-primary h-9 min-h-9 px-4" %>
+          <%= link_to "ログイン", new_session_path, class: "btn btn-outline h-9 min-h-9 px-4" %>
+        </div>
       <% end %>
     </div>
   </div>

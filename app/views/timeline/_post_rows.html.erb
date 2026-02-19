@@ -19,12 +19,15 @@
       </div>
     <% end %>
   <% else %>
-    <%# 他ユーザー投稿は閲覧のみ（リンクなし）。 %>
-    <article class="tt-post-row tt-post-row-no-icon">
+    <%# 他ユーザー投稿はクリックでチャット下書き画面へ遷移する。 %>
+    <%= link_to new_post_chat_path(post),
+                class: "tt-post-row tt-post-row-no-icon tt-post-row-link group",
+                data: { turbo_frame: "_top" },
+                aria: { label: "チャット詳細へ" } do %>
       <div class="min-w-0 flex-1">
         <p class="tt-post-meta tt-post-meta-no-icon"><%= posted_at_label %></p>
         <p class="tt-post-body"><%= post.body.to_s.strip %></p>
       </div>
-    </article>
+    <% end %>
   <% end %>
 <% end %>

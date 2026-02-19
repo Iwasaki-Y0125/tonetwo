@@ -14,6 +14,9 @@ module My
     def show
       # 他ユーザー投稿の参照を防ぐため、ログイン中ユーザーの関連から検索する。
       @post = Current.user.posts.find(params[:id])
+      @chatrooms = @post.chatrooms.includes(:reply_user, chat_messages: :user).to_a
+      @chatrooms.sort_by! { |chatroom| chatroom.latest_message_at || chatroom.created_at }
+      @chatrooms.reverse!
     end
 
     private
@@ -32,6 +35,7 @@ module My
       @next_path = build_next_path(result.last_post) if @has_next && result.last_post.present?
     end
 
+    # 無限スクロールの次ページのパスを生成するためのヘルパーメソッド
     def build_next_path(last_post)
       my_posts_path(before_created_at: last_post.created_at.iso8601(6), before_id: last_post.id)
     end

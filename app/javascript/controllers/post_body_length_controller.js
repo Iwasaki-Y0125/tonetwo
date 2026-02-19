@@ -2,7 +2,10 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["input", "message", "alert", "counter", "submit"]
-  static values = { limit: { type: Number, default: 140 } }
+  static values = {
+    limit: { type: Number, default: 140 },
+    actionLabel: { type: String, default: "投稿" }
+  }
 
   // 初期表示時に警告表示を同期する
   connect() {
@@ -20,7 +23,7 @@ export default class extends Controller {
       this.counterTarget.classList.toggle("tt-form-counter-over", isOver)
     }
 
-    this.messageTarget.textContent = isOver ? `${this.limitValue}字を超えているため投稿できません。` : "\u00A0"
+    this.messageTarget.textContent = isOver ? `${this.limitValue}字を超えているため${this.actionLabelValue}できません。` : "\u00A0"
     this.messageTarget.classList.toggle("invisible", !isOver)
     if (this.hasSubmitTarget) this.submitTarget.disabled = isOver
     if (!isOver) this.alertTarget.classList.add("hidden")

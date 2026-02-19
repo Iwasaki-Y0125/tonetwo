@@ -1,0 +1,47 @@
+<%= form_with model: model,
+              url: url,
+              class: [margin_class, "space-y-2 tt-compose-focus-area"].compact.join(" "),
+              data: {
+                controller: "post-body-length auto-grow-textarea",
+                post_body_length_limit_value: 140,
+                post_body_length_action_label_value: "送信",
+                action: "submit->post-body-length#guardSubmit"
+              } do |form| %>
+  <div class="alert alert-error hidden" data-post-body-length-target="alert">
+    140字以内で入力してください。
+  </div>
+
+  <% error_messages = model.errors.messages.values.flatten.uniq %>
+  <% if error_messages.any? %>
+    <div class="alert alert-error">
+      <div class="space-y-1">
+        <% error_messages.each do |message| %>
+          <p class="font-semibold text-white"><%= message %></p>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="block w-full rounded-2xl border border-base-300 bg-base-100/95 px-3 py-2">
+    <%= form.text_area :body,
+                       required: true,
+                       rows: 1,
+                       class: "w-full min-h-8 resize-none bg-transparent py-2 text-sm outline-none md:text-base",
+                       placeholder: "メッセージを入力(140字まで)",
+                       data: {
+                         post_body_length_target: "input",
+                         compose_focus_target: "input",
+                         auto_grow_textarea_target: "field",
+                         action: "input->post-body-length#check input->auto-grow-textarea#resize"
+                       } %>
+    <div class="mt-2 flex items-end gap-3">
+      <p class="tt-form-error-inline invisible flex-1" data-post-body-length-target="message" aria-live="polite"></p>
+      <p class="tt-form-counter" data-post-body-length-target="counter" aria-live="polite">0/140</p>
+      <%= form.button type: :submit,
+                      class: "btn btn-circle btn-primary btn-sm shrink-0 text-white",
+                      data: { post_body_length_target: "submit", compose_focus_target: "submit" } do %>
+        <%= image_tag "send.svg", alt: "送信", class: "block h-4 w-4" %>
+      <% end %>
+    </div>
+  </div>
+<% end %>

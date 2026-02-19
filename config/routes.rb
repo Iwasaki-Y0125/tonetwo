@@ -5,10 +5,24 @@ Rails.application.routes.draw do
   get "timeline/similar", to: "timeline#similar", as: :similar_timeline
   # TODO(UI): 将来的に個別投稿ページを再導入する場合は :new を戻す。
   # resources :posts, only: %i[new create]
-  resources :posts, only: %i[create]
+
+  # 補足）チャットルームとメッセージのルーティング
+  # チャットルーム作成のトリガーは「投稿へのメッセージ送信」である
+  # そのため、postsリソースのネストとして定義する
+  resources :posts, only: %i[create] do
+    resource :chat, only: %i[new create], controller: "chats"
+  end
+
+  # チャットルームの一覧/詳細閲覧 チャットルーム内でのメッセージ送信のルーティング
+  resources :chats, only: %i[index show] do
+    resources :messages, only: %i[create], module: :chats
+  end
+
+  # 自分の投稿の一覧/詳細閲覧のルーティング
   namespace :my do
     resources :posts, only: %i[index show]
   end
+
   get "support" => "support_pages#show", as: :support_page
 
   # TODO(Auth): MVP時点ではパスワードリセットは未実装のため非公開。

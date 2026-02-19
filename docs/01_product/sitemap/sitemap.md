@@ -57,12 +57,8 @@ https://guides.rubyonrails.org/sign_up_and_settings.html
 
 | 概要 | アクション | ヘルパー名 | HTTPメソッド | パス | コントローラー#アクション |
 |---|---|---|---|---|---|
-| 投稿作成フォーム | new | new_post_path | GET | `/posts/new` | `posts#new` |
 | 投稿作成 | create | posts_path | POST | `/posts` | `posts#create` |
-| 投稿詳細 | show | post_path | GET | `/posts/:id` | `posts#show` |
-| 投稿の表示設定変更 | update | post_path | PATCH | `/posts/:id` | `posts#update` |
-
-> 投稿の編集は、現時点では実装しない方針。
+> 現行実装（2026-02-19 時点）では `posts#create` のみ有効。
 
 ### 【ナビ】自分の投稿（専用）
 
@@ -80,7 +76,9 @@ https://guides.rubyonrails.org/sign_up_and_settings.html
 |---|---|---|---|---|---|
 | チャット一覧 | index | chats_path | GET | `/chats` | `chats#index` |
 | チャット詳細 | show | chat_path | GET | `/chats/:id` | `chats#show` |
-| メッセージ送信 | create | chat_messages_path | POST | 　`/chats/:chat_id/messages` | `messages#create` |
+| 投稿からチャット下書き画面 | new | new_post_chat_path | GET | `/posts/:post_id/chat/new` | `chats#new` |
+| 初回メッセージ送信（room作成/再利用） | create | post_chat_path | POST | `/posts/:post_id/chat` | `chats#create` |
+| 既存チャットへメッセージ送信 | create | chat_messages_path | POST | `/chats/:chat_id/messages` | `chats/messages#create` |
 
 
 ### 【ナビ】通知
