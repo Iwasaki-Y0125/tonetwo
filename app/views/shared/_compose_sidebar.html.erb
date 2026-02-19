@@ -1,0 +1,40 @@
+<% compose_post = if defined?(@post) && @post.respond_to?(:new_record?) && @post.new_record?
+                    @post
+                  else
+                    Post.new
+                  end %>
+
+<div class="tt-surface px-5 py-4">
+  <%= form_with model: compose_post,
+                url: posts_path,
+                class: "space-y-2 tt-compose-focus-area",
+                data: {
+                  controller: "post-body-length auto-grow-textarea compose-focus",
+                  post_body_length_limit_value: 140,
+                  action: "submit->post-body-length#guardSubmit click->compose-focus#activate"
+                } do |form| %>
+    <div class="hidden" data-post-body-length-target="alert"></div>
+
+    <%= form.text_area :body,
+                       required: true,
+                       rows: 1,
+                       class: "textarea-plain tt-post-textarea min-h-[7rem]",
+                       placeholder: "今どんな感じ？（140字以内）",
+                       data: {
+                         post_body_length_target: "input",
+                         compose_focus_target: "input",
+                         auto_grow_textarea_target: "field",
+                         action: "input->post-body-length#check input->auto-grow-textarea#resize"
+                       } %>
+    <div class="mt-2 flex items-end gap-3">
+      <p class="tt-form-error-inline invisible flex-1" data-post-body-length-target="message" aria-live="polite"></p>
+      <p class="tt-form-counter" data-post-body-length-target="counter" aria-live="polite">0/140</p>
+      <%= form.submit "投稿",
+                      class: "btn btn-primary",
+                      data: {
+                        post_body_length_target: "submit",
+                        compose_focus_target: "submit"
+                      } %>
+    </div>
+  <% end %>
+</div>

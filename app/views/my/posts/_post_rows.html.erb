@@ -1,14 +1,10 @@
 <% posts.each do |post| %>
   <% posted_at = post.created_at.in_time_zone("Asia/Tokyo") %>
   <% posted_at_label = posted_at.today? ? posted_at.strftime("%H:%M Today") : posted_at.strftime("%Y/%m/%d %H:%M") %>
-  <%= link_to my_post_path(post), class: "tt-post-row tt-post-row-link group", aria: { label: "投稿詳細へ" } do %>
+  <%= link_to my_post_path(post), class: "tt-post-row tt-post-row-no-icon tt-post-row-link group", aria: { label: "投稿詳細へ" } do %>
     <div class="min-w-0 flex-1">
-      <p class="tt-post-meta"><%= posted_at_label %></p>
+      <p class="tt-post-meta tt-post-meta-no-icon"><%= posted_at_label %></p>
       <p class="tt-post-body"><%= post.body.to_s.strip %></p>
     </div>
-
-    <span class="tt-post-row-icon shrink-0">
-      <%= image_tag "icons/arrow_circle_right.svg", alt: "", class: "h-8 w-8 tt-post-arrow-icon", aria: { hidden: true } %>
-    </span>
   <% end %>
 <% end %>

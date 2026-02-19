@@ -37,8 +37,8 @@
 }
 
 @layer base {
-  h1, h2, h3, h4, h5, h6 {
-    font-weight: 400 !important;
+  h1 {
+    font-weight: 700 !important;
   }
 
   a {
@@ -60,6 +60,36 @@
     @apply mx-auto w-full max-w-[1120px] px-4 lg:px-6;
   }
 
+  .tt-page-main {
+    @apply min-h-screen;
+  }
+
+  .tt-page-section-feed {
+    @apply w-full max-w-[540px] pt-4 pb-12;
+  }
+
+  .tt-page-section-form {
+    @apply mx-auto max-w-md px-6 py-16;
+  }
+
+  .tt-page-heading-feed {
+    @apply mb-4 px-1 text-lg font-medium;
+    color: #3A486D;
+  }
+
+  .tt-page-heading-feed-plain {
+    @apply mb-4 px-1 text-lg;
+    color: #3A486D;
+  }
+
+  .tt-page-heading-form {
+    @apply mb-10 text-4xl font-medium;
+  }
+
+  .tt-page-heading-form-sub {
+    @apply mb-8 text-3xl font-medium;
+  }
+
   .tt-surface {
     @apply rounded-[1rem] border border-base-300 bg-base-100;
   }
@@ -73,8 +103,8 @@
   }
 
   .tt-post-textarea {
-    @apply block min-h-0 w-full resize-none overflow-y-hidden overflow-x-visible border-0 bg-transparent px-0 py-1 text-sm text-base-content leading-6 placeholder:text-base-content/40 focus:outline-none;
-    max-inline-size: min(27em, 100%);
+    @apply block min-h-0 w-full resize-none overflow-y-hidden overflow-x-visible border-0 bg-transparent px-0 py-1 text-sm text-base-content leading-6 placeholder:text-base placeholder:text-base-content/60 focus:outline-none;
+    max-inline-size: min(30em, 100%);
   }
 
   .tt-form-error-inline {
@@ -90,12 +120,29 @@
     @apply text-error;
   }
 
+  .tt-compose-focus-area {
+    cursor: text;
+  }
+
+  .tt-compose-focus-area .tt-post-textarea {
+    cursor: text;
+  }
+
   .tt-post-row {
     @apply relative flex items-start gap-4 px-6 pt-6 pb-10 pr-16;
   }
 
   .tt-post-row + .tt-post-row {
     @apply border-t border-base-300;
+  }
+
+  /* 無限スクロール差し込み時の先頭行にも区切り線を出す */
+  turbo-frame#timeline_next > .tt-post-row:first-child {
+    @apply border-t border-base-300;
+  }
+
+  .tt-post-row-no-icon {
+    @apply pr-6;
   }
 
   .tt-post-row-link {
@@ -129,9 +176,20 @@
     right: -1.5rem;
   }
 
+  .tt-post-meta-no-icon {
+    right: 0;
+  }
+
+  .tt-self-post-badge {
+    @apply inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] leading-4;
+    border-color: #C2C9D2;
+    background-color: #C2C9D2;
+    color: #ffffff;
+  }
+
   .tt-post-body {
     @apply mt-2 whitespace-pre-wrap break-words text-sm leading-6 text-base-content;
-    max-inline-size: min(27em, 100%);
+    max-inline-size: min(30em, 100%);
   }
 
   .tt-side-nav-link:active {
@@ -142,7 +200,7 @@
   }
 
   .tt-side-nav-link {
-    color: inherit !important;
+    color: color-mix(in oklab, var(--color-base-content) 70%, transparent) !important;
     transition: color 300ms ease, background-color 300ms ease, box-shadow 300ms ease;
     border-radius: 0.75rem !important;
     padding-inline: 1rem !important;
@@ -155,13 +213,13 @@
 
   .tt-side-nav-link-active {
     color: color-mix(in oklab, var(--color-base-content) 70%, transparent) !important;
-    background-color: var(--color-base-100) !important;
+    background-color: color-mix(in oklab, var(--color-primary) 22%, transparent) !important;
   }
 
   .tt-nav-soft {
-    background-color: color-mix(in oklab, var(--color-base-content) 8%, var(--color-base-100));
-    border-radius: 1rem;
-    padding: 0.25rem;
+    background-color: transparent;
+    border-radius: 0;
+    padding: 0;
   }
 
   .tt-nav-soft > .menu {
@@ -190,20 +248,77 @@
     color: #ffffff !important;
   }
 
+  .tt-header-nav-link {
+    @apply inline-flex h-10 w-[8.75rem] items-center justify-center gap-2 rounded-xl px-3 text-sm font-medium text-base-content/70;
+    background: var(--color-base-100);
+    border: 1px solid color-mix(in oklab, var(--color-base-content) 12%, #ffffff);
+    box-shadow: none;
+    transition: color 180ms ease, background-color 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  }
+
+  .tt-header-nav-link:hover {
+    background: color-mix(in oklab, var(--color-base-100) 92%, #f3f6fb);
+    border-color: color-mix(in oklab, var(--color-base-content) 16%, #ffffff);
+    box-shadow: none;
+  }
+
+  .tt-header-nav-link-active {
+    color: var(--color-primary);
+    background: color-mix(in oklab, var(--color-primary) 10%, var(--color-base-100));
+    border-color: color-mix(in oklab, var(--color-primary) 30%, #ffffff);
+    box-shadow: none;
+  }
+
+  .tt-header-nav-link-active:hover {
+    box-shadow: none;
+  }
+
+  .tt-header-nav-text {
+    text-shadow: none;
+  }
+
+  .tt-header-nav-link-active .tt-header-nav-text {
+    text-shadow: none;
+  }
+
+  .tt-header-nav-strip {
+    @apply rounded-2xl px-2 py-1;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .tt-header-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    display: inline-block;
+    flex-shrink: 0;
+    background-color: currentColor;
+    mask-image: var(--tt-header-icon-url);
+    -webkit-mask-image: var(--tt-header-icon-url);
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    mask-size: contain;
+    -webkit-mask-size: contain;
+  }
+
   .tt-tabs-soft {
-    background-color: color-mix(in oklab, var(--color-base-content) 8%, var(--color-base-100)) !important;
+    background-color: var(--color-base-100) !important;
     border-radius: 1rem;
     padding: 0.25rem;
     align-items: center;
     overflow: hidden;
     box-shadow: none !important;
-    --tab-height: 2.25rem;
+    --tab-height: 2.5rem;
   }
 
   .tt-tabs-soft > .tab {
+    --tt-active-bar-offset: 0rem;
+    --tt-active-bar-width: 4rem;
     border-radius: 9999px;
-    height: 2.25rem;
-    min-height: 2.25rem;
+    height: 2.5rem;
+    min-height: 2.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -211,15 +326,39 @@
     padding-top: 0;
     padding-bottom: 0;
     margin: 0;
-    transition: none;
+    transition: color 200ms ease;
     background-color: transparent;
     box-shadow: none !important;
+    position: relative;
+  }
+
+  .tt-tabs-soft > .tab.tt-tab-has-help {
+    /* 「?」バッジ分だけアクティブ下線を左に寄せて文字中央へ合わせる */
+    --tt-active-bar-offset: -0.3rem;
+    --tt-active-bar-width: 5.0rem;
   }
 
   .tt-tabs-soft > .tab:is(.tab-active, [aria-selected="true"], [aria-current="true"], [aria-current="page"], input:checked, label:has(:checked)) {
-    background-color: var(--color-base-100) !important;
+    background-color: transparent !important;
     box-shadow: none !important;
     color: var(--color-base-content);
+  }
+
+  .tt-tabs-soft > .tab:is(.tab-active, [aria-selected="true"], [aria-current="true"], [aria-current="page"], input:checked, label:has(:checked))::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: var(--tt-active-bar-width);
+    height: 0.2rem;
+    transform: translateX(calc(-50% + var(--tt-active-bar-offset)));
+    border-radius: 9999px;
+    background-color: var(--color-primary);
+  }
+
+  .tt-tabs-sticky {
+    /* 固定時の上余白(1rem)を通常背景で塗り、背面コンテンツの透けを防ぐ */
+    box-shadow: 0 -1rem 0 var(--color-base-200);
   }
 
   .tt-help-badge {
@@ -249,6 +388,13 @@
     visibility: hidden;
     pointer-events: none;
     transition: opacity 0.15s ease;
+  }
+
+  .tt-help-title {
+    display: block;
+    margin-bottom: 0.4rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid color-mix(in oklab, #ffffff 30%, transparent);
   }
 
   .tt-help-popover::before {

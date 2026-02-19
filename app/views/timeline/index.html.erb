@@ -1,65 +1,7 @@
-<main class="min-h-screen">
-  <section class="w-full max-w-[540px] pt-0 pb-12">
-    <div class="mb-5">
-      <div role="tablist" class="tabs tabs-box tt-tabs-soft w-full overflow-visible">
-        <%= link_to "全体",
-                    timeline_path,
-                    role: "tab",
-                    "aria-selected": (@active_tab == :all).to_s,
-                    class: [
-                      "tab flex-1 justify-center gap-2 overflow-visible font-medium text-base-content/70",
-                      (@active_tab == :all ? "tab-active" : nil)
-                    ] %>
-
-        <%= link_to similar_timeline_path,
-                    role: "tab",
-                    "aria-selected": (@active_tab == :similar).to_s,
-                    class: [
-                      "tab flex-1 justify-center gap-2 overflow-visible font-medium text-base-content/70",
-                      (@active_tab == :similar ? "tab-active" : nil)
-                    ] do %>
-          <span>おすすめ</span>
-          <span class="tt-help-trigger" aria-label="おすすめ表示の説明" tabindex="0">
-            <span class="tt-help-badge inline-flex size-5 items-center justify-center rounded-full text-[11px] leading-none">?</span>
-            <span class="tt-help-popover" role="tooltip">
-              あなたの直近の投稿の文章から<br>
-              話題（例：趣味、仕事、勉強など）<br>
-              文の雰囲気（前向き／しんどい など）<br>
-              をもとに、近い投稿をおすすめに表示しています
-            </span>
-          </span>
-        <% end %>
-      </div>
-    </div>
-
-    <%= form_with model: @post,
-                  url: posts_path,
-                  class: "space-y-2",
-                  data: {
-                    controller: "post-body-length auto-grow-textarea",
-                    post_body_length_limit_value: 140,
-                    action: "submit->post-body-length#guardSubmit"
-                  } do |form| %>
-      <div class="hidden" data-post-body-length-target="alert"></div>
-
-      <div class="tt-post-form-card">
-        <%= form.text_area :body,
-                           required: true,
-                           rows: 1,
-                           class: "textarea-plain tt-post-textarea",
-                           placeholder: "今どんな感じ？（140字以内）",
-                           data: {
-                             post_body_length_target: "input",
-                             auto_grow_textarea_target: "field",
-                             action: "input->post-body-length#check input->auto-grow-textarea#resize"
-                           } %>
-        <div class="mt-2 flex items-end gap-3">
-          <p class="tt-form-error-inline invisible flex-1" data-post-body-length-target="message" aria-live="polite"></p>
-          <p class="tt-form-counter" data-post-body-length-target="counter" aria-live="polite">0/140</p>
-          <%= form.submit "投稿", class: "btn btn-primary", data: { post_body_length_target: "submit" } %>
-        </div>
-      </div>
-    <% end %>
+<main class="tt-page-main">
+  <section class="tt-page-section-feed">
+    <% timeline_heading = (@active_tab == :similar ? "おすすめタイムライン" : "全体タイムライン") %>
+    <h1 class="tt-page-heading-feed"><%= timeline_heading %></h1>
 
     <%= render "timeline/feed",
                posts: @posts,

@@ -17,7 +17,6 @@ class TimelineFlowTest < ActionDispatch::IntegrationTest
     get timeline_path
 
     assert_response :success
-    assert_includes @response.body, "role=\"tablist\""
     assert_includes @response.body, "全体"
     assert_includes @response.body, "おすすめ"
     assert_includes @response.body, "投稿"

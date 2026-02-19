@@ -1,39 +1,58 @@
-<header class="fixed inset-x-0 top-0 z-30 bg-white">
+<header class="fixed inset-x-0 top-0 z-30 bg-base-100 shadow-[0_1px_8px_color-mix(in_oklab,var(--color-base-content)_5%,transparent)]">
   <div class="tt-shell">
-    <div class="flex h-[56px] items-center justify-between lg:hidden">
-      <%= link_to root_path, class: "inline-flex h-9 items-center justify-center" do %>
-        <%= image_tag "Logo.svg", alt: "ToneTwo", class: "block h-6 w-auto" %>
+    <div class="grid h-[64px] grid-cols-[1fr_auto_1fr] items-center gap-4">
+      <%= link_to root_path, class: "inline-flex h-9 items-center justify-center shrink-0" do %>
+        <%= image_tag "Logo.svg", alt: "ToneTwo", class: "tt-header-logo block h-6 w-auto" %>
       <% end %>
 
       <% if authenticated? %>
+        <% timeline_active = current_page?(timeline_path) %>
+        <% similar_active = current_page?(similar_timeline_path) %>
+        <% my_posts_active = current_page?(my_posts_path) %>
+        <nav class="min-w-0 overflow-visible">
+          <ul class="tt-header-nav-strip flex items-center gap-2 whitespace-nowrap">
+            <li>
+              <%= link_to timeline_path, class: ["tt-header-nav-link", (timeline_active ? "tt-header-nav-link-active" : nil)] do %>
+                <%= tt_header_icon("icons/home.svg") %>
+                <span class="tt-header-nav-text">全体</span>
+              <% end %>
+            </li>
+            <li>
+              <%= link_to similar_timeline_path, class: ["tt-header-nav-link", (similar_active ? "tt-header-nav-link-active" : nil)] do %>
+                <%= tt_header_icon("icons/star_shine.svg") %>
+                <span class="tt-header-nav-text">おすすめ</span>
+                <span class="tt-help-trigger" aria-label="おすすめ表示の説明" tabindex="0">
+                  <span class="tt-help-badge inline-flex size-5 items-center justify-center rounded-full text-[11px] leading-none">?</span>
+                  <span class="tt-help-popover" role="tooltip">
+                    <span class="tt-help-title"><strong>おすすめタイムラインとは</strong></span>
+                    あなたの直近の投稿の文章から<br>
+                    ・話題（例：趣味、仕事、勉強など）<br>
+                    ・文の雰囲気（前向き／しんどい など）<br>
+                    をもとに、近い投稿をおすすめに表示しています
+                  </span>
+                </span>
+              <% end %>
+            </li>
+            <li>
+              <a class="tt-header-nav-link cursor-default">
+                <%= tt_header_icon("icons/chat_bubble.svg") %>
+                <span class="tt-header-nav-text">チャット</span>
+              </a>
+            </li>
+            <li>
+              <%= link_to my_posts_path, class: ["tt-header-nav-link", (my_posts_active ? "tt-header-nav-link-active" : nil)] do %>
+                <%= tt_header_icon("icons/account_circle.svg") %>
+                <span class="tt-header-nav-text">MY投稿</span>
+              <% end %>
+            </li>
+          </ul>
+        </nav>
+
         <%= link_to "ログアウト",
                     session_path,
                     data: { turbo_method: :delete },
-                    class: "btn btn-outline h-8 min-h-8 px-3 border border-[#D7DCE3] text-[#A5ACB8] hover:border-[#C2C9D2] hover:bg-[#C2C9D2] hover:text-[#ffffff]" %>
+                    class: "btn btn-outline tt-subtle-outline-btn h-9 min-h-9 justify-self-end px-4" %>
       <% end %>
-    </div>
-
-    <div class="hidden h-[56px] lg:grid lg:grid-cols-12 lg:gap-8">
-      <div class="lg:col-span-3 lg:flex lg:items-center">
-        <div class="ml-auto w-[200px]">
-          <%= link_to root_path, class: "inline-flex h-9 items-center justify-center" do %>
-            <%= image_tag "Logo.svg", alt: "ToneTwo", class: "block h-6 w-auto" %>
-          <% end %>
-        </div>
-      </div>
-
-      <div class="lg:col-span-9 lg:flex lg:items-center">
-        <div class="w-full max-w-[540px]">
-          <% if authenticated? %>
-            <div class="flex justify-end">
-              <%= link_to "ログアウト",
-                          session_path,
-                          data: { turbo_method: :delete },
-                          class: "btn btn-outline h-8 min-h-8 px-3 border border-[#D7DCE3] text-[#A5ACB8] hover:border-[#C2C9D2] hover:bg-[#C2C9D2] hover:text-[#ffffff]" %>
-            </div>
-          <% end %>
-        </div>
-      </div>
     </div>
   </div>
 </header>
