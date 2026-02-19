@@ -1,10 +1,10 @@
-<main class="min-h-screen">
-  <section class="w-full max-w-[540px] pt-0 pb-12">
+<main class="tt-page-main">
+  <section class="tt-page-section-feed">
     <% posted_at = @post.created_at.in_time_zone("Asia/Tokyo") %>
     <% posted_at_label = posted_at.today? ? posted_at.strftime("%H:%M Today") : posted_at.strftime("%Y/%m/%d %H:%M") %>
-    <h1 class="text-xl font-medium mb-6 text-[#3A486D]">自分の投稿詳細</h1>
+    <h1 class="tt-page-heading-feed-plain">自分の投稿詳細</h1>
 
-    <article class="tt-surface tt-post-row px-8 py-8">
+    <article class="tt-surface tt-post-row mt-4 px-8 py-8">
       <div class="min-w-0 flex-1">
         <p class="tt-post-meta"><%= posted_at_label %></p>
         <p class="tt-post-body"><%= @post.body.to_s.strip %></p>
@@ -12,11 +12,5 @@
 
       <span class="h-8 w-8 shrink-0" aria-hidden="true"></span>
     </article>
-
-    <div class="mt-8 flex flex-wrap justify-end gap-2">
-      <%= link_to "全体TL", timeline_path, class: "btn btn-outline tt-subtle-outline-btn" %>
-      <%= link_to "おすすめTL", similar_timeline_path, class: "btn btn-outline tt-subtle-outline-btn" %>
-      <%= link_to "自分の投稿一覧", my_posts_path, class: "btn btn-primary" %>
-    </div>
   </section>
 </main>

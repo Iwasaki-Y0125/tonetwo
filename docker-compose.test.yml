@@ -1,0 +1,7 @@
+# *テスト実行用の上書き構成
+services:
+  web:
+    env_file:
+      - .env.test
+    environment:
+      RAILS_ENV: test

@@ -10,13 +10,13 @@
                     }.compact do %>
   <%# ポストがある場合のパーシャル呼び出し %>
   <% if posts.any? %>
-    <div class="tt-surface mt-6 overflow-hidden">
+    <div class="tt-surface mt-4 overflow-hidden">
       <%= render "timeline/post_rows", posts: posts %>
       <%= render "timeline/next_frame", has_next: has_next, next_path: next_path %>
     </div>
   <% else %>
     <%# ポストがない場合の空状態表示。empty_state_linesごとに文章を表示する %>
-    <div class="tt-empty-state mt-6">
+    <div class="tt-empty-state mt-4">
       <% Array(empty_state_lines.presence || ["投稿はまだありません。"]).each do |line| %>
         <% if line.blank? %>
           <br>
