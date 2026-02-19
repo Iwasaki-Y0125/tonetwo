@@ -1,0 +1,21 @@
+<main class="tt-page-main">
+  <section class="tt-page-section-feed">
+    <h1 class="tt-page-heading-feed-plain">チャット一覧</h1>
+
+    <% if @chatrooms.any? %>
+      <div class="tt-surface mt-4 divide-y divide-base-300 overflow-hidden">
+        <% @chatrooms.each do |chatroom| %>
+          <%= render "chats/chatroom_summary_row",
+                     chatroom: chatroom,
+                     title: chatroom.post.body.to_s.strip,
+                     title_class: "truncate text-base font-semibold text-primary",
+                     subtitle_class: "mt-2 truncate text-base text-base-content/60" %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="tt-empty-state mt-4">
+        チャットはまだありません。
+      </div>
+    <% end %>
+  </section>
+</main>

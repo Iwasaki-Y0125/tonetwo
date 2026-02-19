@@ -15,8 +15,17 @@ class User < ApplicationRecord
 
   has_secure_password
   has_many :sessions, dependent: :destroy
+
+  # restrict_with_error: ユーザ削除時に関連投稿があると削除できず、エラーになる。
+  # ユーザー退会後も投稿は残す方針のため。
   has_many :posts, dependent: :restrict_with_error
 
+  # chatrooms が users を直接参照していないため、reply_user_id を外部キーとする。
+  has_many :reply_chatrooms, class_name: "Chatroom", foreign_key: :reply_user_id, inverse_of: :reply_user, dependent: :restrict_with_error
+
+  has_many :chat_messages, dependent: :restrict_with_error
+
+  # エラーメッセージなどの属性名を日本語化する
   def self.human_attribute_name(attribute, options = {})
     ATTRIBUTE_JA_NAMES[attribute.to_sym] || super
   end

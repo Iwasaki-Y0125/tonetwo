@@ -1,7 +1,6 @@
 <main class="tt-page-main">
   <section class="tt-page-section-feed">
-    <% posted_at = @post.created_at.in_time_zone("Asia/Tokyo") %>
-    <% posted_at_label = posted_at.today? ? posted_at.strftime("%H:%M Today") : posted_at.strftime("%Y/%m/%d %H:%M") %>
+    <% posted_at_label = tt_datetime_label(@post.created_at.in_time_zone("Asia/Tokyo")) %>
     <h1 class="tt-page-heading-feed-plain">自分の投稿詳細</h1>
 
     <article class="tt-surface tt-post-row mt-4 px-8 py-8">
@@ -12,5 +11,22 @@
 
       <span class="h-8 w-8 shrink-0" aria-hidden="true"></span>
     </article>
+
+    <h1 class="tt-page-heading-feed mt-8">紐づいてるチャット一覧</h1>
+    <% if @chatrooms.any? %>
+      <div class="tt-surface mt-4 divide-y divide-base-300 overflow-hidden">
+        <% @chatrooms.each do |chatroom| %>
+          <%= render "chats/chatroom_summary_row",
+                     chatroom: chatroom,
+                     title: nil,
+                     title_class: "truncate text-sm text-base-content/80",
+                     subtitle_class: "mt-2 truncate text-base text-base-content/80" %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="tt-empty-state mt-4">
+        この投稿に紐づくチャットはまだありません。
+      </div>
+    <% end %>
   </section>
 </main>

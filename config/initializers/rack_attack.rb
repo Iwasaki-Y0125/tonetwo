@@ -35,6 +35,14 @@ class Rack::Attack
     client_ip(req) if req.post? && req.path == "/posts"
   end
 
+  throttle("posts/chat_create/ip", limit: 20, period: 1.minute) do |req|
+    client_ip(req) if req.post? && req.path.match?(%r{\A/posts/\d+/chat\z})
+  end
+
+  throttle("chats/messages_create/ip", limit: 20, period: 1.minute) do |req|
+    client_ip(req) if req.post? && req.path.match?(%r{\A/chats/\d+/messages\z})
+  end
+
   # Rack::Attackで弾いたときに、監視イベントを記録して429を返す処理
   def self.throttled_response(request)
     ActiveSupport::Notifications.instrument("security.throttle", throttled_payload(request))

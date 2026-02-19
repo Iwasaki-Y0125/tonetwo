@@ -17,4 +17,10 @@ module ApplicationHelper
       aria: { hidden: true }
     )
   end
+
+  def tt_datetime_label(datetime)
+    return "-" if datetime.blank?
+
+    datetime.today? ? datetime.strftime("%H:%M Today") : datetime.strftime("%Y/%m/%d %H:%M")
+  end
 end

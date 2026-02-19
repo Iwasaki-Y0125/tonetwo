@@ -157,7 +157,7 @@ class TimelineFlowTest < ActionDispatch::IntegrationTest
     assert_not_includes @response.body, "候補投稿0"
   end
 
-  test "タイムライン上で自分の投稿は詳細ページへのリンクになる" do
+  test "タイムライン上で自分投稿は詳細、他人投稿はチャット下書きへのリンクになる" do
     user = users(:one)
     other_user = users(:two)
     sign_in_as(user)
@@ -169,7 +169,7 @@ class TimelineFlowTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "a[href='#{my_post_path(own_post)}']", text: /自分のTL投稿/
-    assert_select "a[href='#{my_post_path(other_post)}']", count: 0
+    assert_select "a[href='#{new_post_chat_path(other_post)}']", text: /他人のTL投稿/
   end
 
   private

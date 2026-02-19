@@ -10,9 +10,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_16_074136) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_19_160100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "chat_messages", force: :cascade do |t|
+    t.text "body", null: false
+    t.bigint "chatroom_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["chatroom_id", "created_at", "id"], name: "index_chat_messages_on_chatroom_created_at_id"
+    t.index ["chatroom_id"], name: "index_chat_messages_on_chatroom_id"
+    t.index ["user_id"], name: "index_chat_messages_on_user_id"
+    t.check_constraint "char_length(TRIM(BOTH FROM body)) > 0", name: "chk_chat_messages_body_not_blank"
+    t.check_constraint "char_length(body) <= 140", name: "chk_chat_messages_body_max_140"
+  end
+
+  create_table "chatrooms", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "post_id", null: false
+    t.bigint "reply_user_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id", "reply_user_id"], name: "index_chatrooms_on_post_id_and_reply_user_id", unique: true
+    t.index ["post_id"], name: "index_chatrooms_on_post_id"
+    t.index ["reply_user_id"], name: "index_chatrooms_on_reply_user_id"
+  end
 
   create_table "filter_terms", force: :cascade do |t|
     t.string "action", default: "prohibit", null: false
@@ -89,6 +112,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_16_074136) do
     t.check_constraint "char_length(TRIM(BOTH FROM terms_version)) > 0", name: "chk_users_terms_version_not_blank"
   end
 
+  add_foreign_key "chat_messages", "chatrooms"
+  add_foreign_key "chat_messages", "users"
+  add_foreign_key "chatrooms", "posts"
+  add_foreign_key "chatrooms", "users", column: "reply_user_id"
   add_foreign_key "post_terms", "posts"
   add_foreign_key "post_terms", "terms"
   add_foreign_key "posts", "users"

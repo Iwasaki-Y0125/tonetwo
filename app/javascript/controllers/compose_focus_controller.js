@@ -5,9 +5,14 @@ export default class extends Controller {
 
   // 投稿ボタン以外を押したときに、入力欄へフォーカスを移す
   activate(event) {
-    if (this.hasSubmitTarget && this.submitTarget.contains(event.target)) return
-    if (!this.hasInputTarget) return
+    const submit =
+      this.hasSubmitTarget ? this.submitTarget : this.element.querySelector("[data-compose-focus-target='submit']")
+    if (submit && submit.contains(event.target)) return
 
-    this.inputTarget.focus({ preventScroll: true })
+    const input =
+      this.hasInputTarget ? this.inputTarget : this.element.querySelector("textarea, input[type='text']")
+    if (!input) return
+
+    input.focus({ preventScroll: true })
   }
 }

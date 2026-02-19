@@ -15,8 +15,13 @@ class PostsController < ApplicationController
     elsif @post.support_required?
       redirect_to support_page_path, notice: Post::SUPPORT_MESSAGE
     else
-      flash.now[:alert] = Post::PROHIBIT_MESSAGE if @post.prohibit_hit?
-      render :new, status: :unprocessable_entity
+      # 投稿失敗時は、投稿内容とエラーメッセージをフラッシュに積んで、遷移元に戻す。
+      if request.referer.present?
+        redirect_back fallback_location: similar_timeline_path, flash: compose_error_flash(@post)
+        return
+      end
+      # リファラーがない場合も、全体TLに戻してエラーを表示する。
+      redirect_to timeline_path, flash: compose_error_flash(@post)
     end
   end
 
@@ -36,6 +41,16 @@ class PostsController < ApplicationController
     redirect_to similar_timeline_path, alert: "投稿回数が上限に達しました。時間をおいて再度お試しください。"
   end
 
+  # 投稿失敗時に、エラーメッセージと投稿内容をリダイレクト先に渡すためのヘルパーメソッド
+  def compose_error_flash(post)
+    {
+      compose_errors: post.errors.messages.values.flatten.uniq,
+      # flash経由の保持データを最小化するため、本文は最大140文字までに制限する。
+      compose_body: post.body.to_s.first(140)
+    }
+  end
+
+  # ストロングパラメータ
   def post_params
     params.require(:post).permit(:body)
   end

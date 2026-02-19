@@ -98,6 +98,28 @@ class RackAttackThrottleTest < ActionDispatch::IntegrationTest
     assert_equal "Too Many Requests", response.body
   end
 
+  test "POST /posts/:post_id/chat は上限超過で429を返す" do
+    20.times do
+      post "/posts/1/chat", params: { chat_message: { body: "rack attack start chat test" } }
+      assert_redirected_to new_session_path
+    end
+
+    post "/posts/1/chat", params: { chat_message: { body: "rack attack start chat test over limit" } }
+    assert_response :too_many_requests
+    assert_equal "Too Many Requests", response.body
+  end
+
+  test "POST /chats/:chat_id/messages は上限超過で429を返す" do
+    20.times do
+      post "/chats/1/messages", params: { chat_message: { body: "rack attack chat test" } }
+      assert_redirected_to new_session_path
+    end
+
+    post "/chats/1/messages", params: { chat_message: { body: "rack attack chat test over limit" } }
+    assert_response :too_many_requests
+    assert_equal "Too Many Requests", response.body
+  end
+
   private
 
   # Rack::Attack本体は実ストア（SolidCache）で動かしたまま、

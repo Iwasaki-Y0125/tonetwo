@@ -1,8 +1,14 @@
 <% compose_post = if defined?(@post) && @post.respond_to?(:new_record?) && @post.new_record?
+                    @post.body = flash[:compose_body].to_s if @post.body.blank? && flash[:compose_body].present?
                     @post
                   else
-                    Post.new
+                    Post.new(body: flash[:compose_body].to_s)
                   end %>
+<% compose_error_messages = if compose_post.errors.any?
+                              compose_post.errors.messages.values.flatten.uniq
+                            else
+                              Array(flash[:compose_errors]).reject(&:blank?)
+                            end %>
 
 <div class="tt-surface px-5 py-4">
   <%= form_with model: compose_post,
@@ -14,6 +20,16 @@
                   action: "submit->post-body-length#guardSubmit click->compose-focus#activate"
                 } do |form| %>
     <div class="hidden" data-post-body-length-target="alert"></div>
+
+    <% if compose_error_messages.any? %>
+      <div class="alert alert-error">
+        <div class="space-y-1">
+          <% compose_error_messages.each do |message| %>
+            <p class="font-semibold text-white"><%= message %></p>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
 
     <%= form.text_area :body,
                        required: true,

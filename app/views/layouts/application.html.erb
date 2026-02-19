@@ -37,7 +37,7 @@
               <div class="tt-flash-layer">
                 <% if flash[:notice] %>
                 <div class="alert alert-success tt-flash-toast pointer-events-auto inline-flex w-fit max-w-full text-white">
-                  <span><%= flash[:notice] %></span>
+                  <span class="font-semibold text-white"><%= flash[:notice] %></span>
                   <button type="button"
                           class="btn btn-ghost btn-xs text-white hover:text-white/90"
                           aria-label="閉じる"
@@ -48,7 +48,7 @@
                 <% end %>
                 <% if flash[:alert] %>
                 <div class="alert alert-error tt-flash-toast pointer-events-auto inline-flex w-fit max-w-full text-white">
-                  <span><%= flash[:alert] %></span>
+                  <span class="font-semibold text-white"><%= flash[:alert] %></span>
                   <button type="button"
                           class="btn btn-ghost btn-xs text-white hover:text-white/90"
                           aria-label="閉じる"

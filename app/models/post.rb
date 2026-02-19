@@ -5,9 +5,14 @@ class Post < ApplicationRecord
 
   belongs_to :user
 
+  #  todo ここら辺の依存関係は、ややこしくなりそうなので、運用後に機能確定してきたら整理する
   # ポストの削除機能は追加しない予定だが、万が一のために関連するpost_termsは削除するようにしておく。
   has_many :post_terms, dependent: :delete_all
   has_many :terms, through: :post_terms
+
+  # restrict_with_error: ポスト削除時に関連チャットがあると削除できず、エラーになる。
+  # ユーザー退会後も投稿やチャット内容は残す方針のため。
+  has_many :chatrooms, dependent: :restrict_with_error
 
   # 投稿作成を先に完了させ、解析は失敗時に再試行できるよう非同期で実行する。
   after_create_commit :enqueue_analysis_job
