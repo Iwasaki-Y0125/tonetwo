@@ -38,7 +38,7 @@
 
 @layer base {
   h1 {
-    font-weight: 700 !important;
+    font-weight: 600 !important;
   }
 
   a {
@@ -49,6 +49,16 @@
 }
 
 @layer components {
+  :root {
+    --tt-heading-color: #3A486D;
+  }
+
+  .tt-page-bg {
+    background-color: #eff2f4;
+    background-image: linear-gradient(180deg, #f4f6f8 0%, #eff2f4 46%, #d2d8dd 100%);
+    background-attachment: fixed;
+  }
+
   .alert.alert-error {
     color: #ffffff !important;
     font-weight: 600;
@@ -76,13 +86,13 @@
   }
 
   .tt-page-heading-feed {
-    @apply mb-4 px-1 text-lg font-medium;
-    color: #3A486D;
+    @apply mb-4 px-1 text-xl font-medium;
+    color: var(--tt-heading-color);
   }
 
   .tt-page-heading-feed-plain {
-    @apply mb-4 px-1 text-lg;
-    color: #3A486D;
+    @apply mb-4 px-1 text-xl;
+    color: var(--tt-heading-color);
   }
 
   .tt-page-heading-form {
@@ -90,11 +100,12 @@
   }
 
   .tt-page-heading-form-sub {
-    @apply mb-8 text-3xl font-medium;
+    @apply mb-8 text-4xl font-medium;
   }
 
   .tt-surface {
     @apply rounded-[1rem] border border-base-300 bg-base-100;
+    box-shadow: 8px 12px 22px -16px rgba(40, 58, 84, 0.14), 2px 5px 10px -8px rgba(40, 58, 84, 0.1);
   }
 
   .tt-empty-state {
@@ -103,6 +114,7 @@
 
   .tt-post-form-card {
     @apply rounded-[1rem] border border-base-300 bg-base-100 px-5 py-4;
+    box-shadow: 8px 12px 22px -16px rgba(40, 58, 84, 0.14), 2px 5px 10px -8px rgba(40, 58, 84, 0.1);
   }
 
   .tt-post-textarea {
@@ -174,7 +186,7 @@
   }
 
   .tt-post-meta {
-    @apply text-right text-xs text-base-content/55;
+    @apply text-right text-xs font-normal text-base-content/55;
     position: relative;
     right: -1.5rem;
   }
@@ -185,14 +197,57 @@
 
   .tt-self-post-badge {
     @apply inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] leading-4;
-    border-color: #C2C9D2;
-    background-color: #C2C9D2;
+    border-color: var(--tt-heading-color);
+    background-color: var(--tt-heading-color);
     color: #ffffff;
   }
 
   .tt-post-body {
     @apply mt-2 whitespace-pre-wrap break-words text-base leading-6 font-normal text-base-content;
     max-inline-size: min(30em, 100%);
+  }
+
+  .tt-symbol-easter-egg {
+    @apply items-center justify-center;
+    min-height: 6.25rem;
+  }
+
+  .tt-symbol-easter-egg-stack {
+    @apply inline-flex flex-col items-center gap-2;
+  }
+
+  .tt-symbol-easter-egg-bubble {
+    @apply relative inline-block rounded-full px-3 py-1 text-xs;
+    background: #ffffff;
+    color: var(--tt-heading-color);
+    border: 1px solid color-mix(in oklab, var(--color-base-content) 12%, #ffffff);
+    box-shadow: 0 3px 10px -8px rgba(40, 58, 84, 0.35);
+    margin-bottom: 0.35rem;
+  }
+
+  .tt-symbol-easter-egg-bubble::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: calc(100% - 1px);
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 7px solid #ffffff;
+  }
+
+  .tt-symbol-easter-egg-tap {
+    @apply text-xs;
+    color: var(--tt-heading-color);
+    line-height: 1.2;
+  }
+
+  .tt-symbol-easter-egg-image {
+    width: 1.75rem;
+    height: 1.75rem;
+    opacity: 1;
   }
 
   .tt-help-trigger {
@@ -218,28 +273,31 @@
   }
 
   .tt-header-nav-link {
-    @apply inline-flex h-10 w-[8.75rem] items-center justify-center gap-2 rounded-xl px-3 text-sm font-medium text-base-content/70;
-    background: var(--color-base-100);
-    border: 1px solid color-mix(in oklab, var(--color-base-content) 12%, #ffffff);
+    @apply inline-flex h-10 w-[7.75rem] items-center justify-center gap-2 rounded-xl px-3 text-sm font-normal;
+    position: relative;
+    overflow: visible;
+    color: var(--tt-heading-color);
+    background: transparent;
+    border: 0;
     box-shadow: none;
-    transition: color 180ms ease, background-color 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    transition: color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
   }
 
   .tt-header-nav-link:hover {
-    background: color-mix(in oklab, var(--color-base-100) 92%, #f3f6fb);
-    border-color: color-mix(in oklab, var(--color-base-content) 16%, #ffffff);
+    color: var(--tt-heading-color);
+    background: #eff2f4;
     box-shadow: none;
   }
 
   .tt-header-nav-link-active {
-    color: var(--color-primary);
-    background: color-mix(in oklab, var(--color-primary) 10%, var(--color-base-100));
-    border-color: color-mix(in oklab, var(--color-primary) 30%, #ffffff);
-    box-shadow: none;
+    color: var(--tt-heading-color);
+    background: linear-gradient(135deg, #a1b1c7 0%, #c4d4e6 100%);
+    box-shadow: inset 2px 2px 3px rgba(118, 132, 151, 0.3), inset -1px -1px 1px rgba(255, 255, 255, 0.95), inset -30px -30px 100px rgba(255, 255, 255, 1);
   }
 
   .tt-header-nav-link-active:hover {
-    box-shadow: none;
+    background: linear-gradient(135deg, #a1b1c7 0%, #c4d4e6 100%);
+    box-shadow: inset 2px 2px 3px rgba(118, 132, 151, 0.3), inset -1px -1px 1px rgba(255, 255, 255, 0.95), inset -30px -30px 100px rgba(255, 255, 255, 1);
   }
 
   .tt-header-nav-text {

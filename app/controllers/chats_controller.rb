@@ -53,7 +53,7 @@ class ChatsController < ApplicationController
     @chat_message = e.record if e.record.is_a?(ChatMessage)
     # サポートワードが含まれる場合はサポートページへ遷移する
     if @chat_message&.support_required?
-      redirect_to support_page_path, notice: ChatMessage::SUPPORT_MESSAGE
+      redirect_to support_page_path
       return
     end
     # それ以外のエラーの場合は、エラーメッセージをフラッシュに積んで、遷移元に戻す。

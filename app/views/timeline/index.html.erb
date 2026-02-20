@@ -1,7 +1,23 @@
 <main class="tt-page-main">
   <section class="tt-page-section-feed">
     <% timeline_heading = (@active_tab == :similar ? "おすすめタイムライン" : "全体タイムライン") %>
-    <h1 class="tt-page-heading-feed"><%= timeline_heading %></h1>
+    <h1 class="tt-page-heading-feed">
+      <span class="inline-flex items-center gap-2">
+        <%= timeline_heading %>
+        <% if @active_tab == :similar %>
+          <span class="tt-help-trigger" aria-label="おすすめ表示の説明" tabindex="0">
+            <span class="tt-help-badge inline-flex size-5 items-center justify-center rounded-full text-[11px] leading-none">?</span>
+            <span class="tt-help-popover" role="tooltip">
+              <span class="tt-help-title"><strong>おすすめタイムラインとは</strong></span>
+              あなたの直近の投稿の文章から<br>
+              ・話題（例：趣味、仕事、勉強など）<br>
+              ・文の雰囲気（前向き／しんどい など）<br>
+              をもとに、近い投稿をおすすめに表示しています
+            </span>
+          </span>
+        <% end %>
+      </span>
+    </h1>
 
     <%= render "timeline/feed",
                posts: @posts,

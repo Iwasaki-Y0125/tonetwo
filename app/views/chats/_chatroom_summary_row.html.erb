@@ -7,7 +7,7 @@
         <p class="<%= title_class %>"><%= title %></p>
       <% end %>
     </div>
-    <p class="shrink-0 text-xs text-base-content/50"><%= tt_datetime_label(latest_message_at&.in_time_zone("Asia/Tokyo")) %></p>
+    <p class="shrink-0 text-xs font-normal text-base-content/50"><%= tt_datetime_label(latest_message_at&.in_time_zone("Asia/Tokyo")) %></p>
   </div>
   <p class="<%= subtitle_class %>">
     <%= latest_message&.body.to_s.strip.presence || "まだメッセージがありません" %>

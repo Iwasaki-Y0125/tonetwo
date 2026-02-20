@@ -1,8 +1,8 @@
-<header class="fixed inset-x-0 top-0 z-30 bg-base-100 shadow-[0_1px_8px_color-mix(in_oklab,var(--color-base-content)_5%,transparent)]">
+<header class="fixed inset-x-0 top-0 z-30 bg-[#f8fafc] shadow-[0_1px_10px_color-mix(in_oklab,var(--color-base-content)_10%,transparent)]">
   <div class="tt-shell">
     <div class="grid h-[64px] grid-cols-[1fr_auto_1fr] items-center gap-4">
       <%= link_to root_path, class: "inline-flex h-9 items-center justify-center shrink-0" do %>
-        <%= image_tag "Logo.svg", alt: "ToneTwo", class: "tt-header-logo block h-6 w-auto" %>
+        <%= image_tag "Logo.svg", alt: "ToneTwo", class: "tt-header-logo block h-7 w-auto" %>
       <% end %>
 
       <% if authenticated? %>
