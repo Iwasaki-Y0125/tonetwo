@@ -42,7 +42,7 @@
    - `find_or_create_by!` + `RecordNotUnique` rescue で競合時も既存roomを再利用。
 4. 権限制御
    - `owner_user_id` は持たず、`chatroom.post.user_id` と `reply_user_id` で参加者判定。
-   - 参加者以外は `RecordNotFound`。
+   - 参加者以外アクセスはモデルで `RecordNotFound` とし、コントローラで捕捉して `timeline` へリダイレクトする。
 5. UI
    - チャット画面: 右=自分、左=相手。
    - 送信フォーム: 投稿フォームの文字数制限UI（140字）を流用。
@@ -82,3 +82,20 @@
 - [x] 投稿からチャット開始できる。
 - [x] 同一投稿×同一相手でroomが重複しない。
 - [x] 作成後（再利用時含む）にチャット詳細へ遷移できる。
+
+## 追記（Issue #144: 連投不可と交互送信制御）
+- `app/models/chatroom.rb`
+  - `sendable_by?(user)` を追加し、直前メッセージ送信者と現在ユーザーが同一なら送信不可と判定する。
+  - `start_with_message!` は「room確保 + 初回メッセージ作成」をトランザクションで扱い、メッセージ作成は `ChatMessage.create_in_room!` に委譲する。
+- `app/models/chat_message.rb`
+  - `create_in_room!(chatroom:, user:, body:)` を追加し、`chatroom.with_lock` による直列化付きで保存する。
+  - `validate :prevent_consecutive_send` を追加し、`chatroom.sendable_by?(user)` が `false` の場合は保存不可にした。
+  - これにより `POST /posts/:post_id/chat` と `POST /chats/:chat_id/messages` の両経路を同一ロジックで防御する。
+- `app/controllers/chats_controller.rb` / `app/controllers/chats/messages_controller.rb`
+  - 非参加者アクセス時（`RecordNotFound`）は `timeline` へリダイレクトする。
+- `app/views/chats/show.html.erb` / `app/views/chats/_composer_form.html.erb`
+  - 送信不可時にフォーム上へ理由と制約説明を表示し、textarea/送信ボタン/フォーム外観を無効状態で表示するUIを追加した。
+- `app/views/chats/_heading_with_help.html.erb` / `app/views/chats/index.html.erb` / `app/views/chats/show.html.erb` / `app/views/chats/new.html.erb`
+  - 見出し横にヘルプマークを追加し、ホバー/フォーカス時に「荒らし防止のため交互返信方式」であることを説明するポップアップを追加した。
+- `test/integration/chats_flow_test.rb`
+  - 初回送信導線での連投不可、相手送信後の再送可、送信不可理由のUI表示、非参加者アクセス時のリダイレクトを検証するテストを追加した。

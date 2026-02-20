@@ -1,6 +1,6 @@
 <main class="tt-page-main">
   <section class="tt-page-section-feed">
-    <h1 class="tt-page-heading-feed-plain">チャット一覧</h1>
+    <%= render "chats/heading_with_help", title: "チャット一覧" %>
 
     <% if @chatrooms.any? %>
       <div class="tt-surface mt-4 divide-y divide-base-300 overflow-hidden">

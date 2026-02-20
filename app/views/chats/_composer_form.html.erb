@@ -1,3 +1,6 @@
+<% submit_disabled = local_assigns.fetch(:submit_disabled, false) %>
+<% submit_block_reason = local_assigns[:submit_block_reason] %>
+
 <%= form_with model: model,
               url: url,
               class: [margin_class, "space-y-2 tt-compose-focus-area"].compact.join(" "),
@@ -11,6 +14,14 @@
     140字以内で入力してください。
   </div>
 
+  <% if submit_disabled && submit_block_reason.present? %>
+    <div class="rounded-xl border border-emerald-200 bg-emerald-100 px-4 py-3 text-emerald-900">
+      <p class="font-semibold"><%= submit_block_reason %></p>
+      <p class="mt-1 text-xs text-emerald-800">チャットは荒らし防止のため、交互に送信しあう方式です。<br>
+      連続での送信はできません。相手から返信が届くとまたメッセージを送信できます。</p>
+    </div>
+  <% end %>
+
   <% error_messages = model.errors.messages.values.flatten.uniq %>
   <% if error_messages.any? %>
     <div class="alert alert-error">
@@ -22,11 +33,12 @@
     </div>
   <% end %>
 
-  <div class="block w-full rounded-2xl border border-base-300 bg-base-100/95 px-3 py-2">
+  <div class="<%= ["block w-full rounded-2xl border px-3 py-2", (submit_disabled ? "border-slate-400 bg-slate-300/95 opacity-90 cursor-not-allowed" : "border-base-300 bg-base-100/95")].join(" ") %>">
     <%= form.text_area :body,
                        required: true,
                        rows: 1,
-                       class: "w-full min-h-8 resize-none bg-transparent py-2 text-sm outline-none md:text-base",
+                       disabled: submit_disabled,
+                       class: [ "w-full min-h-8 resize-none bg-transparent py-2 text-sm outline-none md:text-base", ("cursor-not-allowed text-slate-600 placeholder:text-slate-500" if submit_disabled) ].compact.join(" "),
                        placeholder: "メッセージを入力(140字まで)",
                        data: {
                          post_body_length_target: "input",
@@ -38,7 +50,8 @@
       <p class="tt-form-error-inline invisible flex-1" data-post-body-length-target="message" aria-live="polite"></p>
       <p class="tt-form-counter" data-post-body-length-target="counter" aria-live="polite">0/140</p>
       <%= form.button type: :submit,
-                      class: "btn btn-circle btn-primary btn-sm shrink-0 text-white",
+                      disabled: submit_disabled,
+                      class: [ "btn btn-circle btn-primary btn-sm shrink-0 text-white", ("btn-disabled opacity-60 cursor-not-allowed" if submit_disabled) ].compact.join(" "),
                       data: { post_body_length_target: "submit", compose_focus_target: "submit" } do %>
         <%= image_tag "send.svg", alt: "送信", class: "block h-4 w-4" %>
       <% end %>

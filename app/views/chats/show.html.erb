@@ -1,6 +1,7 @@
 <main class="tt-page-main">
   <section class="tt-page-section-feed">
-    <h1 class="tt-page-heading-feed-plain">チャット</h1>
+    <%= render "chats/heading_with_help", title: "チャット" %>
+    <% sendable = @chatroom.sendable_by?(Current.user) %>
 
     <div class="mt-4 rounded-2xl bg-info/20 p-5 md:p-6"
          data-controller="compose-focus"
@@ -16,7 +17,9 @@
       <%= render "chats/composer_form",
                  model: @chat_message,
                  url: chat_messages_path(@chatroom),
-                 margin_class: "mt-4" %>
+                 margin_class: "mt-4",
+                 submit_disabled: !sendable,
+                 submit_block_reason: sendable ? nil : ChatMessage::CONSECUTIVE_SEND_MESSAGE %>
     </div>
   </section>
 </main>
