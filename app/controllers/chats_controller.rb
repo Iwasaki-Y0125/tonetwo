@@ -7,6 +7,14 @@ class ChatsController < ApplicationController
     @chatroom = Chatroom.for_show(id: params[:id], user: Current.user)
     @chat_messages = @chatroom.sorted_messages
     @chat_message = ChatMessage.new
+  rescue ActiveRecord::RecordNotFound
+    Rails.logger.warn(
+      event: "chat_access_denied",
+      user_id: Current.user&.id,
+      chat_id: params[:id],
+      action: "chats#show"
+    )
+    redirect_to timeline_path, alert: "このチャットにはアクセスできません。"
   end
 
   def new
