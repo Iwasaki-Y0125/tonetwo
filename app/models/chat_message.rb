@@ -1,6 +1,5 @@
 class ChatMessage < ApplicationRecord
   PROHIBIT_MESSAGE = "不適切なワードを含むため送信できません".freeze
-  SUPPORT_MESSAGE = "サポートページへ移動します".freeze
 
   belongs_to :chatroom
   belongs_to :user
@@ -40,7 +39,7 @@ class ChatMessage < ApplicationRecord
 
     if matched_terms.where(action: "support").exists?
       @support_required = true
-      errors.add(:base, SUPPORT_MESSAGE)
+      errors.add(:base, :invalid)
     else
       errors.add(:body, PROHIBIT_MESSAGE)
     end

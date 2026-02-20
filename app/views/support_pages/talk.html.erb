@@ -1,0 +1,108 @@
+<% support_post = Post.new %>
+
+<main class="tt-page-main">
+  <section class="mx-auto max-w-3xl px-6 py-16 space-y-6">
+    <article class="tt-surface px-6 py-7 md:px-8">
+      <div class="space-y-4 text-sm leading-7">
+        <h2 class="text-base font-semibold text-[color:var(--tt-heading-color)]">1. はじめに</h2>
+        <p>はじめまして、このサイトの開発者です。</p>
+        <p>ちょっとしんどいなあって言葉が投稿本文に含まれていたので、投稿は保存できません。ごめんなさい。</p>
+        <p>ただ、こういうときに単にサポートページに誘導するっていうのもなんか味気ないし丸投げ感があってどうなんだろうという気持ちもあって。</p>
+        <p>せっかく個人で運営しているサイトなので、ちょっと私個人の雑談を挟んでみようとおもいます。</p>
+        <h2 class="pt-6 text-base font-semibold text-[color:var(--tt-heading-color)]">2. あなたがつらいのは脳の構造の問題</h2>
+        <p>人は言葉がある以上、完全に幸福にはなれないとおもっています。（急に何言ってんだって帰らないで）</p>
+        <p>
+          人に限らず、生物は生き残るために、危険なこと不快なことは強く記憶されるようにできています。<br>
+          たとえば、幸せなできごとが99あったとしても、1つの不幸なできごとがあったら、そちらが強く記憶されて、自分は不幸だと認識してしまう。生存本能として。
+        </p>
+        <p>
+          さらに、人間は、不幸なできごとを、言葉で記憶できるので、何度も何度も繰り返し鮮明に思い出せます。<br>
+          たとえば、100億とか資産があったとしても、犬のフンを踏んでしまったら、その日は何回も犬のフン踏んじゃったよ･･････って落ち込むんじゃないかなって（念のため、感情の動きを検証したいので、誰か100億円ください）
+        </p>
+        <p>人間が言葉を得たことの副作用として、完全に幸福な状態っていうのは存在しないんじゃないかなっておもいます。</p>
+        <p>だから、生きれてれば死にたいぐらいつらくなるのは、構造上しょうがないことだとおもいます。あなたが弱いとか、甘えてるとかじゃなくて、脳の構造の問題です。</p>
+        <h2 class="pt-6 text-base font-semibold text-[color:var(--tt-heading-color)]">3. それでも少し楽になる道</h2>
+        <p>じゃあ、やっぱり死ぬしかないのかというと、そういうわけでもなくて。</p>
+        <p>完全に幸福な状態が存在しないとしても、完全に不幸な状態も存在しないとおもいます。</p>
+        <p>
+          たとえば、さっきの犬のフンを踏んでしまった話も、犬のフンを踏んでしまったこと自体は不幸なできごとです。<br>
+          でも、そのあとに、犬のフンを踏んでしまったことを誰かに話して笑い合えたら、そのできごとは完全に不幸なできごとではなくなります。
+        </p>
+        <p>人は言葉を得たから、つらいことをつらいままにせず、誰かと共有して、笑い合うことができます。</p>
+        <p>そういうふうに、誰かと共有して、笑い合える場所があれば、完全に不幸な状態も存在しないんじゃないかなっておもうのです。</p>
+        <h2 class="pt-6 text-base font-semibold text-[color:var(--tt-heading-color)]">4. ここで話してほしいこと</h2>
+        <p>
+          人は孤独になると、どこかおかしくなります。<br>
+          ここでいう孤独というのは、単にひとりぼっちであるというだけではなく、家族や友人がいたとしても、誰にも自分の本心を明かせない状態のことです。
+        </p>
+        <p>昔のSNSでは、そういうリアルでは話せないことを吐き出す場という側面があったとおもうのですが、最近はどこか冷笑的で殺伐としていて、むしろ本音が言いづらい感じだなあとおもいます。</p>
+        <p>だから、そういうとりとめのない話を、誰かと共有して、笑い合える場所をインターネットに復活させたくて、このサイトを作りました。</p>
+        <p>そういうとりとめのない話をここでしてみませんか？</p>
+        <p>
+          今日食べたあれがおいしかったとか、最近仕事がしんどいとか、そういうとりとめのない話で大丈夫です。<br>
+          見知らぬだれかと、そういうとりとめのない話を共有して、しょうもないやり取りをして。
+        </p>
+        <p>
+          しんどいことは結局なんも解決してないけど、<br>
+          まあ、明日もちょっくら生きてみようか。
+        </p>
+        <p>そんな気持ちに、あなたになってもらえたら、とても嬉しいです。</p>
+      </div>
+    </article>
+
+    <article class="tt-post-form-card">
+      <%= form_with model: support_post,
+                    url: posts_path,
+                    class: "space-y-2 tt-compose-focus-area",
+                    data: {
+                      controller: "post-body-length auto-grow-textarea compose-focus",
+                      post_body_length_limit_value: 140,
+                      action: "submit->post-body-length#guardSubmit click->compose-focus#activate"
+                    } do |form| %>
+        <div class="hidden" data-post-body-length-target="alert"></div>
+
+        <%= form.text_area :body,
+                           required: true,
+                           rows: 1,
+                           class: "textarea-plain tt-post-textarea min-h-[7rem]",
+                           placeholder: "今どんな感じ？（140字以内）",
+                           data: {
+                             post_body_length_target: "input",
+                             compose_focus_target: "input",
+                             auto_grow_textarea_target: "field",
+                             action: "input->post-body-length#check input->auto-grow-textarea#resize"
+                           } %>
+        <div class="mt-2 flex items-end gap-3">
+          <p class="tt-form-error-inline invisible flex-1" data-post-body-length-target="message" aria-live="polite"></p>
+          <p class="tt-form-counter" data-post-body-length-target="counter" aria-live="polite">0/140</p>
+          <%= form.submit "投稿",
+                          class: "btn btn-primary",
+                          data: {
+                            post_body_length_target: "submit",
+                            compose_focus_target: "submit"
+                          } %>
+        </div>
+      <% end %>
+    </article>
+
+    <article class="tt-surface px-6 py-7 md:px-8">
+      <h2 class="tt-page-heading-feed-plain mb-4 px-0">つらさが強いときの公的支援</h2>
+      <div class="space-y-3 text-sm leading-7">
+        <p>
+          ひとりで抱えるのが難しいときは、公的な相談窓口を頼ってください。
+          緊急時は、ためらわずに119番や最寄りの救急窓口に連絡してください。
+        </p>
+        <ul class="space-y-2">
+          <li class="rounded-xl border border-base-300 bg-base-100 px-4 py-3">
+            <p class="text-xs tracking-[0.08em] text-base-content/55">公的相談窓口</p>
+            <p class="mt-1">こころの健康相談統一ダイヤル</p>
+            <p class="mt-1 text-sm">
+              電話:
+              <a href="tel:0570064556" class="font-semibold underline decoration-base-content/35 underline-offset-2">0570-064-556</a>
+            </p>
+          </li>
+        </ul>
+      </div>
+    </article>
+  </section>
+</main>

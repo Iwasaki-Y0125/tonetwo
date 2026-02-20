@@ -1,0 +1,10 @@
+<%= link_to symbol_page_path,
+            class: "tt-post-row tt-post-row-no-icon tt-symbol-easter-egg",
+            data: { turbo_frame: "_top" },
+            aria: { label: "シンボルページへ" } do %>
+  <span class="tt-symbol-easter-egg-stack">
+    <span class="tt-symbol-easter-egg-bubble">見つかっちゃった･･･えへへ</span>
+    <%= image_tag "Symbol.svg", alt: "Symbol", class: "tt-symbol-easter-egg-image" %>
+    <span class="tt-symbol-easter-egg-tap">Tap Me!</span>
+  </span>
+<% end %>

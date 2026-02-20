@@ -10,7 +10,7 @@
                               Array(flash[:compose_errors]).reject(&:blank?)
                             end %>
 
-<div class="tt-surface px-5 py-4">
+<div class="tt-post-form-card">
   <%= form_with model: compose_post,
                 url: posts_path,
                 class: "space-y-2 tt-compose-focus-area",

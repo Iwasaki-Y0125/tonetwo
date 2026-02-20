@@ -62,6 +62,6 @@ class PostTest < ActiveSupport::TestCase
 
     assert_not post.valid?
     assert post.support_required?
-    assert_includes post.errors[:base], "サポートページへ移動します"
+    assert_includes post.errors.details[:base], { error: :invalid }
   end
 end

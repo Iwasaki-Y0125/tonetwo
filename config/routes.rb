@@ -24,6 +24,8 @@ Rails.application.routes.draw do
   end
 
   get "support" => "support_pages#show", as: :support_page
+  get "support/talk" => "support_pages#talk", as: :support_talk_page
+  get "symbol" => "symbol_pages#show", as: :symbol_page
 
   # TODO(Auth): MVP時点ではパスワードリセットは未実装のため非公開。
   # 本リリースまでに下記ルートを有効化する。

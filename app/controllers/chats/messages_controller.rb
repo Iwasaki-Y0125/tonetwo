@@ -12,7 +12,7 @@ module Chats
       end
       # サポートワードが含まれる場合はサポートページへ遷移する
       if @chat_message.support_required?
-        redirect_to support_page_path, notice: ChatMessage::SUPPORT_MESSAGE
+        redirect_to support_page_path
         return
       end
 

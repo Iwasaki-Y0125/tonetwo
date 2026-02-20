@@ -13,7 +13,7 @@ class PostsController < ApplicationController
     if @post.save
       redirect_to similar_timeline_path, notice: "投稿しました。"
     elsif @post.support_required?
-      redirect_to support_page_path, notice: Post::SUPPORT_MESSAGE
+      redirect_to support_page_path
     else
       # 投稿失敗時は、投稿内容とエラーメッセージをフラッシュに積んで、遷移元に戻す。
       if request.referer.present?

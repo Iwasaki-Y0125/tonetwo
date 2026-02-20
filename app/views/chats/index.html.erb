@@ -8,8 +8,8 @@
           <%= render "chats/chatroom_summary_row",
                      chatroom: chatroom,
                      title: chatroom.post.body.to_s.strip,
-                     title_class: "truncate text-base font-semibold text-primary",
-                     subtitle_class: "mt-2 truncate text-base text-base-content/60" %>
+                     title_class: "truncate text-base font-semibold text-[color:var(--tt-heading-color)]",
+                     subtitle_class: "mt-2 truncate text-base font-normal text-base-content/60" %>
         <% end %>
       </div>
     <% else %>

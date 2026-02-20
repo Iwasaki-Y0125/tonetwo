@@ -1,7 +1,6 @@
 class Post < ApplicationRecord
   SENTIMENT_LABELS = %w[pos neg].freeze
   PROHIBIT_MESSAGE = "不適切なワードを含むため投稿できません".freeze
-  SUPPORT_MESSAGE = "サポートページへ移動します".freeze
 
   belongs_to :user
 
@@ -49,8 +48,8 @@ class Post < ApplicationRecord
 
     if matched_terms.where(action: "support").exists?
       @support_required = true
-      # 保存は止めつつ、controllerがサポートページへ自動遷移できるようにメッセージを積む。
-      errors.add(:base, SUPPORT_MESSAGE)
+      # 保存は止めつつ、controllerがサポートページへ自動遷移できるようにする。
+      errors.add(:base, :invalid)
     else
       errors.add(:body, PROHIBIT_MESSAGE)
     end
