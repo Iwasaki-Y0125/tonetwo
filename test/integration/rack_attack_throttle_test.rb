@@ -1,4 +1,5 @@
 require "test_helper"
+require "digest/md5"
 
 class RackAttackThrottleTest < ActionDispatch::IntegrationTest
   # Rack::Attackの動作を検証するためのテストセットアップ
@@ -17,6 +18,7 @@ class RackAttackThrottleTest < ActionDispatch::IntegrationTest
     disable_controller_rate_limit_for_middleware_test(SessionsController)
     disable_controller_rate_limit_for_middleware_test(SignUpsController)
     disable_controller_rate_limit_for_middleware_test(PostsController)
+    @request_env = { "REMOTE_ADDR" => test_remote_ip }
   end
 
   # Rack::Attackテスト終了後、ほかのテストに影響しないようにRack::Attackの有効設定を元の状態に戻す
@@ -32,34 +34,34 @@ class RackAttackThrottleTest < ActionDispatch::IntegrationTest
     headers = { "HTTP_AUTHORIZATION" => "Basic dGVzdDp0ZXN0" }
 
     20.times do
-      get new_session_path, headers: headers
+      get new_session_path, headers: headers, env: @request_env
       assert_response :success
     end
 
-    get new_session_path, headers: headers
+    get new_session_path, headers: headers, env: @request_env
     assert_response :too_many_requests
     assert_equal "Too Many Requests", response.body
   end
 
   test "通常リクエストは上限超過で429を返す" do
     240.times do
-      get new_session_path
+      get new_session_path, env: @request_env
       assert_response :success
     end
 
-    get new_session_path
+    get new_session_path, env: @request_env
     assert_response :too_many_requests
     assert_equal "Too Many Requests", response.body
   end
 
   test "POST /session は上限超過で抑止される" do
     20.times do
-      post session_path, params: { email_address: "one@example.com", password: "wrong-password" }
+      post session_path, params: { email_address: "one@example.com", password: "wrong-password" }, env: @request_env
       assert_redirected_to new_session_path
       assert_equal "メールアドレスまたはパスワードが異なります。", flash[:alert]
     end
 
-    post session_path, params: { email_address: "one@example.com", password: "wrong-password" }
+    post session_path, params: { email_address: "one@example.com", password: "wrong-password" }, env: @request_env
     assert_response :too_many_requests
     assert_equal "Too Many Requests", response.body
   end
@@ -72,7 +74,7 @@ class RackAttackThrottleTest < ActionDispatch::IntegrationTest
           password: "Password1!",
           password_confirmation: "Password1!"
         }
-      }
+      }, env: @request_env
       assert_response :unprocessable_entity
     end
 
@@ -82,40 +84,40 @@ class RackAttackThrottleTest < ActionDispatch::IntegrationTest
         password: "Password1!",
         password_confirmation: "Password1!"
       }
-    }
+    }, env: @request_env
     assert_response :too_many_requests
     assert_equal "Too Many Requests", response.body
   end
 
   test "POST /posts は上限超過で429を返す" do
     20.times do
-      post posts_path, params: { post: { body: "rack attack test" } }
+      post posts_path, params: { post: { body: "rack attack test" } }, env: @request_env
       assert_redirected_to new_session_path
     end
 
-    post posts_path, params: { post: { body: "rack attack test over limit" } }
+    post posts_path, params: { post: { body: "rack attack test over limit" } }, env: @request_env
     assert_response :too_many_requests
     assert_equal "Too Many Requests", response.body
   end
 
   test "POST /posts/:post_id/chat は上限超過で429を返す" do
     20.times do
-      post "/posts/1/chat", params: { chat_message: { body: "rack attack start chat test" } }
+      post "/posts/1/chat", params: { chat_message: { body: "rack attack start chat test" } }, env: @request_env
       assert_redirected_to new_session_path
     end
 
-    post "/posts/1/chat", params: { chat_message: { body: "rack attack start chat test over limit" } }
+    post "/posts/1/chat", params: { chat_message: { body: "rack attack start chat test over limit" } }, env: @request_env
     assert_response :too_many_requests
     assert_equal "Too Many Requests", response.body
   end
 
   test "POST /chats/:chat_id/messages は上限超過で429を返す" do
     20.times do
-      post "/chats/1/messages", params: { chat_message: { body: "rack attack chat test" } }
+      post "/chats/1/messages", params: { chat_message: { body: "rack attack chat test" } }, env: @request_env
       assert_redirected_to new_session_path
     end
 
-    post "/chats/1/messages", params: { chat_message: { body: "rack attack chat test over limit" } }
+    post "/chats/1/messages", params: { chat_message: { body: "rack attack chat test over limit" } }, env: @request_env
     assert_response :too_many_requests
     assert_equal "Too Many Requests", response.body
   end
@@ -149,5 +151,11 @@ class RackAttackThrottleTest < ActionDispatch::IntegrationTest
     @rate_limit_callback_stores.each_value do |entry|
       entry[:binding].local_variable_set(:store, entry[:original_store])
     end
+  end
+
+  # 並列実行時にRack::AttackのIP単位カウンタが衝突しないよう、テストごとに固定IPを分離する。
+  def test_remote_ip
+    hash = Digest::MD5.hexdigest(name).to_i(16)
+    "198.51.100.#{(hash % 200) + 1}"
   end
 end

@@ -1,4 +1,5 @@
 require "test_helper"
+require "digest/md5"
 
 class PostsControllerTest < ActionController::TestCase
   tests PostsController
@@ -8,6 +9,7 @@ class PostsControllerTest < ActionController::TestCase
     Rails.cache.clear
     FilterTerm.delete_all
     @user = users(:one)
+    @request.env["REMOTE_ADDR"] = test_remote_ip
     sign_in_as(@user)
   end
 
@@ -49,6 +51,12 @@ class PostsControllerTest < ActionController::TestCase
   end
 
   private
+
+  # 並列実行時にrate_limitキー（IP単位）が衝突しないよう、テストごとに固定IPを分離する。
+  def test_remote_ip
+    hash = Digest::MD5.hexdigest(name).to_i(16)
+    "203.0.113.#{(hash % 200) + 1}"
+  end
 
   def sign_in_as(user)
     session_record = user.sessions.create!
