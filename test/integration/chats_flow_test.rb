@@ -138,6 +138,23 @@ class ChatsFlowTest < ActionDispatch::IntegrationTest
     assert_includes @response.body, 'disabled="disabled"'
   end
 
+  test "チャット詳細のメッセージ一覧にスクロール用DOM属性が付与される" do
+    owner = users(:one)
+    replier = users(:two)
+    target_post = owner.posts.create!(body: "スクロール属性テスト")
+    chatroom = Chatroom.create!(post: target_post, reply_user: replier)
+    chatroom.chat_messages.create!(user: owner, body: "1通目")
+    sign_in_as(replier)
+
+    get chat_path(chatroom)
+
+    assert_response :success
+    assert_includes @response.body, 'data-controller="compose-focus chat-scroll"'
+    assert_includes @response.body, 'data-chat-scroll-target="messages"'
+    assert_includes @response.body, "max-h-[50vh]"
+    assert_includes @response.body, "overflow-y-auto"
+  end
+
   test "チャット初回送信でprohibit語を含む場合は保存せず422を返す" do
     FilterTerm.find_or_create_by!(term: "しね", action: "prohibit")
     user = users(:one)

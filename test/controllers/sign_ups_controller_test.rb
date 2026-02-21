@@ -1,4 +1,5 @@
 require "test_helper"
+require "digest/md5"
 
 class SignUpsControllerTest < ActionController::TestCase
   tests SignUpsController
@@ -6,6 +7,7 @@ class SignUpsControllerTest < ActionController::TestCase
 
   setup do
     Rails.cache.clear
+    @request.env["REMOTE_ADDR"] = test_remote_ip
   end
 
   test "11回目の`POST /sign_up`で既存rate_limit経由の抑止が発火する" do
@@ -73,5 +75,13 @@ class SignUpsControllerTest < ActionController::TestCase
       }
       assert_response :unprocessable_entity
     end
+  end
+
+  private
+
+  # 並列実行時にrate_limitキー（IP単位）が衝突しないよう、テストごとに固定IPを分離する。
+  def test_remote_ip
+    hash = Digest::MD5.hexdigest(name).to_i(16)
+    "203.0.113.#{(hash % 200) + 1}"
   end
 end

@@ -3,18 +3,19 @@
     <%= render "chats/heading_with_help", title: "チャット" %>
 
     <div class="mt-4 rounded-2xl bg-info/20 p-5 md:p-6"
-         data-controller="compose-focus"
+         data-controller="compose-focus chat-scroll"
          data-action="pointerdown->compose-focus#activate click->compose-focus#activate">
-      <div class="mb-4">
+      <div class="min-h-[20rem] max-h-[50vh] space-y-2 overflow-y-auto pr-1"
+           data-chat-scroll-target="messages">
         <%= render "chats/seed_post_bubble", post: @post, current_user: Current.user %>
       </div>
-
-      <%= render "chats/composer_form",
-                 model: @chat_message,
-                 url: post_chat_path(@post),
-                 margin_class: nil,
-                 submit_disabled: false,
-                 submit_block_reason: nil %>
     </div>
+
+    <%= render "chats/composer_form",
+               model: @chat_message,
+               url: post_chat_path(@post),
+               margin_class: "mt-4",
+               submit_disabled: false,
+               submit_block_reason: nil %>
   </section>
 </main>

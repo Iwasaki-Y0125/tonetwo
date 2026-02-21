@@ -1,6 +1,6 @@
 <% posted_at = post.created_at.in_time_zone("Asia/Tokyo") %>
 <% own_post = post.user_id == current_user.id %>
-<div class="space-y-2">
+<div class="space-y-2 px-4">
   <div class="flex <%= own_post ? "justify-end" : "justify-start" %>">
     <div class="<%= own_post ? "bg-neutral text-neutral-content" : "bg-base-100 text-base-content" %> inline-block max-w-[85%] rounded-[1.35rem] px-5 py-3 text-left whitespace-pre-wrap break-words"><%= post.body.to_s.strip %></div>
   </div>

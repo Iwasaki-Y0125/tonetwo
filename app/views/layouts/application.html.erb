@@ -24,14 +24,17 @@
   <body data-theme="pastel" class="tt-page-bg min-h-screen text-base-content">
     <%= render "shared/site_header" %>
     <% if authenticated? %>
+      <% show_compose_sidebar = current_page?(timeline_path) || current_page?(similar_timeline_path) %>
       <div class="pt-16">
         <div class="tt-shell py-8">
           <div class="relative mx-auto w-full max-w-[540px]">
-            <div class="absolute left-full top-16 ml-6 hidden w-[300px] lg:block">
-              <div class="sticky top-24">
-                <%= render "shared/compose_sidebar" %>
+            <% if show_compose_sidebar %>
+              <div class="absolute left-full top-16 ml-6 hidden w-[300px] lg:block">
+                <div class="sticky top-24">
+                  <%= render "shared/compose_sidebar" %>
+                </div>
               </div>
-            </div>
+            <% end %>
 
             <div class="pointer-events-none absolute inset-x-0 top-0 z-40">
               <div class="tt-flash-layer">

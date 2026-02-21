@@ -1,4 +1,5 @@
 require "test_helper"
+require "digest/md5"
 
 class SessionsControllerTest < ActionController::TestCase
   tests SessionsController
@@ -7,6 +8,7 @@ class SessionsControllerTest < ActionController::TestCase
   setup do
     Rails.cache.clear
     @user = users(:one)
+    @request.env["REMOTE_ADDR"] = test_remote_ip
   end
 
   test "return_to_after_authenticating(ログイン後のリダイレクト先）に外部URLが注入されたらrootにフォールバックする" do
@@ -55,5 +57,13 @@ class SessionsControllerTest < ActionController::TestCase
       assert_redirected_to new_session_path
       assert_equal "メールアドレスまたはパスワードが異なります。", flash[:alert]
     end
+  end
+
+  private
+
+  # 並列実行時にrate_limitキー（IP単位）が衝突しないよう、テストごとに固定IPを分離する。
+  def test_remote_ip
+    hash = Digest::MD5.hexdigest(name).to_i(16)
+    "203.0.113.#{(hash % 200) + 1}"
   end
 end
