@@ -19,7 +19,10 @@ class ChatMessage < ApplicationRecord
   # with_lock : 対象レコードに対して行ロックをかける。ブロック内の処理は一つずつ順番に処理される（=直列化）
   def self.create_in_room!(chatroom:, user:, body:)
     chatroom.with_lock do
-      chatroom.chat_messages.create!(user: user, body: body)
+      message = chatroom.chat_messages.create!(user: user, body: body)
+      # 一覧バッジ判定のため、直近送信者と未読状態を同時に更新する
+      chatroom.update!(last_sender: user, has_unread: true)
+      message
     end
   end
 

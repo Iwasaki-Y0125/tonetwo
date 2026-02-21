@@ -17,6 +17,21 @@ class ChatsController < ApplicationController
     redirect_to timeline_path, alert: "このチャットにはアクセスできません。"
   end
 
+  # 新着フラグ変更のためのPATCH
+  def read
+    chatroom = Chatroom.for_show(id: params[:id], user: Current.user)
+    chatroom.clear_unread_for!(Current.user)
+    head :no_content
+  rescue ActiveRecord::RecordNotFound
+    Rails.logger.warn(
+      event: "chat_access_denied",
+      user_id: Current.user&.id,
+      chat_id: params[:id],
+      action: "chats#read"
+    )
+    redirect_to timeline_path, alert: "このチャットにはアクセスできません。"
+  end
+
   def new
     @post = Post.find(params[:post_id])
     # 自分の投稿にはチャットを作成できないようにする
