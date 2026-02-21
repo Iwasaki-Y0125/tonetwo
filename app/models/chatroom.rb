@@ -2,6 +2,7 @@ class Chatroom < ApplicationRecord
   # ===== 関連 / バリデーション =====
   belongs_to :post
   belongs_to :reply_user, class_name: "User"
+  belongs_to :last_sender, class_name: "User", optional: true
   has_many :chat_messages, dependent: :delete_all
 
   validates :post_id, uniqueness: { scope: :reply_user_id }
@@ -83,6 +84,13 @@ class Chatroom < ApplicationRecord
     # 最新メッセージの投稿者が自分と同じなら送れない、違うなら送れる
     latest_message_user_id = latest_message&.user_id
     latest_message_user_id.nil? || latest_message_user_id != user.id
+  end
+
+  # 受信側かつ未読状態のときだけ既読更新する
+  def clear_unread_for!(user)
+    return unless last_sender_id != user.id && has_unread?
+
+    update!(has_unread: false)
   end
 
   private

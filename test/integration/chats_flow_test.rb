@@ -185,6 +185,80 @@ class ChatsFlowTest < ActionDispatch::IntegrationTest
     assert_redirected_to support_page_path
   end
 
+  test "受信側がチャット詳細を開くと一覧の新着バッジが消える" do
+    owner = users(:one)
+    replier = users(:two)
+    target_post = owner.posts.create!(body: "新着確認テスト")
+    chatroom, = Chatroom.start_with_message!(post: target_post, reply_user: replier, body: "最初のメッセージ")
+
+    sign_in_as(owner)
+    get chats_path
+    assert_response :success
+    assert_match(/>\s*新着\s*</, @response.body)
+
+    get chat_path(chatroom)
+    assert_response :success
+    assert_equal true, chatroom.reload.has_unread
+    assert_includes @response.body, read_chat_path(chatroom)
+    assert_includes @response.body, 'data-controller="chat-read"'
+
+    patch read_chat_path(chatroom)
+    assert_response :no_content
+    assert_equal false, chatroom.reload.has_unread
+
+    get chats_path
+    assert_response :success
+    assert_no_match(/>\s*新着\s*</, @response.body)
+    assert_no_match(/>\s*返信待ち\s*</, @response.body)
+  end
+
+  test "送信後は送信者が返信待ちになり相手側は新着になる" do
+    owner = users(:one)
+    replier = users(:two)
+    target_post = owner.posts.create!(body: "バッジ遷移テスト")
+    chatroom, = Chatroom.start_with_message!(post: target_post, reply_user: replier, body: "初回メッセージ")
+
+    sign_in_as(owner)
+    get chat_path(chatroom)
+    assert_response :success
+    patch read_chat_path(chatroom)
+    assert_response :no_content
+    assert_equal false, chatroom.reload.has_unread
+
+    assert_difference -> { ChatMessage.count }, 1 do
+      post chat_messages_path(chatroom), params: { chat_message: { body: "返信します" } }
+    end
+    assert_redirected_to chat_path(chatroom)
+    chatroom.reload
+    assert_equal owner.id, chatroom.last_sender_id
+    assert_equal true, chatroom.has_unread
+
+    get chats_path
+    assert_response :success
+    assert_match(/>\s*返信待ち\s*</, @response.body)
+    assert_no_match(/>\s*新着\s*</, @response.body)
+
+    sign_in_as(replier)
+    get chats_path
+    assert_response :success
+    assert_match(/>\s*新着\s*</, @response.body)
+    assert_no_match(/>\s*返信待ち\s*</, @response.body)
+  end
+
+  test "readエンドポイントは参加者以外だとタイムラインへリダイレクトする" do
+    owner = users(:one)
+    replier = users(:two)
+    outsider = build_user(email: "outsider-read@example.com")
+    target_post = owner.posts.create!(body: "既読権限テスト")
+    chatroom, = Chatroom.start_with_message!(post: target_post, reply_user: replier, body: "1通目")
+
+    sign_in_as(outsider)
+    patch read_chat_path(chatroom)
+
+    assert_redirected_to timeline_path
+    assert_equal "このチャットにはアクセスできません。", flash[:alert]
+  end
+
   private
 
   def build_user(email:)

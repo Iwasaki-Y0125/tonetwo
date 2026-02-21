@@ -15,6 +15,7 @@ Rails.application.routes.draw do
 
   # チャットルームの一覧/詳細閲覧 チャットルーム内でのメッセージ送信のルーティング
   resources :chats, only: %i[index show] do
+    patch :read, on: :member
     resources :messages, only: %i[create], module: :chats
   end
 

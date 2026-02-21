@@ -2,6 +2,15 @@
   <section class="tt-page-section-feed">
     <%= render "chats/heading_with_help", title: "チャット" %>
     <% sendable = @chatroom.sendable_by?(Current.user) %>
+    <% needs_read_mark = @chatroom.last_sender_id != Current.user.id && @chatroom.has_unread? %>
+
+    <% if needs_read_mark %>
+      <%= form_with url: read_chat_path(@chatroom),
+                    method: :patch,
+                    class: "hidden",
+                    data: { controller: "chat-read" } do %>
+      <% end %>
+    <% end %>
 
     <div class="mt-4 rounded-2xl bg-info/20 p-5 md:p-6"
          data-controller="compose-focus chat-scroll"
