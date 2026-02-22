@@ -1,0 +1,39 @@
+<turbo-frame id="policy_modal">
+  <div id="policy_modal_overlay"
+       class="tt-policy-modal-overlay"
+       tabindex="-1"
+       data-controller="policy-modal"
+       data-policy-modal-target="overlay"
+       data-action="click->policy-modal#closeOnBackdrop keydown.esc->policy-modal#close">
+    <div class="tt-policy-modal-shell">
+      <article class="tt-policy-card">
+        <button type="button"
+                class="btn btn-ghost tt-policy-modal-close-button"
+                aria-label="閉じる"
+                data-action="policy-modal#close">
+          ✕
+        </button>
+
+        <header class="tt-policy-header tt-policy-header-modal">
+          <h1 class="tt-policy-title"><%= @policy[:title] %></h1>
+          <p class="tt-policy-meta">改定日 (JST): <%= @policy_revised_on_jst %></p>
+          <% if @policy_version.present? %>
+            <p class="tt-policy-meta">Version: <%= @policy_version %></p>
+          <% end %>
+        </header>
+
+        <div class="tt-policy-body">
+          <%= @policy_html %>
+        </div>
+
+        <div class="mt-8 flex justify-center">
+          <button type="button"
+                  class="btn btn-outline tt-subtle-outline-btn"
+                  data-action="policy-modal#close">
+            閉じる
+          </button>
+        </div>
+      </article>
+    </div>
+  </div>
+</turbo-frame>

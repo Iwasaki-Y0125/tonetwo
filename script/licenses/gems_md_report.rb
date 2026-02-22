@@ -2,13 +2,6 @@
 
 require "bundler"
 
-# Usage:
-#   bundle exec ruby script/licenses/gems_md_report.rb > docs/licenses/gems.md
-#
-# Notes:
-# - This file is auto-generated from Bundler specs in the build environment.
-# - If you update gems, regenerate this file.
-
 def licenses_of(spec)
   arr =
     if spec.respond_to?(:licenses) && spec.licenses&.any?
@@ -22,13 +15,12 @@ def licenses_of(spec)
   arr.map(&:to_s).reject(&:empty?).uniq
 end
 
-specs = Bundler.load.specs.sort_by(&:name)
+# 本番配布物に含まれる依存（default group）のみを対象にする。
+specs = Bundler.definition.specs_for([ :default ]).sort_by(&:name)
 
-puts "# RubyGems licenses (generated)\n\n"
-puts "This file is auto-generated from Bundler specs in the build environment."
-puts "If you update gems, regenerate this file.\n\n"
-puts "- Generated at: #{Time.now}\n"
-puts "- Source: Bundler specs in this environment\n\n"
+puts "# RubyGems ライセンス一覧\n\n"
+puts "各gemのライセンス本文および著作権表示は、ホームページ列のリンク先リポジトリにてご確認いただけます。\n\n"
+puts "最終更新日時: #{Time.now}\n\n"
 
 puts "| Gem | Version | License | Homepage |"
 puts "|---|---:|---|---|"

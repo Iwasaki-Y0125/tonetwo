@@ -50,6 +50,9 @@ gem "natto"
 # Rackミドルウェアでアクセス制御を実装するためのライブラリ
 gem "rack-attack", "~> 6.8"
 
+# CommonMark準拠でMarkdownをHTMLに変換するためのライブラリ
+gem "commonmarker"
+
 # ====================
 # 開発 + テスト
 # ====================

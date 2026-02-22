@@ -44,8 +44,8 @@ class SignUpsFlowTest < ActionDispatch::IntegrationTest
     assert cookies[:session_id].present?
     assert_not_nil created_user.terms_accepted_at
     assert_not_nil created_user.privacy_accepted_at
-    assert_equal User::CURRENT_TERMS_VERSION, created_user.terms_version
-    assert_equal User::CURRENT_PRIVACY_VERSION, created_user.privacy_version
+    assert_equal User.current_terms_version, created_user.terms_version
+    assert_equal User.current_privacy_version, created_user.privacy_version
   end
 
   test "メールアドレスは前後空白除去と小文字化で保存される" do

@@ -1,0 +1,19 @@
+<% content_for :title, @page_title %>
+
+<main class="tt-page-main">
+  <section class="mx-auto w-full max-w-4xl px-6 pb-24 pt-8 md:pt-12">
+    <article class="tt-policy-card">
+      <header class="tt-policy-header">
+        <h1 class="tt-policy-title"><%= @policy[:title] %></h1>
+        <p class="tt-policy-meta">改定日 (JST): <%= @policy_revised_on_jst %></p>
+        <% if @policy_version.present? %>
+          <p class="tt-policy-meta">Version: <%= @policy_version %></p>
+        <% end %>
+      </header>
+
+      <div class="tt-policy-body">
+        <%= @policy_html %>
+      </div>
+    </article>
+  </section>
+</main>

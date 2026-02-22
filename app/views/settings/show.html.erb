@@ -5,15 +5,21 @@
     <article class="tt-surface tt-settings-card">
       <h2 class="tt-settings-card-title">ログイン中のメールアドレス</h2>
       <p class="tt-settings-email"><%= tt_masked_email(Current.user&.email_address) %></p>
-    </article>
-
-    <article class="tt-surface tt-settings-card">
-      <h2 class="tt-settings-card-title">アカウント</h2>
-      <div class="tt-settings-actions">
+      <div class="tt-settings-actions mt-6">
         <%= button_to "ログアウト",
                       session_path,
                       method: :delete,
                       class: "btn btn-outline tt-subtle-outline-btn min-h-10 px-6" %>
+      </div>
+    </article>
+
+
+    <article class="tt-surface tt-settings-card">
+      <div class="mt-4 space-y-2 text-base">
+        <p><%= link_to "利用規約", tos_path, class: "underline", data: { turbo_frame: "policy_modal" } %></p>
+        <p><%= link_to "プライバシーポリシー", privacy_path, class: "underline", data: { turbo_frame: "policy_modal" } %></p>
+        <p><%= link_to "サードパーティーライセンス", licenses_path, class: "underline", data: { turbo_frame: "policy_modal" } %></p>
+        <p><%= link_to "お問い合わせ", "https://forms.gle/6ZxJ4TKCGQ1KdsqG6", class: "underline", target: "_blank", rel: "noopener noreferrer" %></p>
       </div>
     </article>
   </section>

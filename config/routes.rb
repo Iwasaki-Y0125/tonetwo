@@ -20,6 +20,9 @@ Rails.application.routes.draw do
   end
 
   get "settings", to: "settings#show", as: :settings
+  get "tos", to: "pages#tos", as: :tos
+  get "privacy", to: "pages#privacy", as: :privacy
+  get "licenses", to: "pages#licenses", as: :licenses
 
   # 自分の投稿の一覧/詳細閲覧のルーティング
   namespace :my do

@@ -89,6 +89,10 @@ class AuthenticationFlowTest < ActionDispatch::IntegrationTest
     assert_select "h1", "設定"
     assert_select "p", masked_email
     assert_select "p", text: @user.email_address, count: 0
+    assert_select "a[href='#{tos_path}']", text: "利用規約"
+    assert_select "a[href='#{privacy_path}']", text: "プライバシーポリシー"
+    assert_select "a[href='#{licenses_path}']", text: "サードパーティーライセンス"
+    assert_select "a[href='https://forms.gle/6ZxJ4TKCGQ1KdsqG6']", text: "お問い合わせ"
     assert_select "form.button_to[action='#{session_path}'] button", "ログアウト"
   end
 

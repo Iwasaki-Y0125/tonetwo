@@ -26,6 +26,7 @@
 
 ### 2) 規約版は数値ではなく文字列で管理する
 - `terms_version` / `privacy_version` は `string` を採用。
+  - 現在版は規約本文（Markdown）の内容ハッシュ（`sha256-xxxxxxxxxxxx`）を自動採番する。
 - 版は計算対象ではなく識別子のため、`float` より `string` が適切。
 
 ### 3) MVPは単一レコード管理、将来は履歴テーブル分離
@@ -46,7 +47,8 @@
   - `validates :terms_agreed, acceptance: { accept: "1" }, on: :create`
   - `before_validation :stamp_policy_consents, on: :create, if: :terms_agreed_accepted?`
   - 同意済み時は `terms_accepted_at` / `privacy_accepted_at` / `terms_version` / `privacy_version` を必須化。
-  - 現在版は `CURRENT_TERMS_VERSION` / `CURRENT_PRIVACY_VERSION` 定数で管理。
+  - 現在版は `User.current_terms_version` / `User.current_privacy_version` で取得する。
+  - 値は `PolicyDocuments` が本文ファイルから自動算出する。
 
 ### Controller
 - `app/controllers/sign_ups_controller.rb`
@@ -60,7 +62,7 @@
 ---
 
 ## 運用ルール
-- 規約を更新したら `CURRENT_TERMS_VERSION` / `CURRENT_PRIVACY_VERSION` を更新する。
+- 規約を更新したら本文Markdownを更新する（versionは自動で更新される）。
 - 更新後、必要なら「旧版同意ユーザーへの再同意導線」を別タスクで実装する。
 
 ---

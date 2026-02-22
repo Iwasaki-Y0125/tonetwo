@@ -136,6 +136,7 @@ RUN mkdir -p /etc/apt/keyrings \
 # set -eux: Dockerビルドのデバッグをしやすくする定番セット
 # -e:エラー時に即座に終了 -u:未定義の変数を使ったらエラー -x:実行するコマンドをログに全部出力
 RUN set -eux; \
+  mkdir -p /opt/mecab-dic/metadata /opt/mecab-dic/licenses; \
   # NEologdのインストールを最大5回までリトライ
   for i in 1 2 3 4 5; do \
     # 毎回クローンキャッシュを削除してから実行
@@ -146,6 +147,16 @@ RUN set -eux; \
     # -y:全てyesで実行
     # -n: ログからインストーラの更新/更新チェック挙動に関わるオプションっぽい、詳細不明
       /tmp/mecab-ipadic-neologd/bin/install-mecab-ipadic-neologd -n -y; then \
+      NEOLOGD_COMMIT="$(git -C /tmp/mecab-ipadic-neologd rev-parse HEAD)"; \
+      NEOLOGD_TAG="$(git -C /tmp/mecab-ipadic-neologd describe --tags --exact-match 2>/dev/null || true)"; \
+      printf "%s\n" "${NEOLOGD_COMMIT}" > /opt/mecab-dic/metadata/neologd_commit.txt; \
+      printf "%s\n" "${NEOLOGD_TAG}" > /opt/mecab-dic/metadata/neologd_tag.txt; \
+      cp -a /tmp/mecab-ipadic-neologd/COPYING /opt/mecab-dic/licenses/neologd-license.txt; \
+      if [ -f /tmp/mecab-ipadic-neologd/NOTICE ]; then cp -a /tmp/mecab-ipadic-neologd/NOTICE /opt/mecab-dic/licenses/neologd-notice.txt; \
+      elif [ -f /tmp/mecab-ipadic-neologd/NOTICE.md ]; then cp -a /tmp/mecab-ipadic-neologd/NOTICE.md /opt/mecab-dic/licenses/neologd-notice.txt; \
+      else printf "%s\n" "(NOTICE file not found in mecab-ipadic-neologd source)" > /opt/mecab-dic/licenses/neologd-notice.txt; fi; \
+      cp -a /usr/share/doc/mecab-ipadic/copyright /opt/mecab-dic/licenses/mecab-ipadic-copyright.txt; \
+      cp -a /usr/share/doc/mecab-ipadic-utf8/copyright /opt/mecab-dic/licenses/mecab-ipadic-utf8-copyright.txt; \
       rm -rf /tmp/mecab-ipadic-neologd; \
       # RUN ステップを成功で終了
       exit 0; \
@@ -282,6 +293,11 @@ COPY --from=build /opt/mecab-dic/mecab-ipadic-neologd \
 
 COPY --from=build /opt/mecab-dic/user.dic \
 /usr/local/lib/mecab/dic/user.dic
+
+# ライセンス確認用のメタデータ/著作権ファイルを成果物に同梱
+RUN mkdir -p /usr/local/share/mecab-third-party
+COPY --from=build /opt/mecab-dic/metadata /usr/local/share/mecab-third-party/metadata
+COPY --from=build /opt/mecab-dic/licenses /usr/local/share/mecab-third-party/licenses
 
 # =========================================
 

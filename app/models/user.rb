@@ -1,8 +1,6 @@
 class User < ApplicationRecord
   PASSWORD_MIN_LENGTH = 12
   PASSWORD_COMPLEXITY = /\A(?=.*[A-Za-z])(?=.*\d).+\z/
-  CURRENT_TERMS_VERSION = "v1"
-  CURRENT_PRIVACY_VERSION = "v1"
   ATTRIBUTE_JA_NAMES = {
     email_address: "メールアドレス",
     password: "パスワード",
@@ -60,8 +58,8 @@ class User < ApplicationRecord
 
     self.terms_accepted_at ||= accepted_at
     self.privacy_accepted_at ||= accepted_at
-    self.terms_version ||= CURRENT_TERMS_VERSION
-    self.privacy_version ||= CURRENT_PRIVACY_VERSION
+    self.terms_version ||= self.class.current_terms_version
+    self.privacy_version ||= self.class.current_privacy_version
   end
 
   # has_secure_password の英語メッセージを画面表示用に日本語へ置き換える
@@ -71,5 +69,16 @@ class User < ApplicationRecord
 
     errors.delete(:password_confirmation)
     errors.add(:base, "確認用パスワードが一致しません")
+  end
+
+  class << self
+    # 規約本文の内容ハッシュを版として保存する。
+    def current_terms_version
+      Policies::PolicyDocuments.terms_version
+    end
+
+    def current_privacy_version
+      Policies::PolicyDocuments.privacy_version
+    end
   end
 end

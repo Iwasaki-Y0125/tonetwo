@@ -80,8 +80,8 @@
         </label>
         <div class="text-sm w-full">
           <div class="mx-auto flex max-w-sm flex-col items-center gap-1 text-center">
-            <%= link_to "利用規約", "/tos", class: "underline" %>
-            <%= link_to "プライバシーポリシー", "/privacy", class: "underline" %>
+            <%= link_to "利用規約", tos_path, class: "underline", data: { turbo_frame: "policy_modal" } %>
+            <%= link_to "プライバシーポリシー", privacy_path, class: "underline", data: { turbo_frame: "policy_modal" } %>
           </div>
         </div>
       </fieldset>
