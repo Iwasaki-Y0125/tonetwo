@@ -21,25 +21,26 @@
     <%= javascript_importmap_tags %>
   </head>
 
+  <% hide_site_header = content_for?(:hide_site_header) %>
   <body data-theme="pastel" class="tt-page-bg min-h-screen text-base-content">
-    <%= render "shared/site_header" %>
+    <%= render "shared/site_header" unless hide_site_header %>
     <% if authenticated? %>
       <% show_compose_sidebar = current_page?(timeline_path) || current_page?(similar_timeline_path) %>
-      <div class="pt-16">
-        <div class="tt-shell py-8">
-          <div class="relative mx-auto w-full max-w-[540px]">
+      <div class="<%= hide_site_header ? "tt-layout-auth-no-header" : "tt-layout-auth" %>">
+        <div class="tt-shell tt-layout-shell">
+          <div class="tt-layout-main-column">
             <% if show_compose_sidebar %>
-              <div class="absolute left-full top-16 ml-6 hidden w-[300px] lg:block">
-                <div class="sticky top-24">
+              <div class="tt-layout-compose-anchor">
+                <div class="tt-layout-compose-sticky">
                   <%= render "shared/compose_sidebar" %>
                 </div>
               </div>
             <% end %>
 
-            <div class="pointer-events-none absolute inset-x-0 top-0 z-40">
+            <div class="tt-layout-flash-overlay">
               <div class="tt-flash-layer">
                 <% if flash[:notice] %>
-                <div class="alert alert-success tt-flash-toast pointer-events-auto inline-flex w-fit max-w-full text-white">
+                <div class="alert alert-success tt-flash-toast tt-layout-flash-toast">
                   <span class="font-semibold text-white"><%= flash[:notice] %></span>
                   <button type="button"
                           class="btn btn-ghost btn-xs text-white hover:text-white/90"
@@ -50,7 +51,7 @@
                 </div>
                 <% end %>
                 <% if flash[:alert] %>
-                <div class="alert alert-error tt-flash-toast pointer-events-auto inline-flex w-fit max-w-full text-white">
+                <div class="alert alert-error tt-flash-toast tt-layout-flash-toast">
                   <span class="font-semibold text-white"><%= flash[:alert] %></span>
                   <button type="button"
                           class="btn btn-ghost btn-xs text-white hover:text-white/90"
@@ -74,7 +75,7 @@
         </div>
       </div>
     <% else %>
-      <div class="pt-16">
+      <div class="<%= hide_site_header ? "tt-layout-guest-no-header" : "tt-layout-guest" %>">
         <%= yield %>
       </div>
     <% end %>

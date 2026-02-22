@@ -38,6 +38,7 @@ class TimelineController < ApplicationController
     @active_tab = :similar
     # タイムラインに必要な投稿データを取得してインスタンス変数へセットする。
     load_feed!
+    assign_posted_preview!
 
     # turbo frame経由の追加読み込み時は、一覧部分だけ返す。（ render :index を明示しているので、return if が必要 ）
     return if render_feed_chunk_if_turbo_frame!
@@ -116,5 +117,29 @@ class TimelineController < ApplicationController
     else
       timeline_path(cursor_params)
     end
+  end
+
+  # おすすめTL遷移直後のみ、投稿受付確認カード用の情報を取り出す。
+  def assign_posted_preview!
+    return unless @active_tab == :similar
+
+    posted_preview_post_id = flash[:posted_preview_post_id]
+    return if posted_preview_post_id.blank?
+
+    post = Current.user.posts.find_by(id: posted_preview_post_id)
+    return if post.blank?
+
+    @posted_preview = build_posted_preview(post)
+  end
+
+  # 投稿確認カードで表示する最小情報だけを整形する。
+  def build_posted_preview(post)
+    posted_at = post.created_at.in_time_zone("Asia/Tokyo")
+    posted_at_label = posted_at.today? ? posted_at.strftime("%H:%M Today") : posted_at.strftime("%Y/%m/%d %H:%M")
+
+    {
+      body: post.body.to_s.squish.first(140),
+      posted_at_label: posted_at_label
+    }
   end
 end

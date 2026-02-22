@@ -40,7 +40,7 @@ class SignUpsFlowTest < ActionDispatch::IntegrationTest
 
     created_user = User.find_by!(email_address: "new_user@example.com")
     assert_response :redirect
-    assert_redirected_to root_path
+    assert_redirected_to timeline_path
     assert cookies[:session_id].present?
     assert_not_nil created_user.terms_accepted_at
     assert_not_nil created_user.privacy_accepted_at
@@ -62,7 +62,7 @@ class SignUpsFlowTest < ActionDispatch::IntegrationTest
       }
     end
 
-    assert_redirected_to root_path
+    assert_redirected_to timeline_path
     created_user = User.find_by!(email_address: raw_email)
     assert_equal "new_user@example.com", created_user.email_address
   end

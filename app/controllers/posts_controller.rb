@@ -11,7 +11,9 @@ class PostsController < ApplicationController
     @post = Current.user.posts.new(post_params)
 
     if @post.save
-      redirect_to similar_timeline_path, notice: "投稿しました。"
+      # セッション経由の保持データ最小化のため、投稿確認に必要な識別子のみ渡す。
+      flash[:posted_preview_post_id] = @post.id
+      redirect_to similar_timeline_path
     elsif @post.support_required?
       redirect_to support_page_path
     else

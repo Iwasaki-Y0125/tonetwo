@@ -19,6 +19,8 @@ Rails.application.routes.draw do
     resources :messages, only: %i[create], module: :chats
   end
 
+  get "settings", to: "settings#show", as: :settings
+
   # 自分の投稿の一覧/詳細閲覧のルーティング
   namespace :my do
     resources :posts, only: %i[index show]

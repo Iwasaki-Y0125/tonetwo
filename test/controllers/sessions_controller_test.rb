@@ -11,12 +11,12 @@ class SessionsControllerTest < ActionController::TestCase
     @request.env["REMOTE_ADDR"] = test_remote_ip
   end
 
-  test "return_to_after_authenticating(ログイン後のリダイレクト先）に外部URLが注入されたらrootにフォールバックする" do
+  test "return_to_after_authenticating(ログイン後のリダイレクト先）に外部URLが注入されたら全体TLにフォールバックする" do
     session[:return_to_after_authenticating] = "https://evil.example/phishing"
 
     post :create, params: { email_address: @user.email_address, password: "password" }
 
-    assert_redirected_to root_url
+    assert_redirected_to timeline_url
   end
 
   test "11回目の`POST /session`で既存rate_limit経由の抑止が発火する" do
