@@ -37,9 +37,17 @@
       </div>
     <% end %>
 
-    <div class="mt-16 text-center leading-8">
+    <div class="mt-16 text-center leading-8 ">
       <p>アカウント登録がまだの方はこちら</p>
       <%= link_to "ユーザー登録", new_sign_up_path, class: "underline" %>
+    </div>
+
+    <div class="mt-8 text-center text-sm leading-8 pl-4">
+      <%= link_to "利用規約", tos_path, class: "underline", data: { turbo_frame: "policy_modal" } %>
+      <span class="mx-2">|</span>
+      <%= link_to "プライバシーポリシー", privacy_path, class: "underline", data: { turbo_frame: "policy_modal" } %>
+      <span class="mx-2">|</span>
+      <%= link_to "サードパーティーライセンス", licenses_path, class: "underline", data: { turbo_frame: "policy_modal" } %>
     </div>
 
   </section>

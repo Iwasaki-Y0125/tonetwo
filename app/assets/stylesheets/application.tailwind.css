@@ -345,7 +345,7 @@
   }
 
   .tt-lp-faq-answer {
-    @apply whitespace-pre-line text-base leading-7 text-base-content/85;
+    @apply text-base leading-7 text-base-content/85;
   }
 
   .tt-lp-footer {
@@ -379,6 +379,11 @@
   }
 
   @media (min-width: 1024px) {
+    .tt-lp-concept-section {
+      padding-top: 10rem;
+      padding-bottom: 10rem;
+    }
+
     .tt-lp-steps {
       position: relative;
       left: 50%;
@@ -497,6 +502,55 @@
   .tt-page-heading-feed-plain {
     @apply mb-4 px-1 text-xl;
     color: var(--tt-heading-color);
+  }
+
+  .tt-policy-modal-overlay {
+    @apply fixed inset-0 z-[120] overflow-y-auto bg-black/35 px-4 py-6 md:py-10;
+  }
+
+  .tt-policy-modal-shell {
+    @apply mx-auto w-full max-w-4xl;
+  }
+
+  .tt-policy-card {
+    @apply relative rounded-[1rem] border border-base-300 bg-base-100 px-6 py-8 md:px-8 md:py-10;
+    box-shadow: 8px 12px 22px -16px rgba(40, 58, 84, 0.14), 2px 5px 10px -8px rgba(40, 58, 84, 0.1);
+  }
+
+  .tt-policy-modal-close-button {
+    @apply absolute right-3 top-3 min-h-10 min-w-10 text-xl;
+  }
+
+  .tt-policy-header {
+    @apply mb-8 border-b border-base-300 pb-4;
+  }
+
+  .tt-policy-header-modal {
+    @apply pt-6;
+  }
+
+  .tt-policy-title {
+    @apply mb-4 px-0 text-xl;
+    color: var(--tt-heading-color);
+  }
+
+  .tt-policy-meta {
+    @apply mt-2 text-xs text-base-content/60;
+  }
+
+  .tt-policy-body {
+    @apply max-w-none overflow-x-auto text-sm leading-8 md:text-base;
+    @apply [&_h1]:mb-4 [&_h1]:text-2xl [&_h1]:font-bold;
+    @apply [&_h2]:mb-3 [&_h2]:mt-8 [&_h2]:text-xl [&_h2]:font-bold;
+    @apply [&_h3]:mb-2 [&_h3]:mt-6 [&_h3]:text-lg [&_h3]:font-semibold;
+    @apply [&_p]:mb-4 [&_ul]:mb-5 [&_ul]:list-disc [&_ul]:pl-6;
+    @apply [&_ol]:mb-5 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mb-1;
+    @apply [&_a]:break-all;
+    @apply [&_pre]:overflow-x-auto [&_pre]:whitespace-pre-wrap md:[&_pre]:whitespace-pre;
+    @apply [&_pre]:break-words [&_code]:break-words;
+    @apply [&_table]:mb-6 [&_table]:w-full [&_table]:min-w-0 md:[&_table]:min-w-[42rem] [&_table]:border-collapse;
+    @apply [&_th]:border [&_th]:border-base-300 [&_th]:bg-base-200 [&_th]:px-3 [&_th]:py-2 [&_th]:text-left [&_th]:text-sm [&_th]:font-semibold;
+    @apply [&_td]:border [&_td]:border-base-300 [&_td]:px-3 [&_td]:py-2 [&_td]:text-sm;
   }
 
   .tt-page-heading-form {

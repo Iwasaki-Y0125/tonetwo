@@ -74,7 +74,7 @@ class UserTest < ActiveSupport::TestCase
 
     assert_not_nil user.terms_accepted_at
     assert_not_nil user.privacy_accepted_at
-    assert_equal User::CURRENT_TERMS_VERSION, user.terms_version
-    assert_equal User::CURRENT_PRIVACY_VERSION, user.privacy_version
+    assert_equal User.current_terms_version, user.terms_version
+    assert_equal User.current_privacy_version, user.privacy_version
   end
 end

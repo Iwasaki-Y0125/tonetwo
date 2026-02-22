@@ -35,7 +35,10 @@
   { q: "どんな投稿が禁止ですか？", a: "誹謗中傷、差別、脅迫、個人情報の投稿などを禁止しています。" },
   { q: "登録に必要なものは？", a: "メールアドレスで登録できます。" },
   { q: "ブロックや通報はできますか？", a: "現在、実装準備中です。" },
-  { q: "退会はできますか？", a: "現在、実装準備中です。それまでの間に退会をご希望の場合は、\nお問い合わせフォームよりご登録のメールアドレスをお知らせください。\nこちらにてアカウントを削除いたします。" }
+  {
+    q: "退会はできますか？",
+    a: "現在、実装準備中です。それまでの間に退会をご希望の場合は、\n下記のお問い合わせフォームよりご登録のメールアドレスをお知らせください。\nこちらにてアカウントを削除いたします。"
+  }
 ] %>
 
 <main class="tt-lp-page">
@@ -56,7 +59,7 @@
     </div>
   </section>
 
-  <section class="tt-lp-section">
+  <section class="tt-lp-section tt-lp-concept-section">
     <div class="tt-lp-thought-grid">
       <% thoughts.each do |line| %>
         <p class="tt-lp-thought-bubble"><%= line %></p>
@@ -69,7 +72,7 @@
           ToneTwoは<br>
           SNSにちょっと疲れてる人のための<br>
           <span class="tt-lp-accent">ゆるくつながる、気分でつながる</span><br>
-          をコンセプトにした匿名性SNSです。
+          をコンセプトにした匿名性SNSです
         </p>
       </div>
     </article>
@@ -111,7 +114,17 @@
           <% faqs.each_with_index do |faq, index| %>
             <div class="tt-lp-faq-item">
               <dt class="tt-lp-faq-question">Q<%= index + 1 %> <%= faq[:q] %></dt>
-              <dd class="tt-lp-faq-answer"><%= faq[:a] %></dd>
+              <dd class="tt-lp-faq-answer">
+                <%= safe_join(faq[:a].to_s.split("\n"), tag.br) %>
+                <% if faq[:q] == "退会はできますか？" %>
+                  <br>
+                  <%= link_to "お問い合わせフォーム",
+                              "https://forms.gle/6ZxJ4TKCGQ1KdsqG6",
+                              class: "underline",
+                              target: "_blank",
+                              rel: "noopener noreferrer" %>
+                <% end %>
+              </dd>
             </div>
           <% end %>
         </dl>
@@ -130,6 +143,11 @@
 
   <footer class="tt-lp-footer">
     <%= image_tag "LP_Logo.png", alt: "ToneTwo", class: "tt-lp-footer-logo" %>
-    <p class="tt-lp-footer-links">利用規約 | プライバシーポリシー | サードパーティーライセンス | お問い合わせ</p>
+    <p class="tt-lp-footer-links">
+      <%= link_to "利用規約", tos_path, class: "underline", data: { turbo_frame: "policy_modal" } %><span class="mx-2">|</span>
+      <%= link_to "プライバシーポリシー", privacy_path, class: "underline", data: { turbo_frame: "policy_modal" } %><span class="mx-2">|</span>
+      <%= link_to "サードパーティーライセンス", licenses_path, class: "underline", data: { turbo_frame: "policy_modal" } %><span class="mx-2">|</span>
+      <%= link_to "お問い合わせ", "https://forms.gle/6ZxJ4TKCGQ1KdsqG6", class: "underline", target: "_blank", rel: "noopener noreferrer" %>
+    </p>
   </footer>
 </main>

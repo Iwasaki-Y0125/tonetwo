@@ -55,7 +55,7 @@ class PostsFlowTest < ActionDispatch::IntegrationTest
   test "投稿成功後はおすすめTLに投稿受付確認カードを表示する" do
     sign_in_as(users(:one))
 
-    travel_to Time.zone.parse("2026-02-22 14:27:00") do
+    travel_to Time.zone.now.change(hour: 14, min: 27, sec: 0) do
       post posts_path, params: { post: { body: "投稿確認\nテキスト" } }
     end
 
