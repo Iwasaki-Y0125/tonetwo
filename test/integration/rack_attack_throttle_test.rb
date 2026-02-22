@@ -2,8 +2,13 @@ require "test_helper"
 require "digest/md5"
 
 class RackAttackThrottleTest < ActionDispatch::IntegrationTest
+  include ActiveSupport::Testing::TimeHelpers
+
   # Rack::Attackの動作を検証するためのテストセットアップ
   setup do
+    # 1分窓の境界を跨ぐとカウントが分散して429判定がぶれるため、時刻を固定する。
+    travel_to Time.zone.parse("2026-02-22 12:00:00")
+
     @original_enabled = Rack::Attack.enabled
     @original_cache_store = Rack::Attack.cache.store
     @original_controller_cache_store = ActionController::Base.cache_store
@@ -28,6 +33,7 @@ class RackAttackThrottleTest < ActionDispatch::IntegrationTest
     Rack::Attack.cache.store = @original_cache_store
     ActionController::Base.cache_store = @original_controller_cache_store
     restore_controller_rate_limit_store
+    travel_back
   end
 
   test "basic auth付きリクエストは上限超過で429を返す" do

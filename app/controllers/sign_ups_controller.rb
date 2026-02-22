@@ -12,7 +12,7 @@ class SignUpsController < ApplicationController
 
     if @user.save
       start_new_session_for(@user)
-      redirect_to root_path
+      redirect_to timeline_path
     else
       # メール重複の詳細エラーメッセージはアカウント列挙攻撃につながるため、
       # ユーザー画面には表示しない

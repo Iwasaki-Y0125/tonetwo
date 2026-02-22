@@ -51,4 +51,21 @@ class PostsFlowTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to support_page_path
   end
+
+  test "投稿成功後はおすすめTLに投稿受付確認カードを表示する" do
+    sign_in_as(users(:one))
+
+    travel_to Time.zone.parse("2026-02-22 14:27:00") do
+      post posts_path, params: { post: { body: "投稿確認\nテキスト" } }
+    end
+
+    assert_redirected_to similar_timeline_path
+    follow_redirect!
+
+    assert_response :success
+    assert_select ".tt-post-confirm-card", count: 1
+    assert_select ".tt-post-confirm-title", "あなたの投稿を受付けました"
+    assert_select ".tt-post-confirm-body", "投稿確認 テキスト"
+    assert_select ".tt-post-confirm-time", "14:27 Today"
+  end
 end

@@ -58,7 +58,7 @@ module Authentication
       redirect_to new_session_path
     end
 
-    # ログイン後は元の遷移先へ、なければ root に戻す
+    # ログイン後は元の遷移先へ、なければ全体TLに戻す
     def after_authentication_url
       normalize_return_to_path(session.delete(:return_to_after_authenticating))
     end
@@ -90,9 +90,9 @@ module Authentication
 
     # 外部URLや不正値は受け入れず、同一オリジンの相対パスのみ許可する
     def normalize_return_to_path(path)
-      return root_path unless path.is_a?(String)
-      return root_path unless path.start_with?("/")
-      return root_path if path.start_with?("//")
+      return timeline_path unless path.is_a?(String)
+      return timeline_path unless path.start_with?("/")
+      return timeline_path if path.start_with?("//")
 
       path
     end

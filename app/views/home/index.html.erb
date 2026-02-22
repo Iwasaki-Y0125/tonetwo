@@ -1,45 +1,135 @@
-<div class="p-8 max-w-3xl">
-  <div class="prose">
-    <h1>Root Test Page</h1>
-    <p>It works!</p>
-  </div>
+<% content_for :title, "ToneTwo | ゆるくつながる匿名SNS" %>
 
-  <div class="stats mt-6">
-    <div class="stat">
-      <div class="stat-title">Rails.env</div>
-      <div class="stat-value text-primary"><%= Rails.env %></div>
-    </div>
-    <div class="stat">
-      <div class="stat-title">Time</div>
-      <div class="stat-value text-secondary"><%= Time.current %></div>
-    </div>
-  </div>
-</div>
+<% thoughts = [
+  "最近、SNSって\n気をつかうことが多いな…",
+  "ちょっとした話を\nふつうに言える場がほしい",
+  "もっとゆるく\nつながれたらいいのに"
+] %>
 
-<div class="p-8">
-  <div class="card bg-base-100 tt-shadow-min max-w-md">
-    <div class="card-body">
-      <h2 class="card-title">DaisyUI OK</h2>
-      <p>Tailwind + DaisyUI が反映されています。</p>
+<% steps = [
+  {
+    number: 1,
+    title: "まずは気軽に、いまの気分を投稿",
+    body: " 投稿はちょっとしたことでOK。",
+    image: "LP02.png"
+  },
+  {
+    number: 2,
+    title: "おすすめ表示",
+    body: "自分の投稿と同じ話題・近い雰囲気の投稿が、おすすめに表示。",
+    image: "LP03.png"
+  },
+  {
+    number: 3,
+    title: "1on1で気楽にやり取り",
+    body: "チャットは1on1で交互送信。自分のペースで会話できます。",
+    image: "LP04.png"
+  }
+] %>
 
-      <div class="divider my-2"></div>
+<% faqs = [
+  { q: "ToneTwoの特徴は何ですか？", a: "・いまの気分を匿名でゆるく投稿できます。\n・投稿文から気分の近い投稿が表示され、気が合いそうなら1on1でやり取りできます。\n・チャットは1通ずつ交代で送る形式で、落ち着いてやり取りできます。" },
+  { q: "「おすすめ」とはどういう仕組みですか？", a: "投稿文から次の要素をもとに、近い投稿をおすすめに表示しています。\n・話題（例：趣味、仕事、勉強など）\n・文の雰囲気（前向き／しんどい など）" },
+  { q: "おすすめはどれくらい正確ですか？", a: "ベータ版は単語ベースの簡易判定のため、\n文章によっては意図と異なるおすすめが表示される場合があります。\n順次改善予定ですが、おすすめは参考としてご利用ください。" },
+  { q: "返信は必須ですか？", a: "いいえ。読むだけでも、もちろんOKです。\n返信したい気分のときに、ゆるく返してください。" },
+  { q: "どんな投稿が禁止ですか？", a: "誹謗中傷、差別、脅迫、個人情報の投稿などを禁止しています。" },
+  { q: "登録に必要なものは？", a: "メールアドレスで登録できます。" },
+  { q: "ブロックや通報はできますか？", a: "現在、実装準備中です。" },
+  { q: "退会はできますか？", a: "現在、実装準備中です。それまでの間に退会をご希望の場合は、\nお問い合わせフォームよりご登録のメールアドレスをお知らせください。\nこちらにてアカウントを削除いたします。" }
+] %>
 
-      <% if authenticated? %>
-        <p>
-          現在ログイン中: はい（<span class="font-semibold"><%= Current.user&.email_address %></span>）
-        </p>
-      <% else %>
-        <p>現在ログイン中: いいえ</p>
-      <% end %>
+<main class="tt-lp-page">
+  <section class="tt-lp-section tt-lp-hero">
+    <div class="tt-lp-hero-grid">
+      <div class="tt-lp-hero-copy">
+        <h1 class="tt-lp-catch-pill"><span class="tt-lp-catch-pill-text">ゆるくつながる。気分でつながる。</span></h1>
+        <%= image_tag "LP_Logo.png", alt: "ToneTwo", class: "tt-lp-logo-image" %>
+        <div class="tt-lp-hero-actions">
+          <%= link_to "ユーザー登録", new_sign_up_path, class: "btn btn-primary tt-lp-cta-btn" %>
+          <%= link_to "ログイン", new_session_path, class: "btn btn-outline tt-lp-cta-btn tt-subtle-outline-btn" %>
+        </div>
+      </div>
 
-      <div class="card-actions justify-end">
-        <% if authenticated? %>
-          <%= link_to "ログアウト", session_path, data: { turbo_method: :delete }, class: "btn btn-outline" %>
-        <% else %>
-          <%= link_to "ユーザー登録", new_sign_up_path, class: "btn btn-primary" %>
-          <%= link_to "ログイン", new_session_path, class: "btn btn-primary" %>
-        <% end %>
+      <div class="tt-lp-hero-device-wrap">
+        <%= image_tag "LP01.png", alt: "ToneTwo 画面イメージ", class: "tt-lp-hero-device", loading: "eager" %>
       </div>
     </div>
-  </div>
-</div>
+  </section>
+
+  <section class="tt-lp-section">
+    <div class="tt-lp-thought-grid">
+      <% thoughts.each do |line| %>
+        <p class="tt-lp-thought-bubble"><%= line %></p>
+      <% end %>
+    </div>
+
+    <article class="card tt-lp-concept-card">
+      <div class="card-body">
+        <p class="tt-lp-concept-text">
+          ToneTwoは<br>
+          SNSにちょっと疲れてる人のための<br>
+          <span class="tt-lp-accent">ゆるくつながる、気分でつながる</span><br>
+          をコンセプトにした匿名性SNSです。
+        </p>
+      </div>
+    </article>
+  </section>
+
+  <section class="tt-lp-section tt-lp-steps">
+    <div class="tt-lp-steps-grid">
+      <% steps.each do |step| %>
+        <article class="card tt-lp-step-card">
+          <div class="card-body">
+            <h3 class="tt-lp-step-title">
+              <span class="badge badge-primary tt-lp-step-badge"><%= step[:number] %></span>
+              <%= step[:title] %>
+            </h3>
+            <p class="tt-lp-step-text"><%= step[:body] %></p>
+          </div>
+          <figure class="tt-lp-step-image-wrap">
+            <%= image_tag step[:image], alt: "STEP#{step[:number]}の画面", class: "tt-lp-step-image", loading: "lazy" %>
+          </figure>
+        </article>
+      <% end %>
+    </div>
+  </section>
+
+  <section class="tt-lp-section tt-lp-register-section-primary">
+    <article class="card tt-lp-register-card">
+      <div class="card-body">
+        <p class="tt-lp-register-lead">登録はこちらから</p>
+        <%= link_to "ユーザー登録", new_sign_up_path, class: "btn btn-primary tt-lp-cta-btn" %>
+      </div>
+    </article>
+  </section>
+
+  <section class="tt-lp-section tt-lp-faq-section">
+    <article class="card tt-lp-faq-card">
+      <div class="card-body">
+        <h2 class="tt-lp-section-title">よくある質問</h2>
+        <dl class="tt-lp-faq-list">
+          <% faqs.each_with_index do |faq, index| %>
+            <div class="tt-lp-faq-item">
+              <dt class="tt-lp-faq-question">Q<%= index + 1 %> <%= faq[:q] %></dt>
+              <dd class="tt-lp-faq-answer"><%= faq[:a] %></dd>
+            </div>
+          <% end %>
+        </dl>
+      </div>
+    </article>
+  </section>
+
+  <section class="tt-lp-section">
+    <article class="card tt-lp-register-card">
+      <div class="card-body">
+        <p class="tt-lp-register-lead">登録はこちらから</p>
+        <%= link_to "ユーザー登録", new_sign_up_path, class: "btn btn-primary tt-lp-cta-btn" %>
+      </div>
+    </article>
+  </section>
+
+  <footer class="tt-lp-footer">
+    <%= image_tag "LP_Logo.png", alt: "ToneTwo", class: "tt-lp-footer-logo" %>
+    <p class="tt-lp-footer-links">利用規約 | プライバシーポリシー | サードパーティーライセンス | お問い合わせ</p>
+  </footer>
+</main>

@@ -10,8 +10,8 @@
                 class: "tt-post-row tt-post-row-no-icon tt-post-row-link group",
                 data: { turbo_frame: "_top" },
                 aria: { label: "自分の投稿詳細へ" } do %>
-      <div class="min-w-0 flex-1">
-        <div class="flex items-start justify-between gap-3">
+      <div class="tt-post-content">
+        <div class="tt-post-row-head">
           <p class="tt-self-post-badge">自分の投稿</p>
           <p class="tt-post-meta tt-post-meta-no-icon"><%= posted_at_label %></p>
         </div>
@@ -24,7 +24,7 @@
                 class: "tt-post-row tt-post-row-no-icon tt-post-row-link group",
                 data: { turbo_frame: "_top" },
                 aria: { label: "チャット詳細へ" } do %>
-      <div class="min-w-0 flex-1">
+      <div class="tt-post-content">
         <p class="tt-post-meta tt-post-meta-no-icon"><%= posted_at_label %></p>
         <p class="tt-post-body"><%= post.body.to_s.strip %></p>
       </div>

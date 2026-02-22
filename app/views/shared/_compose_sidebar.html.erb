@@ -9,23 +9,24 @@
                             else
                               Array(flash[:compose_errors]).reject(&:blank?)
                             end %>
+<% textarea_min_height_class = local_assigns[:compact] ? "min-h-[3.5rem]" : "min-h-[7rem]" %>
 
 <div class="tt-post-form-card">
   <%= form_with model: compose_post,
                 url: posts_path,
-                class: "space-y-2 tt-compose-focus-area",
+                class: "tt-compose-form tt-compose-focus-area",
                 data: {
                   controller: "post-body-length auto-grow-textarea compose-focus",
                   post_body_length_limit_value: 140,
                   action: "submit->post-body-length#guardSubmit click->compose-focus#activate"
                 } do |form| %>
-    <div class="hidden" data-post-body-length-target="alert"></div>
+    <div class="tt-compose-alert-slot" data-post-body-length-target="alert"></div>
 
     <% if compose_error_messages.any? %>
       <div class="alert alert-error">
-        <div class="space-y-1">
+        <div class="tt-compose-error-list">
           <% compose_error_messages.each do |message| %>
-            <p class="font-semibold text-white"><%= message %></p>
+            <p class="tt-compose-error-text"><%= message %></p>
           <% end %>
         </div>
       </div>
@@ -34,7 +35,7 @@
     <%= form.text_area :body,
                        required: true,
                        rows: 1,
-                       class: "textarea-plain tt-post-textarea min-h-[7rem]",
+                       class: "textarea-plain tt-post-textarea #{textarea_min_height_class}",
                        placeholder: "今どんな感じ？（140字以内）",
                        data: {
                          post_body_length_target: "input",
@@ -42,7 +43,7 @@
                          auto_grow_textarea_target: "field",
                          action: "input->post-body-length#check input->auto-grow-textarea#resize"
                        } %>
-    <div class="mt-2 flex items-end gap-3">
+    <div class="tt-compose-actions">
       <p class="tt-form-error-inline invisible flex-1" data-post-body-length-target="message" aria-live="polite"></p>
       <p class="tt-form-counter" data-post-body-length-target="counter" aria-live="polite">0/140</p>
       <%= form.submit "投稿",

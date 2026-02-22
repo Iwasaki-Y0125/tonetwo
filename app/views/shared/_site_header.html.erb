@@ -1,17 +1,19 @@
-<header class="fixed inset-x-0 top-0 z-30 bg-[#f8fafc] shadow-[0_1px_10px_color-mix(in_oklab,var(--color-base-content)_10%,transparent)]">
-  <div class="tt-shell">
-    <div class="grid h-[64px] grid-cols-[1fr_auto_1fr] items-center gap-4">
-      <%= link_to root_path, class: "inline-flex h-9 items-center justify-center shrink-0" do %>
-        <%= image_tag "Logo.svg", alt: "ToneTwo", class: "tt-header-logo block h-7 w-auto" %>
-      <% end %>
+<% if authenticated? %>
+  <% timeline_active = current_page?(timeline_path) %>
+  <% similar_active = current_page?(similar_timeline_path) %>
+  <% my_posts_active = current_page?(my_posts_path) %>
+  <% chats_active = current_page?(chats_path) || controller_name == "chats" %>
+  <% settings_active = current_page?(settings_path) %>
 
-      <% if authenticated? %>
-        <% timeline_active = current_page?(timeline_path) %>
-        <% similar_active = current_page?(similar_timeline_path) %>
-        <% my_posts_active = current_page?(my_posts_path) %>
-        <% chats_active = current_page?(chats_path) || controller_name == "chats" %>
-        <nav class="min-w-0 overflow-visible">
-          <ul class="tt-header-nav-strip flex items-center gap-2 whitespace-nowrap">
+  <header class="tt-site-header tt-site-header-auth">
+    <div class="tt-shell">
+      <div class="tt-site-header-grid">
+        <%= link_to timeline_path, class: "tt-site-header-logo-link tt-site-header-logo-link-start" do %>
+          <%= image_tag "Logo.svg", alt: "ToneTwo", class: "tt-header-logo block h-8 w-auto" %>
+        <% end %>
+
+        <nav class="tt-site-header-nav">
+          <ul class="tt-header-nav-strip tt-site-header-nav-list">
             <li>
               <%= link_to timeline_path, class: ["tt-header-nav-link", (timeline_active ? "tt-header-nav-link-active" : nil)] do %>
                 <%= tt_header_icon("icons/home.svg") %>
@@ -22,16 +24,6 @@
               <%= link_to similar_timeline_path, class: ["tt-header-nav-link", (similar_active ? "tt-header-nav-link-active" : nil)] do %>
                 <%= tt_header_icon("icons/star_shine.svg") %>
                 <span class="tt-header-nav-text">おすすめ</span>
-                <span class="tt-help-trigger" aria-label="おすすめ表示の説明" tabindex="0">
-                  <span class="tt-help-badge inline-flex size-5 items-center justify-center rounded-full text-[11px] leading-none">?</span>
-                  <span class="tt-help-popover" role="tooltip">
-                    <span class="tt-help-title"><strong>おすすめタイムラインとは</strong></span>
-                    あなたの直近の投稿の文章から<br>
-                    ・話題（例：趣味、仕事、勉強など）<br>
-                    ・文の雰囲気（前向き／しんどい など）<br>
-                    をもとに、近い投稿をおすすめに表示しています
-                  </span>
-                </span>
               <% end %>
             </li>
             <li>
@@ -46,20 +38,66 @@
                 <span class="tt-header-nav-text">MY投稿</span>
               <% end %>
             </li>
+            <li>
+              <%= link_to settings_path, class: ["tt-header-nav-link", (settings_active ? "tt-header-nav-link-active" : nil)] do %>
+                <%= tt_header_icon("icons/settings.svg") %>
+                <span class="tt-header-nav-text">設定</span>
+              <% end %>
+            </li>
           </ul>
         </nav>
 
-        <%= link_to "ログアウト",
-                    session_path,
-                    data: { turbo_method: :delete },
-                    class: "btn btn-outline tt-subtle-outline-btn h-9 min-h-9 justify-self-end px-4" %>
-      <% else %>
         <div aria-hidden="true"></div>
-        <div class="justify-self-end flex items-center gap-2 pr-24">
-          <%= link_to "ユーザー登録", new_sign_up_path, class: "btn btn-primary h-9 min-h-9 px-4" %>
-          <%= link_to "ログイン", new_session_path, class: "btn btn-outline h-9 min-h-9 px-4" %>
-        </div>
-      <% end %>
+      </div>
     </div>
-  </div>
-</header>
+  </header>
+
+  <nav class="tt-mobile-footer-nav md:hidden" aria-label="メインナビゲーション">
+    <ul class="tt-mobile-footer-nav-list">
+      <li>
+        <%= link_to timeline_path, class: ["tt-mobile-footer-nav-link", (timeline_active ? "tt-mobile-footer-nav-link-active" : nil)] do %>
+          <%= tt_header_icon("icons/home.svg") %>
+          <span class="tt-mobile-footer-nav-label">ホーム</span>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to similar_timeline_path, class: ["tt-mobile-footer-nav-link", (similar_active ? "tt-mobile-footer-nav-link-active" : nil)] do %>
+          <%= tt_header_icon("icons/star_shine.svg") %>
+          <span class="tt-mobile-footer-nav-label">おすすめ</span>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to chats_path, class: ["tt-mobile-footer-nav-link", (chats_active ? "tt-mobile-footer-nav-link-active" : nil)] do %>
+          <%= tt_header_icon("icons/chat_bubble.svg") %>
+          <span class="tt-mobile-footer-nav-label">チャット</span>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to my_posts_path, class: ["tt-mobile-footer-nav-link", (my_posts_active ? "tt-mobile-footer-nav-link-active" : nil)] do %>
+          <%= tt_header_icon("icons/account_circle.svg") %>
+          <span class="tt-mobile-footer-nav-label">MY投稿</span>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to settings_path, class: ["tt-mobile-footer-nav-link", (settings_active ? "tt-mobile-footer-nav-link-active" : nil)] do %>
+          <%= tt_header_icon("icons/settings.svg") %>
+          <span class="tt-mobile-footer-nav-label">設定</span>
+        <% end %>
+      </li>
+    </ul>
+  </nav>
+<% else %>
+  <header class="tt-site-header">
+    <div class="tt-shell">
+      <div class="tt-site-header-public-row">
+        <%= link_to root_path, class: "tt-site-header-logo-link" do %>
+          <%= image_tag "Logo.svg", alt: "ToneTwo", class: "tt-header-logo block h-6 w-auto" %>
+        <% end %>
+        <div class="tt-site-header-public-actions">
+          <%= link_to "ユーザー登録", new_sign_up_path, class: "btn btn-primary tt-site-header-action-btn" %>
+          <%= link_to "ログイン", new_session_path, class: "btn btn-outline tt-subtle-outline-btn tt-site-header-action-btn" %>
+        </div>
+      </div>
+    </div>
+  </header>
+<% end %>

@@ -1,0 +1,20 @@
+<main class="tt-page-main">
+  <section class="tt-page-section-feed">
+    <h1 class="tt-page-heading-feed">設定</h1>
+
+    <article class="tt-surface tt-settings-card">
+      <h2 class="tt-settings-card-title">ログイン中のメールアドレス</h2>
+      <p class="tt-settings-email"><%= tt_masked_email(Current.user&.email_address) %></p>
+    </article>
+
+    <article class="tt-surface tt-settings-card">
+      <h2 class="tt-settings-card-title">アカウント</h2>
+      <div class="tt-settings-actions">
+        <%= button_to "ログアウト",
+                      session_path,
+                      method: :delete,
+                      class: "btn btn-outline tt-subtle-outline-btn min-h-10 px-6" %>
+      </div>
+    </article>
+  </section>
+</main>
