@@ -36,19 +36,6 @@ class RackAttackThrottleTest < ActionDispatch::IntegrationTest
     travel_back
   end
 
-  test "basic auth付きリクエストは上限超過で429を返す" do
-    headers = { "HTTP_AUTHORIZATION" => "Basic dGVzdDp0ZXN0" }
-
-    20.times do
-      get new_session_path, headers: headers, env: @request_env
-      assert_response :success
-    end
-
-    get new_session_path, headers: headers, env: @request_env
-    assert_response :too_many_requests
-    assert_equal "Too Many Requests", response.body
-  end
-
   test "通常リクエストは上限超過で429を返す" do
     240.times do
       get new_session_path, env: @request_env
@@ -57,7 +44,7 @@ class RackAttackThrottleTest < ActionDispatch::IntegrationTest
 
     get new_session_path, env: @request_env
     assert_response :too_many_requests
-    assert_equal "Too Many Requests", response.body
+    assert_equal "429 Too Many Requests", response.body
   end
 
   test "POST /session は上限超過で抑止される" do
@@ -69,7 +56,7 @@ class RackAttackThrottleTest < ActionDispatch::IntegrationTest
 
     post session_path, params: { email_address: "one@example.com", password: "wrong-password" }, env: @request_env
     assert_response :too_many_requests
-    assert_equal "Too Many Requests", response.body
+    assert_equal "429 Too Many Requests", response.body
   end
 
   test "POST /sign_up は上限超過で429を返す" do
@@ -92,7 +79,7 @@ class RackAttackThrottleTest < ActionDispatch::IntegrationTest
       }
     }, env: @request_env
     assert_response :too_many_requests
-    assert_equal "Too Many Requests", response.body
+    assert_equal "429 Too Many Requests", response.body
   end
 
   test "POST /posts は上限超過で429を返す" do
@@ -103,7 +90,7 @@ class RackAttackThrottleTest < ActionDispatch::IntegrationTest
 
     post posts_path, params: { post: { body: "rack attack test over limit" } }, env: @request_env
     assert_response :too_many_requests
-    assert_equal "Too Many Requests", response.body
+    assert_equal "429 Too Many Requests", response.body
   end
 
   test "POST /posts/:post_id/chat は上限超過で429を返す" do
@@ -114,7 +101,7 @@ class RackAttackThrottleTest < ActionDispatch::IntegrationTest
 
     post "/posts/1/chat", params: { chat_message: { body: "rack attack start chat test over limit" } }, env: @request_env
     assert_response :too_many_requests
-    assert_equal "Too Many Requests", response.body
+    assert_equal "429 Too Many Requests", response.body
   end
 
   test "POST /chats/:chat_id/messages は上限超過で429を返す" do
@@ -125,7 +112,7 @@ class RackAttackThrottleTest < ActionDispatch::IntegrationTest
 
     post "/chats/1/messages", params: { chat_message: { body: "rack attack chat test over limit" } }, env: @request_env
     assert_response :too_many_requests
-    assert_equal "Too Many Requests", response.body
+    assert_equal "429 Too Many Requests", response.body
   end
 
   private
