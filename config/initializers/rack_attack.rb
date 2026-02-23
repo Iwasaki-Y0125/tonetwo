@@ -1,6 +1,6 @@
 class Rack::Attack
-  # 本番のみ有効化（必要に応じて調整）
-  Rack::Attack.enabled = Rails.env.production?
+  # 本番のみ有効化。切り分け時は RACK_ATTACK_ENABLED=0 で一時停止できる。
+  Rack::Attack.enabled = Rails.env.production? && ENV.fetch("RACK_ATTACK_ENABLED", "1") == "1"
 
   # Cloudflare経由の本番では、接続元プロキシIPではなく利用者IPを優先して使う。
   # 前提: Render側でorigin直アクセスを遮断済みのため、CF-Connecting-IPを信頼する運用。
@@ -9,15 +9,21 @@ class Rack::Attack
     req.get_header("HTTP_CF_CONNECTING_IP").presence || req.ip
   end
 
-  # 1分あたりのリクエスト数をIPごとに制限（仮値）
+  # 未ログイン時の全体アクセスだけを粗く抑止する。
+  # ログイン後の通常閲覧は、個別エンドポイントの制限に任せる。
   throttle("req/ip", limit: 240, period: 1.minute) do |req|
+    next if req.path == "/up"
+    next if req.path.start_with?("/assets")
+    next if req.path == "/favicon.ico"
+    next if req.cookies["session_id"].present?
+
     client_ip(req)
   end
 
-  # Basic認証ヘッダ付きリクエストだけを制限対象にする（仮公開向け）
-  throttle("basic_auth/ip", limit: 20, period: 1.minute) do |req|
-    client_ip(req) if req.path != "/up" && req.get_header("HTTP_AUTHORIZATION").present?
-  end
+  # # Basic認証ヘッダ付きリクエストだけを制限対象にする（仮公開向け）
+  # throttle("basic_auth/ip", limit: 20, period: 1.minute) do |req|
+  #   client_ip(req) if req.path != "/up" && req.get_header("HTTP_AUTHORIZATION").present?
+  # end
 
   # 役割分担:
   # - Rack::Attack はミドルウェア層で粗く遮断（429）
