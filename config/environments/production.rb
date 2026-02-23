@@ -26,6 +26,8 @@ Rails.application.configure do
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
+  # MVPでは画像変換機能を使わないため、variant処理を無効化して依存gemを不要にする。
+  config.active_storage.variant_processor = :disabled
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
   config.assume_ssl = true
