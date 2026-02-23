@@ -258,7 +258,7 @@
 | シークレット検知（CI） | GitGuardian |
 | 静的解析 | RuboCop |
 | セキュリティ静的解析 | Brakeman |
-| テスト | MVPでは最小限（手動確認＋重要箇所のみMinitestのrequest/integration test） |
+| テスト | Minitest（request/integration主軸 + 重要導線のみsystem test） |
 | バージョン管理 | GitHub |
 | インフラ補助 | Docker, GitHub Actions |
 
@@ -416,9 +416,10 @@
 ---
 
 ###  テスト
-- **MVPでは最小限（手動確認＋重要箇所のみMinitestのrequest/integration test）**
-    - MVP段階では開発スピードを優先し、基本は手動確認で動作を担保する
-    - ただし、壊れると致命的な導線（例：ログイン、投稿、リプライ、ミュート、退会など）は Minitest の `request/integration test` を最小限だけ用意し、回帰バグを防ぐ
+- **Minitest（request/integration主軸 + 重要導線のみsystem test）**
+    - 基本は request/integration test で回帰を検知し、速度と保守性を優先する
+    - ただし、壊れると影響が大きい導線（例：ログイン、投稿、チャット）は system test を最小本数で追加し、UI挙動も回帰検知する
+    - 詳細な運用方針は `docs/03_engineering/testing/2026-02-08-01-testing-policy-minitest.md` と `docs/03_engineering/testing/2026-02-23-01-system-test-foundation-runbook.md` を参照
 
 ---
 

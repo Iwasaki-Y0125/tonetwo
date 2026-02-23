@@ -6,7 +6,7 @@
 ## 結論
 - 現在は **Minitest** を採用する。
 - テストは **request/integration test を主軸** にし、重要導線のみ system test を追加する。
-- CI は既存の `bin/rails db:test:prepare test test:system` を継続する。
+- CI は `bin/rails test` を基本に運用し、system test は実行基盤整備後に段階的に組み込む。
 
 ## Minitestを採用する理由
 - Railsデフォルトであること。既存構成（Gem/CI/生成物）が Minitest 前提で、追加導入コストが最小。
