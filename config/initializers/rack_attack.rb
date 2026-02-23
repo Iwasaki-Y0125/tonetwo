@@ -1,6 +1,6 @@
 class Rack::Attack
-  # 本番のみ有効化。切り分け時は RACK_ATTACK_ENABLED=0 で一時停止できる。
-  Rack::Attack.enabled = Rails.env.production? && ENV.fetch("RACK_ATTACK_ENABLED", "1") == "1"
+  # 本番のみ有効化
+  Rack::Attack.enabled = Rails.env.production?
 
   # Cloudflare経由の本番では、接続元プロキシIPではなく利用者IPを優先して使う。
   # 前提: Render側でorigin直アクセスを遮断済みのため、CF-Connecting-IPを信頼する運用。
