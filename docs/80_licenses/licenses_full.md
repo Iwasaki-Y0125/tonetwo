@@ -55,7 +55,7 @@
 
 各gemのライセンス本文および著作権表示は、ホームページ列のリンク先リポジトリにてご確認いただけます。
 
-最終更新日時: 2026-02-23 04:27:49 +0900
+最終更新日時: 2026-02-23 23:07:09 +0900
 
 | Gem | Version | License | Homepage |
 |---|---:|---|---|
@@ -95,7 +95,7 @@
 | i18n | 1.14.8 | MIT | https://github.com/ruby-i18n/i18n |
 | importmap-rails | 2.2.3 | MIT | https://github.com/rails/importmap-rails |
 | io-console | 0.8.2 | Ruby, BSD-2-Clause | https://github.com/ruby/io-console |
-| irb | 1.16.0 | Ruby, BSD-2-Clause | https://github.com/ruby/irb |
+| irb | 1.17.0 | Ruby, BSD-2-Clause | https://github.com/ruby/irb |
 | jbuilder | 2.14.1 | MIT | https://github.com/rails/jbuilder |
 | json | 2.18.1 | Ruby | https://github.com/ruby/json |
 | kamal | 2.10.1 | MIT | https://github.com/basecamp/kamal |
@@ -136,12 +136,12 @@
 | rails-html-sanitizer | 1.6.2 | MIT | https://github.com/rails/rails-html-sanitizer |
 | railties | 8.1.2 | MIT | https://rubyonrails.org |
 | rake | 13.3.1 | MIT | https://github.com/ruby/rake |
-| rdoc | 7.1.0 | Ruby | https://ruby.github.io/rdoc |
+| rdoc | 7.2.0 | Ruby | https://ruby.github.io/rdoc |
 | reline | 0.6.3 | Ruby | https://github.com/ruby/reline |
 | securerandom | 0.4.1 | Ruby, BSD-2-Clause | https://github.com/ruby/securerandom |
 | solid_cable | 3.0.12 | MIT | https://github.com/rails/solid_cable |
 | solid_cache | 1.0.10 | MIT | http://github.com/rails/solid_cache |
-| solid_queue | 1.3.1 | MIT | https://github.com/rails/solid_queue |
+| solid_queue | 1.3.2 | MIT | https://github.com/rails/solid_queue |
 | sshkit | 1.25.0 | MIT | http://github.com/capistrano/sshkit |
 | stimulus-rails | 1.3.4 | MIT | https://stimulus.hotwired.dev |
 | stringio | 3.2.0 | Ruby, BSD-2-Clause | https://github.com/ruby/stringio |
@@ -155,7 +155,7 @@
 | useragent | 0.16.11 | MIT | https://github.com/gshutler/useragent |
 | websocket-driver | 0.8.0 | Apache-2.0 | https://github.com/faye/websocket-driver-ruby |
 | websocket-extensions | 0.1.5 | Apache-2.0 | https://github.com/faye/websocket-extensions-ruby |
-| zeitwerk | 2.7.4 | MIT | https://github.com/fxn/zeitwerk |
+| zeitwerk | 2.7.5 | MIT | https://github.com/fxn/zeitwerk |
 
 
 ---
