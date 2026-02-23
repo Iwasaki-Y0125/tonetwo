@@ -11,7 +11,7 @@ class Rack::Attack
 
   # 未ログイン時の全体アクセスだけを粗く抑止する。
   # ログイン後の通常閲覧は、個別エンドポイントの制限に任せる。
-  throttle("req/ip", limit: 240, period: 1.minute) do |req|
+  throttle("req/ip", limit: 480, period: 1.minute) do |req|
     next if req.path == "/up"
     next if req.path.start_with?("/assets")
     next if req.path == "/favicon.ico"
@@ -52,7 +52,7 @@ class Rack::Attack
   # Rack::Attackで弾いたときに、監視イベントを記録して429を返す処理
   def self.throttled_response(request)
     ActiveSupport::Notifications.instrument("security.throttle", throttled_payload(request))
-    [ 429, { "Content-Type" => "text/plain" }, [ "Too Many Requests" ] ]
+    [ 429, { "Content-Type" => "text/plain" }, [ "429 Too Many Requests" ] ]
   end
 
   def self.throttled_payload(request)
