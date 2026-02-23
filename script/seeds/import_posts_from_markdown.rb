@@ -3,7 +3,8 @@
 require "optparse"
 require "securerandom"
 
-ENV["RAILS_ENV"] ||= "production"
+abort "[seed] RAILS_ENV=production を明示して実行してください" unless ENV["RAILS_ENV"] == "production"
+
 require_relative "../../config/environment"
 
 module Seeds
@@ -74,7 +75,7 @@ module Seeds
     def validate_posts!(posts)
       raise "[seed] posts is empty" if posts.empty?
 
-      too_long = posts.each_with_index.filter_map { |body, idx| [idx + 1, body.length] if body.length > 140 }
+      too_long = posts.each_with_index.filter_map { |body, idx| [ idx + 1, body.length ] if body.length > 140 }
       return if too_long.empty?
 
       details = too_long.map { |row_no, len| "line=#{row_no} length=#{len}" }.join(", ")
