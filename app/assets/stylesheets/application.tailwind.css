@@ -856,8 +856,8 @@
   }
 
   .tt-mobile-footer-nav-link .tt-header-icon {
-    width: 1.2rem;
-    height: 1.2rem;
+    width: 1.7rem;
+    height: 1.7rem;
   }
 
   .tt-mobile-footer-nav-label {
@@ -1012,6 +1012,13 @@
   }
 
   @media (max-width: 767px) {
+    /* 本文可読性向上のため、モバイル時のみ本文テキストを一段階拡大 */
+    .tt-post-body,
+    .tt-chat-bubble-body {
+      font-size: 1.0625rem;
+      line-height: 1.75;
+    }
+
     /* チャット見出しは左端寄りのため、モバイルではポップオーバーを左基準にして見切れを防ぐ */
     .tt-help-popover-chat {
       left: 0;

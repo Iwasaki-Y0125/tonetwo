@@ -1,7 +1,7 @@
 <% if authenticated? %>
   <% timeline_active = current_page?(timeline_path) %>
   <% similar_active = current_page?(similar_timeline_path) %>
-  <% my_posts_active = current_page?(my_posts_path) %>
+  <% my_posts_active = current_page?(my_posts_path) || controller_path == "my/posts" %>
   <% chats_active = current_page?(chats_path) || controller_name == "chats" %>
   <% settings_active = current_page?(settings_path) %>
 
