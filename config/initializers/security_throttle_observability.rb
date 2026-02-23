@@ -30,11 +30,19 @@ unless Rails.configuration.x.security_throttle_subscriber_registered
   end
 
   def should_emit_throttle_log?(count)
-    count == WARN_THRESHOLD || count == ERROR_THRESHOLD || (count > ERROR_THRESHOLD && (count % ERROR_THRESHOLD).zero?)
+    # 元の運用ロジック（切り戻し用）
+    # count == WARN_THRESHOLD || count == ERROR_THRESHOLD || (count > ERROR_THRESHOLD && (count % ERROR_THRESHOLD).zero?)
+
+    # 切り分け期間中は 429 を毎回記録する
+    true
   end
 
   def throttle_log_level(count)
-    count >= ERROR_THRESHOLD ? :error : :warn
+    # 元の運用ロジック（切り戻し用）
+    # count >= ERROR_THRESHOLD ? :error : :warn
+
+    # 切り分け期間中は通知漏れ防止のため常に error
+    :error
   end
 
   # layer を必須キーにして、middleware/controller の抑止シグナルを同一イベントで集計する
