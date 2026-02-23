@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  allow_unauthenticated_access only: %i[ new create ]
+  unauthenticated_access_only only: %i[new create]
   rate_limit to: 10, within: 3.minutes, only: :create,
              with: -> { handle_create_rate_limit }
 

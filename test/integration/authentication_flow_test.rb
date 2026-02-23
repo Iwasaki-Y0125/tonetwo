@@ -13,7 +13,7 @@ class AuthenticationFlowTest < ActionDispatch::IntegrationTest
 
   test "ログイン成功" do
     assert_difference("Session.count", 1) do
-      post session_path, params: { email_address: @user.email_address, password: "password" }
+      post session_path, params: { email_address: @user.email_address, password: "password12345" }
     end
 
     assert_response :redirect
@@ -60,6 +60,18 @@ class AuthenticationFlowTest < ActionDispatch::IntegrationTest
 
     get root_path
 
+    assert_redirected_to timeline_path
+  end
+
+  test "ログイン済みでログイン処理を実行するとルートへリダイレクトされる" do
+    sign_in_as(@user)
+
+    assert_no_difference("Session.count") do
+      post session_path, params: { email_address: @user.email_address, password: "password12345" }
+    end
+
+    assert_redirected_to root_path
+    follow_redirect!
     assert_redirected_to timeline_path
   end
 
@@ -110,7 +122,7 @@ class AuthenticationFlowTest < ActionDispatch::IntegrationTest
     get protected_page_path
     assert_redirected_to new_session_path
 
-    post session_path, params: { email_address: @user.email_address, password: "password" }
+    post session_path, params: { email_address: @user.email_address, password: "password12345" }
 
     assert_redirected_to protected_page_path
     assert cookies[:session_id].present?
@@ -120,13 +132,13 @@ class AuthenticationFlowTest < ActionDispatch::IntegrationTest
     get protected_page_path
     assert_redirected_to new_session_path
 
-    post session_path, params: { email_address: @user.email_address, password: "password" }
+    post session_path, params: { email_address: @user.email_address, password: "password12345" }
     assert_redirected_to protected_page_path
 
     delete session_path
     assert_redirected_to new_session_path
 
-    post session_path, params: { email_address: @user.email_address, password: "password" }
+    post session_path, params: { email_address: @user.email_address, password: "password12345" }
     assert_redirected_to timeline_url
   end
 

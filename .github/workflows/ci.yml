@@ -33,9 +33,14 @@ jobs:
               - "db/**"
               - "lib/**"
               - "test/**"
+              - "Dockerfile.dev"
+              - "docker-compose.dev.yml"
+              - "docker-compose.test.yml"
               - "Gemfile"
               - "Gemfile.lock"
               - "Rakefile"
+              - "Makefile"
+              - ".github/workflows/ci.yml"
 
   # ----------------------------
   # Ruby静的チェック（Brakeman + Rubocop）
@@ -103,68 +108,21 @@ jobs:
     needs: changes
     runs-on: ubuntu-latest
 
-    # job内で使うサービスコンテナ（テスト用DBなど）を起動
-    services:
-      postgres:
-        # postgres公式イメージでDBを起動
-        image: postgres
-        # DBユーザー/パスワード（テスト用）
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-        # runner（Ubuntu）側の localhost:5432 にポート公開
-        ports:
-          - 5432:5432
-        # DB起動完了を待つためのヘルスチェック（pg_isready が通るまでリトライ）
-        options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=3
-
-      # Redisも使う場合のテンプレ（今は無効）
-      # redis:
-      #   image: redis
-      #   ports:
-      #     - 6379:6379
-      #   options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
-
     steps:
-      # OSパッケージをインストール
-      # - build-essential: ネイティブ拡張のビルド（ffi等）に必要になることがある
-      # - git: bundlerがgitソースのgemを取る場合に必要
-      # - libpq-dev: PostgreSQL用ネイティブ拡張（pg等）ビルド用ヘッダ
-      # - libyaml-dev: psych（YAML）まわりで必要になることがある
-      # - pkg-config: ネイティブ依存の検出補助
-      # - mecab/libmecab-dev/mecab-ipadic-utf8: natto が MeCab（libmecab.so）を使うために必要
-      - name: Install packages
-        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y build-essential git libpq-dev libyaml-dev pkg-config mecab libmecab-dev mecab-ipadic-utf8
-
       # ソース取得
       - name: Checkout code
         uses: actions/checkout@v6
 
-      # Rubyセットアップ + bundlerキャッシュ
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-
-      # Tailwind CSS をビルド（レイアウトで tailwind.css を参照するため）
-      - name: Build CSS assets
-        run: |
-          mkdir -p app/assets/builds
-          npm ci
-          npm run build:css
-
-      # テスト実行
-      # - RAILS_ENV=test: テスト環境で起動
-      # - DATABASE_URL: services.postgres が localhost:5432 で待っているのでそこに接続
-      # - db:test:prepare: テストDB準備
-      # - test: unit/integration等のテスト
-      # - --exclude: Rack::Attack系はローカル実行に寄せる
+      # Dockerfile.dev + docker-compose.test.yml を使って、ローカルと同じ経路で実行する
       - name: Run tests
-        env:
-          RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432
-          # REDIS_URL: redis://localhost:6379/0
-        run: |
-          bin/rails db:test:prepare
-          bin/rails test --exclude '/RackAttackThrottleTest/'
+        run: make test
+
+      # system test 失敗時の画面を保全して調査しやすくする
+      - name: Upload test screenshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-screenshots
+          path: tmp/screenshots/failures_*.png
+          retention-days: 1
+          if-no-files-found: ignore

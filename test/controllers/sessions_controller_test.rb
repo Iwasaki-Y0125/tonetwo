@@ -14,7 +14,7 @@ class SessionsControllerTest < ActionController::TestCase
   test "return_to_after_authenticating(ログイン後のリダイレクト先）に外部URLが注入されたら全体TLにフォールバックする" do
     session[:return_to_after_authenticating] = "https://evil.example/phishing"
 
-    post :create, params: { email_address: @user.email_address, password: "password" }
+    post :create, params: { email_address: @user.email_address, password: "password12345" }
 
     assert_redirected_to timeline_url
   end

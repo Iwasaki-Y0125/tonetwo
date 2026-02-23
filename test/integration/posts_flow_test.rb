@@ -8,6 +8,14 @@ class PostsFlowTest < ActionDispatch::IntegrationTest
     FilterTerm.delete_all
   end
 
+  test "未ログインユーザーは投稿作成できない" do
+    assert_no_difference("Post.count") do
+      post posts_path, params: { post: { body: "unauthorized post" } }
+    end
+
+    assert_redirected_to new_session_path
+  end
+
   test "ログイン済みユーザーはタイムラインで投稿フォームを表示できる" do
     sign_in_as(users(:one))
 
