@@ -2,7 +2,7 @@
 
 各gemのライセンス本文および著作権表示は、ホームページ列のリンク先リポジトリにてご確認いただけます。
 
-最終更新日時: 2026-02-23 23:07:09 +0900
+最終更新日時: 2026-02-24 23:52:20 +0900
 
 | Gem | Version | License | Homepage |
 |---|---:|---|---|
@@ -33,7 +33,7 @@
 | dotenv | 3.2.0 | MIT | https://github.com/bkeepers/dotenv |
 | drb | 2.2.3 | Ruby, BSD-2-Clause | https://github.com/ruby/drb |
 | ed25519 | 1.4.0 | MIT | https://github.com/RubyCrypto/ed25519 |
-| erb | 6.0.1 | Ruby, BSD-2-Clause | https://github.com/ruby/erb |
+| erb | 6.0.2 | Ruby, BSD-2-Clause | https://github.com/ruby/erb |
 | erubi | 1.13.1 | MIT | https://github.com/jeremyevans/erubi |
 | et-orbi | 1.4.0 | MIT | https://github.com/floraison/et-orbi |
 | ffi | 1.17.3 | BSD-3-Clause | https://github.com/ffi/ffi/wiki |
@@ -51,7 +51,7 @@
 | mail | 2.9.0 | MIT | https://github.com/mikel/mail |
 | marcel | 1.1.0 | MIT, Apache-2.0 | https://github.com/rails/marcel |
 | mini_mime | 1.1.5 | MIT | https://github.com/discourse/mini_mime |
-| minitest | 6.0.1 | MIT | https://minite.st/ |
+| minitest | 6.0.2 | MIT | https://minite.st/ |
 | msgpack | 1.8.0 | Apache 2.0 | http://msgpack.org/ |
 | natto | 1.2.0 | BSD | https://github.com/buruzaemon/natto |
 | net-imap | 0.6.2 | Ruby, BSD-2-Clause | https://github.com/ruby/net-imap |
