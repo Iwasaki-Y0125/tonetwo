@@ -1,0 +1,45 @@
+name: CodeQL
+
+#
+on:
+  # 既存 CI と同様に、作成・更新されたすべての PR を解析する
+  pull_request:
+
+permissions:
+  actions: read
+  contents: read
+  # GitHub の Security タブに書き込める
+  security-events: write
+
+jobs:
+  analyze:
+    # 言語ごとに複数回実行する
+    name: Analyze (${{ matrix.language }})
+    runs-on: ubuntu-latest
+    strategy:
+      # どれか落ちても最後まで走らせる
+      fail-fast: false
+      matrix:
+        include:
+          - language: actions  #CI
+            build-mode: none   #静的解析
+          - language: javascript-typescript
+            build-mode: none
+          - language: ruby
+            build-mode: none
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      # CodeQL 解析を始める前の初期化処理
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+          config-file: ./.github/codeql/codeql-config.yml
+
+      # 初期化した条件に従って実際の解析結果を出して GitHub に送る
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v4

@@ -1,0 +1,11 @@
+name: "CodeQL Config"
+
+# テストコード由来の誤検知を避け、アプリ本体の解析に絞る
+paths-ignore:
+  - test
+  - test/**
+  - "**/*_test.rb"
+  - "**/*.test.js"
+  - "**/*.test.ts"
+  - "**/*.spec.js"
+  - "**/*.spec.ts"
