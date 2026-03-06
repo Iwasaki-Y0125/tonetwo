@@ -62,6 +62,7 @@ class ChatsController < ApplicationController
     # newからチャットメッセージの内容を受け取る
     @chat_message = ChatMessage.new(chat_message_params)
 
+    # 初回送信は room 作成と message 保存を同一トランザクションで扱う。
     @chatroom, @chat_message = Chatroom.start_with_message!(
       post: @post,
       reply_user: Current.user,
@@ -69,17 +70,15 @@ class ChatsController < ApplicationController
     )
 
     redirect_to chat_path(@chatroom)
-
-  # メッセージの保存に失敗した時用の例外処理
   rescue ActiveRecord::RecordInvalid => e
-    # 失敗したメッセージ作成の情報を画面再表示用に引き継ぐ
     @chat_message = e.record if e.record.is_a?(ChatMessage)
-    # サポートワードが含まれる場合はサポートページへ遷移する
+
+    # support語だけは通常エラーではなく専用導線へ送る。
     if @chat_message&.support_required?
       redirect_to support_page_path
       return
     end
-    # それ以外のエラーの場合は、エラーメッセージをフラッシュに積んで、遷移元に戻す。
+
     render :new, status: :unprocessable_entity
   end
 

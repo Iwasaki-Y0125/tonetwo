@@ -24,6 +24,7 @@ class Post < ApplicationRecord
             allow_nil: true
   validate :reject_filtered_terms
 
+  # 検証のたびに状態を初期化し、前回判定のフラグ残りを防ぐ。
   # controller側で「サポートページへ遷移するか」を判定するためのフラグ。
   def support_required?
     @support_required == true
@@ -36,23 +37,25 @@ class Post < ApplicationRecord
 
   private
 
+  # バリデーション
   # 投稿保存前に危険語を判定する。
   # support語が含まれる場合はサポート導線を優先し、prohibit語の通常エラーより先に扱う。
   def reject_filtered_terms
-    # 検証のたびに状態を初期化し、前回判定のフラグ残りを防ぐ。
     @support_required = false
-    return if body.blank?
-
-    matched_terms = FilterTerm.matching(body)
-    return if matched_terms.empty?
-
-    if matched_terms.where(action: "support").exists?
+    moderation_result = Moderation::SupportProhibitChecker.call(body)
+    if moderation_result.support?
       @support_required = true
       # 保存は止めつつ、controllerがサポートページへ自動遷移できるようにする。
       errors.add(:base, :invalid)
-    else
-      errors.add(:body, PROHIBIT_MESSAGE)
+      return
     end
+
+    if moderation_result.prohibit?
+      errors.add(:body, PROHIBIT_MESSAGE)
+      return
+    end
+
+    return if moderation_result.ok?
   end
 
   def enqueue_analysis_job

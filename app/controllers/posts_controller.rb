@@ -14,17 +14,22 @@ class PostsController < ApplicationController
       # セッション経由の保持データ最小化のため、投稿確認に必要な識別子のみ渡す。
       flash[:posted_preview_post_id] = @post.id
       redirect_to similar_timeline_path
-    elsif @post.support_required?
-      redirect_to support_page_path
-    else
-      # 投稿失敗時は、投稿内容とエラーメッセージをフラッシュに積んで、遷移元に戻す。
-      if request.referer.present?
-        redirect_back fallback_location: similar_timeline_path, flash: compose_error_flash(@post)
-        return
-      end
-      # リファラーがない場合も、全体TLに戻してエラーを表示する。
-      redirect_to timeline_path, flash: compose_error_flash(@post)
+      return
     end
+
+    if @post.support_required?
+      redirect_to support_page_path
+      return
+    end
+
+    # 投稿失敗時は、投稿内容とエラーメッセージをフラッシュに積んで、遷移元に戻す。
+    if request.referer.present?
+      redirect_back fallback_location: similar_timeline_path, flash: compose_error_flash(@post)
+      return
+    end
+
+    # リファラーがない場合も、全体TLに戻してエラーを表示する。
+    redirect_to timeline_path, flash: compose_error_flash(@post)
   end
 
   private

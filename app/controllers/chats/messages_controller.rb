@@ -8,6 +8,8 @@ module Chats
       redirect_to chat_path(@chatroom)
     rescue ActiveRecord::RecordInvalid => e
       @chat_message = e.record if e.record.is_a?(ChatMessage)
+
+      # support語だけは通常エラーではなく専用導線へ送る。
       if @chat_message&.support_required?
         redirect_to support_page_path
         return
