@@ -55,7 +55,7 @@ class Post < ApplicationRecord
       return
     end
 
-    return if moderation_result.ok?
+    nil if moderation_result.ok?
   end
 
   def enqueue_analysis_job

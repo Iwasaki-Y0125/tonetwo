@@ -69,6 +69,6 @@ class ChatMessage < ApplicationRecord
       return
     end
 
-    return if moderation_result.ok?
+    nil if moderation_result.ok?
   end
 end
