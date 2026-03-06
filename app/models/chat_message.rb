@@ -27,7 +27,8 @@ class ChatMessage < ApplicationRecord
   end
 
   # ===== 判定参照用 =====
-  # サポートワードが含まれているかどうかを判定するためのメソッド
+  # 検証のたびに状態を初期化し、前回判定のフラグ残りを防ぐ。
+  # controller側で「サポートページへ遷移するか」を判定するためのフラグ。
   def support_required?
     @support_required == true
   end
@@ -56,15 +57,18 @@ class ChatMessage < ApplicationRecord
   # support語がある場合はサポート導線を優先し、prohibitより先に扱う。
   def reject_filtered_terms
     @support_required = false
-
-    matched_terms = FilterTerm.matching(body)
-    return if matched_terms.empty?
-
-    if matched_terms.where(action: "support").exists?
+    moderation_result = Moderation::SupportProhibitChecker.call(body)
+    if moderation_result.support?
       @support_required = true
       errors.add(:base, :invalid)
-    else
-      errors.add(:body, PROHIBIT_MESSAGE)
+      return
     end
+
+    if moderation_result.prohibit?
+      errors.add(:body, PROHIBIT_MESSAGE)
+      return
+    end
+
+    nil if moderation_result.ok?
   end
 end
