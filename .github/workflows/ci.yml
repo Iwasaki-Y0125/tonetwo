@@ -6,6 +6,9 @@ on:
   # PRが作成/更新されたときに実行
   pull_request:
 
+permissions:
+  contents: read
+
 # 同じPRで新しい実行が始まったら古い実行をキャンセル
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
