@@ -4,6 +4,8 @@ name: CodeQL
 on:
   # 既存 CI と同様に、作成・更新されたすべての PR を解析する
   pull_request:
+  # 必要時に GitHub UI から main へ手動実行できるようにする
+  workflow_dispatch:
 
 permissions:
   actions: read
