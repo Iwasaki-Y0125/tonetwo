@@ -8,17 +8,16 @@ description: Issue番号/URL/タイトルが提示されたとき、ローカル
 
 `issue-to-branch` を使って、添付したIssueキャプチャから作業ブランチを切って。
 読み取り結果（Issue番号 / タイトル / repo）を先に確認してから作成して。
-命名規則は `feature/issue-<num>-<slug>` を使い、作成したブランチ名と実行コマンドも報告して。
+命名規則は `feature|fix|chore|refactor|docs/issue-<num>-<slug>` を使い、prefix も内容に合わせて選んで。作成したブランチ名と実行コマンドも報告して。
 -->
 
 # Issue to Branch
 
 ## ゴール
 - Issue情報を根拠に、衝突しない作業ブランチを作成する。
-- このリポジトリの既定命名規約 `feature/issue-<num>-<slug>` に統一する。
+- このリポジトリの既定命名規約 `feature|fix|chore|refactor|docs/issue-<num>-<slug>` に従う。
 - `web_search = cached` を前提に、ユーザー入力（キャプチャやコピペなど）を一次情報として扱う。
 - 画像（Issueキャプチャ）入力を標準運用として扱う。
-
 
 ## 手順
 1. 入力を正規化する。
@@ -31,15 +30,21 @@ description: Issue番号/URL/タイトルが提示されたとき、ローカル
 
 2. ローカル規約を確認する。
 - `AGENTS.md`、`docs/`、既存ブランチ名（`git branch -a`）を確認する。
-- ローカルに別規約が明示されていない限り、`feature/issue-<num>-<slug>` を採用する。
+- ローカルに別規約が明示されていない限り、`feature|fix|chore|refactor|docs/issue-<num>-<slug>` を採用する。
 
 3. ブランチ名を決める。
 - 規約がある場合は規約を優先する。
-- 規約がない場合は `feature/issue-<number>-<slug>` を使う。
+- 規約がない場合は `feature|fix|chore|refactor|docs/issue-<number>-<slug>` を使う。
+- prefix は Issue の性質から選ぶ。
+  - 機能追加: `feature`
+  - バグ修正: `fix`
+  - 雑務・設定: `chore`
+  - リファクタ: `refactor`
+  - ドキュメント: `docs`
 - `<slug>` はIssueの「やること（タスク）」から最重要の作業項目を1つ選び、1〜4語で要約して作る（必須）。
 - `<slug>` は小文字kebab-caseにし、英数字と`-`以外は除去する。
 - `<slug>` は1〜4語に収め、5語以上になりそうな場合は語を削って調整する。
-- タイトルがない、または `<slug>` が空になる場合は `feature/issue-<number>-task` を使う。
+- タイトルがない、または `<slug>` が空になる場合は `chore/issue-<number>-task` を使う。
 
 4. 競合を確認する。
 - `git branch --list '<branch>'` と `git branch -r --list 'origin/<branch>'` で重複確認する。
@@ -58,7 +63,7 @@ description: Issue番号/URL/タイトルが提示されたとき、ローカル
 
 ## 制約
 - 既存規約と矛盾する命名で作らない。
-- Issueタイトルが不足しても `feature/issue-<number>-task` で作業開始できる状態にする。
+- Issueタイトルが不足しても `chore/issue-<number>-task` で作業開始できる状態にする。
 - slugは最重要作業項目を表し、1〜4語に必ず収める。
 - `git checkout -b` より `git switch -c` を優先する。
 - `cached` 設定時はIssueメタデータの自動補完を期待しない。
