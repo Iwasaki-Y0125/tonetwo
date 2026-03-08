@@ -12,7 +12,7 @@
 - Wago：
   - `ラベル \t 表現(単語/フレーズ)` を **空白区切りフレーズ（最大5語）**として辞書化
   - 6語以上は一致しにくく辞書内でも少数のため対象外
-  - `user.pn` を **本体辞書より優先**して読み込む
+  - `user_wago.tsv` を **本体辞書より優先**して読み込む
 - Scorer：
   - 対象品詞（名詞/形容詞/動詞/副詞）をインデックス抽出し探索を軽量化
   - `wago` は **最長一致（最大5語）**でフレーズ評価 → 次に `pn` を単語評価
@@ -26,7 +26,7 @@
   - `/opt/sentiment_lex/pn.csv.m3.120408.trim`
   - `/opt/sentiment_lex/wago.121808.pn`
 - ユーザー辞書（リポジトリ管理）
-  - `sentiment_userdic/user.pn`（Wago user dict）
+  - `sentiment_userdic/user_wago.tsv`（Wago user dict）
 - 初期化（Rails）
   - `config/initializers/sentiment.rb`
     - `SENTIMENT_LEX_DIR` 配下の辞書パスを組み立てて `PN_LEX / WAGO_LEX / SENTIMENT_SCORER` を生成
@@ -49,14 +49,14 @@
   - 優先順位を `wago（フレーズ） → pn（単語）` に変更
   - 否定反転をフレーズ対応（covered_by_hit参照）に変更
 - ユーザー辞書
-  - `sentiment_userdic/user.pn` に表記ゆれ/俗語を追加して吸収（例：うれしい、まずい、微妙、買い得 など）
+  - `sentiment_userdic/user_wago.tsv` に表記ゆれ/俗語を追加して吸収（例：うれしい、まずい、微妙、買い得 など）
   - `mecab_userdic/user.csv` に `しか勝たん` を登録して分割を防止
 
 
 
 ## ユーザー辞書追加手順
 ### 1) ユーザー辞書を編集
-- Wago：`sentiment_userdic/user.pn` に追記（TSV：ラベル + TAB + 表現）
+- Wago：`sentiment_userdic/user_wago.tsv` に追記（TSV：ラベル + TAB + 表現）
 - MeCab：`mecab_userdic/user.csv` に追記（近い既存語のL/R/cost/featureを流用）
 
 ### 2) web を再起動して反映
@@ -89,7 +89,7 @@ ls -l /opt/sentiment_lex/wago.121808.pn
 ### 2) user辞書がコンテナ内にあるか
 ```sh
 make exec
-ls -l /app/sentiment_userdic/user.pn
+ls -l /app/sentiment_userdic/user_wago.tsv
 ```
 
 ### 3) PN が引けてるか（pn側の語で確認）

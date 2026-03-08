@@ -9,43 +9,45 @@ module Sentiment
       LABEL_MAP = { "p" => 1, "n" => -1, "e" => 0 }.freeze
 
       def initialize(path)
-        @path = path
-        @dict = nil
+        @paths = Array(path)
+        @dictionary = nil
       end
 
       # 単語のスコアを返す
       def score(word)
-        dict[word]
+        dictionary[word]
       end
 
-      # @dict があればそれを返す。なければ load_dict で読み込んでセットして返す
-      def dict
-        @dict ||= load_dict
+      # @dictionary があればそれを返す。なければ load_dictionary で読み込んでセットして返す
+      def dictionary
+        @dictionary ||= load_dictionary
       end
 
       private
 
-      def load_dict
-        raise "pn lexicon not found: #{@path}" unless File.exist?(@path)
+      def load_dictionary
+        dictionary = {}
+        @paths.each do |path|
+          File.foreach(path, encoding: "UTF-8") do |line|
+            line = line.strip
+            # 空行はスキップ
+            next if line.empty?
 
-        h = {}
-        File.foreach(@path, encoding: "UTF-8") do |line|
-          line = line.strip
-          next if line.empty?
+            # タブ区切りで最大3つに分割
+            # word：1列目（単語）
+            # label：2列目（p/n/e）
+            # _category：3列目（分類）※使わない
+            word, label, _category = line.split("\t", 3)
+            next if word.nil? || label.nil?
 
-          # タブ区切りで最大3つに分割
-          # word：1列目（単語）
-          # label：2列目（p/n/e）
-          # _category：3列目（分類）※使わない
-          word, label, _category = line.split("\t", 3)
-          next if word.nil? || label.nil?
+            label = label.strip
+            next unless LABEL_MAP.key?(label) # p/n/e以外はスキップ
 
-          label = label.strip
-          next unless LABEL_MAP.key?(label) # p/n/e以外はスキップ
-
-          h[word] = LABEL_MAP[label]
+            # 同じ単語が複数回出てきたら、先のほうを優先する（上書きしない）
+            dictionary[word] ||= LABEL_MAP[label]
+          end
         end
-        h
+        dictionary
       end
     end
   end

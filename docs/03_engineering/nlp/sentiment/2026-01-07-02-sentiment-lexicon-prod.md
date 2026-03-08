@@ -81,7 +81,7 @@ pn_path   = File.join(sentiment_lex_dir, "pn.csv.m3.120408.trim")
 wago_path = File.join(sentiment_lex_dir, "wago.121808.pn")
 
 # レポジトリ内で管理(Rails.)
-wago_user_path = Rails.root.join("sentiment_userdic/user.pn").to_s
+wago_user_path = Rails.root.join("sentiment_userdic/user_wago.tsv").to_s
 ```
 
 ## 動作確認
