@@ -63,8 +63,8 @@ echo "うっとうしい" | mecab -d "$BASE_DIC" \
 4. `mecab-dict-index` で `user.csv` を `user.dic` にコンパイルする
 ```sh
 /usr/lib/mecab/mecab-dict-index -d "$BASE_DIC" -u mecab_userdic/user.dic -f utf-8 -t utf-8 mecab_userdic/user.csv
-# mecab-dict-index　=> 辞書コンパイラ(csvを.dicにする)
-# -d "$BASE_DIC"    => NEologd側の辞書設定に合わせてユーザー辞書をビルドする（互換性のため）
+# mecab-dict-index => 辞書コンパイラ(csvを.dicにする)
+# -d "$BASE_DIC"   => NEologd側の辞書設定に合わせてユーザー辞書をビルドする（互換性のため）
 # -u mecab_userdic/user.dic => 出力先のバイナリファイル
 # -f utf-8 -t utf-8 => 入力CSV（from）も出力辞書（to）もUTF-8で扱う指定(文字化け防止)
 # mecab_userdic/user.csv => 入力元のCSV指定
@@ -79,9 +79,9 @@ echo "うざい" | mecab -d "$BASE_DIC" -u mecab_userdic/user.dic \
 # 出力例
 うざい 連結L=43 連結R=43 生起=6956 品詞=形容詞,自立,*,*,形容詞・イ段,基本形,うざい,ウザイ,ウザイ
 ```
-※nodeフォーマットについては下記情報を参考にしました
-https://shogo82148.github.io/mecab/format.html
-元ページ: https://github.com/taku910/mecab/blob/master/format.html
+※nodeフォーマットについては下記情報を参考にしました  
+<https://shogo82148.github.io/mecab/format.html>  
+元ページ: <https://github.com/taku910/mecab/blob/master/format.html>
 
 ### 補足: mecab-dict-index: command not found のエラー対応
 =>`mecab-dict-index`のファイルのパスを特定する必要がある。
@@ -99,7 +99,7 @@ https://shogo82148.github.io/mecab/format.html
 
   4) `find "$LIBEXEC" -maxdepth 2 -name 'mecab-dict-index*' -type f`
       念押しで、/usr/lib/mecab の中（`-maxdepth 2`深さ2階層まで）から`mecab-dict-index`のファイルを探す。
-      -　`-type f `は「ファイルだけを対象にする指定」
+      - `-type f` は「ファイルだけを対象にする指定」
       - `2>/dev/null`は「権限エラーなどの不要なエラー表示を捨てる」
 
   => `usr/lib/mecab/mecab-dict-index` に存在することを特定

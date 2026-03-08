@@ -33,7 +33,7 @@
 
 ### 容量
 - ベース辞書（PN/Wago）は固定ファイルを参照する前提（Docker内 `/opt/sentiment_lex/`）
-- 追加運用するのは **ユーザー辞書 `sentiment_userdic/user.pn`** のみ
+- 追加運用するのは **ユーザー辞書 `sentiment_userdic/user_wago.tsv`** を中心に、必要時は `sentiment_userdic/user_pn.tsv` も含める
   - 表記ゆれ（うれしい/嬉しい 等）や俗語（しか勝たん 等）などSNSで多用される表現かつポジネガ分析に影響が高そうな語を中心に追加する方針
 
 ### 更新
