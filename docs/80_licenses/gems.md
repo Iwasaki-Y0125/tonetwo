@@ -2,7 +2,7 @@
 
 各gemのライセンス本文および著作権表示は、ホームページ列のリンク先リポジトリにてご確認いただけます。
 
-最終更新日時: 2026-03-03 17:09:08 +0900
+最終更新日時: 2026-03-10 22:22:04 +0900
 
 | Gem | Version | License | Homepage |
 |---|---:|---|---|
@@ -93,7 +93,7 @@
 | stimulus-rails | 1.3.4 | MIT | https://stimulus.hotwired.dev |
 | stringio | 3.2.0 | Ruby, BSD-2-Clause | https://github.com/ruby/stringio |
 | thor | 1.5.0 | MIT | https://github.com/rails/thor |
-| thruster | 0.1.18 | MIT | https://github.com/basecamp/thruster |
+| thruster | 0.1.19 | MIT | https://github.com/basecamp/thruster |
 | timeout | 0.6.0 | Ruby, BSD-2-Clause | https://github.com/ruby/timeout |
 | tsort | 0.2.0 | Ruby, BSD-2-Clause | https://github.com/ruby/tsort |
 | turbo-rails | 2.0.23 | MIT | https://github.com/hotwired/turbo-rails |
