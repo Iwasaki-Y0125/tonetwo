@@ -2,7 +2,7 @@
 
 各gemのライセンス本文および著作権表示は、ホームページ列のリンク先リポジトリにてご確認いただけます。
 
-最終更新日時: 2026-03-10 22:22:04 +0900
+最終更新日時: 2026-03-12 02:12:07 +0900
 
 | Gem | Version | License | Homepage |
 |---|---:|---|---|
@@ -20,7 +20,6 @@
 | activesupport | 8.1.2 | MIT | https://rubyonrails.org |
 | base64 | 0.3.0 | Ruby, BSD-2-Clause | https://github.com/ruby/base64 |
 | bcrypt | 3.1.21 | MIT | https://github.com/bcrypt-ruby/bcrypt-ruby |
-| bcrypt_pbkdf | 1.1.2 | MIT | https://github.com/net-ssh/bcrypt_pbkdf-ruby |
 | bigdecimal | 4.0.1 | Ruby, BSD-2-Clause | https://github.com/ruby/bigdecimal |
 | bootsnap | 1.23.0 | MIT | https://github.com/rails/bootsnap |
 | builder | 3.3.0 | MIT | https://github.com/rails/builder |
@@ -30,9 +29,7 @@
 | connection_pool | 3.0.2 | MIT | https://github.com/mperham/connection_pool |
 | crass | 1.0.6 | MIT | https://github.com/rgrove/crass/ |
 | date | 3.5.1 | Ruby, BSD-2-Clause | https://github.com/ruby/date |
-| dotenv | 3.2.0 | MIT | https://github.com/bkeepers/dotenv |
 | drb | 2.2.3 | Ruby, BSD-2-Clause | https://github.com/ruby/drb |
-| ed25519 | 1.4.0 | MIT | https://github.com/RubyCrypto/ed25519 |
 | erb | 6.0.2 | Ruby, BSD-2-Clause | https://github.com/ruby/erb |
 | erubi | 1.13.1 | MIT | https://github.com/jeremyevans/erubi |
 | et-orbi | 1.4.0 | MIT | https://github.com/floraison/et-orbi |
@@ -45,7 +42,6 @@
 | irb | 1.17.0 | Ruby, BSD-2-Clause | https://github.com/ruby/irb |
 | jbuilder | 2.14.1 | MIT | https://github.com/rails/jbuilder |
 | json | 2.18.1 | Ruby | https://github.com/ruby/json |
-| kamal | 2.10.1 | MIT | https://github.com/basecamp/kamal |
 | logger | 1.7.0 | Ruby, BSD-2-Clause | https://github.com/ruby/logger |
 | loofah | 2.25.0 | MIT | https://github.com/flavorjones/loofah |
 | mail | 2.9.0 | MIT | https://github.com/mikel/mail |
@@ -57,13 +53,9 @@
 | net-imap | 0.6.2 | Ruby, BSD-2-Clause | https://github.com/ruby/net-imap |
 | net-pop | 0.1.2 | Ruby, BSD-2-Clause | https://github.com/ruby/net-pop |
 | net-protocol | 0.2.2 | Ruby, BSD-2-Clause | https://github.com/ruby/net-protocol |
-| net-scp | 4.1.0 | MIT | https://github.com/net-ssh/net-scp |
-| net-sftp | 4.0.0 | MIT | https://github.com/net-ssh/net-sftp |
 | net-smtp | 0.5.1 | Ruby, BSD-2-Clause | https://github.com/ruby/net-smtp |
-| net-ssh | 7.3.0 | MIT | https://github.com/net-ssh/net-ssh |
 | nio4r | 2.7.5 | MIT, BSD-2-Clause | https://github.com/socketry/nio4r |
 | nokogiri | 1.19.1 | MIT | https://nokogiri.org |
-| ostruct | 0.6.3 | Ruby, BSD-2-Clause | https://github.com/ruby/ostruct |
 | pg | 1.6.3 | BSD-2-Clause | https://github.com/ged/ruby-pg |
 | pp | 0.6.3 | Ruby, BSD-2-Clause | https://github.com/ruby/pp |
 | prettyprint | 0.2.0 | Ruby, BSD-2-Clause | https://github.com/ruby/prettyprint |
@@ -89,11 +81,9 @@
 | solid_cable | 3.0.12 | MIT | https://github.com/rails/solid_cable |
 | solid_cache | 1.0.10 | MIT | http://github.com/rails/solid_cache |
 | solid_queue | 1.3.2 | MIT | https://github.com/rails/solid_queue |
-| sshkit | 1.25.0 | MIT | http://github.com/capistrano/sshkit |
 | stimulus-rails | 1.3.4 | MIT | https://stimulus.hotwired.dev |
 | stringio | 3.2.0 | Ruby, BSD-2-Clause | https://github.com/ruby/stringio |
 | thor | 1.5.0 | MIT | https://github.com/rails/thor |
-| thruster | 0.1.19 | MIT | https://github.com/basecamp/thruster |
 | timeout | 0.6.0 | Ruby, BSD-2-Clause | https://github.com/ruby/timeout |
 | tsort | 0.2.0 | Ruby, BSD-2-Clause | https://github.com/ruby/tsort |
 | turbo-rails | 2.0.23 | MIT | https://github.com/hotwired/turbo-rails |

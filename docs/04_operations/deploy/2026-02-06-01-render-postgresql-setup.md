@@ -2,6 +2,8 @@
 
 本ドキュメントは Issue「[Deploy] Render PostgreSQL作成・接続・マイグレーション導線整備」の実施手順をまとめる。
 
+> 追記: MVP公開後、仮公開用 Basic認証（`PreviewAccessControl` と `PREVIEW_BASIC_AUTH_*`）は削除済み。
+
 ## 1. 事前確認（根拠）
 
 ### ローカル根拠

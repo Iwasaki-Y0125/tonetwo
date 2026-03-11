@@ -1,7 +1,4 @@
 require "active_support/core_ext/integer/time"
-# 仮公開時の Basic認証ミドルウェア
-# TODO(MVP公開前): 完全公開時にこの require / middleware が必要かを再判断する。
-require Rails.root.join("lib/preview_access_control")
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -92,12 +89,4 @@ Rails.application.configure do
 
   # ヘルスチェックエンドポイントに対して、ホスト保護を無効にします。（死活監視用）
   config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
-
-  # 仮公開中のみ有効化できるアクセス制限（/up は middleware 側で除外）。
-  # TODO(MVP公開前): 公開時に制限不要なら PreviewAccessControl を外す。
-  config.middleware.use(
-    PreviewAccessControl,
-    basic_user: ENV["PREVIEW_BASIC_AUTH_USER"],
-    basic_password: ENV["PREVIEW_BASIC_AUTH_PASSWORD"]
-  )
 end
