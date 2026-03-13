@@ -55,11 +55,11 @@
 
 各gemのライセンス本文および著作権表示は、ホームページ列のリンク先リポジトリにてご確認いただけます。
 
-最終更新日時: 2026-03-12 02:12:07 +0900
+最終更新日時: 2026-03-13 18:06:36 +0900
 
 | Gem | Version | License | Homepage |
 |---|---:|---|---|
-| action_text-trix | 2.1.16 | MIT | https://github.com/basecamp/trix |
+| action_text-trix | 2.1.17 | MIT | https://github.com/basecamp/trix |
 | actioncable | 8.1.2 | MIT | https://rubyonrails.org |
 | actionmailbox | 8.1.2 | MIT | https://rubyonrails.org |
 | actionmailer | 8.1.2 | MIT | https://rubyonrails.org |
