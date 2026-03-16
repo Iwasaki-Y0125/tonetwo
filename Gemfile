@@ -47,6 +47,9 @@ gem "rack-attack", "~> 6.8"
 # CommonMark準拠でMarkdownをHTMLに変換するためのライブラリ
 gem "commonmarker"
 
+# 管理者用ダッシュボードを簡単に作成できるライブラリ
+gem "administrate"
+
 # ====================
 # 開発 + テスト
 # ====================

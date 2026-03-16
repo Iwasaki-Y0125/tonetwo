@@ -21,6 +21,7 @@
 ### Ruby / Rails
 - `Gemfile.lock` を確認する。
 - `Gemfile.lock` を直接編集しない。依存変更が必要な場合は、Bundler を通じて更新する。
+- 巻き戻しや差分調整のためであっても `Gemfile.lock` を手編集しない。必要なら `bundle install` / `bundle update` / `git diff` で差分を確認し、適切な手順で戻す。
 - 必要に応じて `bundle info <gem>` 等で実インストール版を確認する。
 - `Gemfile.lock` と矛盾する前提で実装しない。
 
