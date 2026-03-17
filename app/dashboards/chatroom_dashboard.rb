@@ -15,7 +15,7 @@ class ChatroomDashboard < Administrate::BaseDashboard
     post: Field::BelongsTo,
     reply_user: Field::BelongsTo,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES

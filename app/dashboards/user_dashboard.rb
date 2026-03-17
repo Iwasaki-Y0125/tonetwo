@@ -20,7 +20,7 @@ class UserDashboard < Administrate::BaseDashboard
     terms_accepted_at: Field::DateTime,
     terms_version: Field::String,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES

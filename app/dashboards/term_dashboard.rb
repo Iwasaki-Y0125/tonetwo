@@ -12,7 +12,7 @@ class TermDashboard < Administrate::BaseDashboard
     post_terms: Field::HasMany,
     term: Field::String,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES

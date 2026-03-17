@@ -13,7 +13,7 @@ class SessionDashboard < Administrate::BaseDashboard
     user: Field::BelongsTo,
     user_agent: Field::String,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES

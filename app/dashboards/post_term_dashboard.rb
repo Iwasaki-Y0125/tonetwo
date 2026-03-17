@@ -12,7 +12,7 @@ class PostTermDashboard < Administrate::BaseDashboard
     post: Field::BelongsTo,
     term: Field::BelongsTo,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES
