@@ -19,6 +19,7 @@
 1. `Gemfile` に `gem "administrate"` を追加する。
 2. `make bundle-install` で `Gemfile.lock` を更新する。
 3. `rails generate administrate:install` を Docker 経由で実行する。
+   - 生成物の詳細は [2026-03-17-01-administrate-install-generated-files.md](./2026-03-17-01-administrate-install-generated-files.md) を参照。
 4. `config/routes.rb` の `/admin` 公開対象を必要最小限に絞る。
 5. `Admin::ApplicationController` に認証ガードを実装する。
 6. 管理者フラグ用 migration を追加する。
