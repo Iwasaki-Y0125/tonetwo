@@ -9,6 +9,7 @@
 
 ## 結論
 - `rails generate administrate:install` は、管理画面全体の土台を作る初回 generator。
+- 初回導入では実質必須だが、生成物は広めに出るため、そのまま公開せず後続で routes / controller / dashboard の刈り込みが必要になる。
 - 生成される中心は次の3つ。
   - 管理画面共通コントローラー `app/controllers/admin/application_controller.rb`
   - 管理画面ルーティングの追記 `config/routes.rb`
