@@ -1,17 +1,10 @@
 Rails.application.routes.draw do
   namespace :admin do
-      resources :chat_messages
-      resources :chatrooms
-      resources :filter_terms
-      resources :matching_exclusion_terms
-      resources :posts
-      resources :post_terms
-      resources :sessions
-      resources :terms
-      resources :users
+    resources :filter_terms
+    resources :matching_exclusion_terms
 
-      root to: "chat_messages#index"
-    end
+    root to: "filter_terms#index"
+  end
   resource :session, only: %i[new create destroy]
   resource :sign_up, only: %i[new create]
   get "timeline", to: "timeline#index", as: :timeline

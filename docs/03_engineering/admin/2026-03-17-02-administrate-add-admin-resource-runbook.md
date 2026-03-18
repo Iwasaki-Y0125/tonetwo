@@ -12,6 +12,7 @@
 - 後から管理対象を増やすときは、通常 `rails generate administrate:install` は再実行しない。
 - 対象モデルごとに `rails generate administrate:dashboard ModelName` を実行する。
 - 必要に応じて `config/routes.rb` の `namespace :admin` に `resources` を追加する。
+- 初回整理で削除した dashboard / controller も、この手順で必要時に再生成する。
 
 ## 前提になるもの
 - migration で対応テーブルが作成済みであること

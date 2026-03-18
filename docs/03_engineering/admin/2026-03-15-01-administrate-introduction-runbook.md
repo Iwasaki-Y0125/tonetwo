@@ -11,9 +11,11 @@
 
 ## 実装方針
 - `/admin` 配下に `Administrate` を導入する。
+- `rails generate administrate:install` は初回の土台作成として必須だが、生成物はそのまま使わず公開対象に合わせて刈り込む。
 - 認証は既存セッションを流用する。
 - 管理者判定は `users` に明示的なフラグを持たせる案を第一候補とする。
-- 初回の管理対象は `users`、`posts`、`filter_terms` を想定する。
+- 初回の管理対象は `filter_terms`、`matching_exclusion_terms` とする。
+- 通報対応は将来の `*_abuse_reports` 起点で扱う。
 
 ## 手順
 1. `Gemfile` に `gem "administrate"` を追加する。
@@ -21,6 +23,8 @@
 3. `rails generate administrate:install` を Docker 経由で実行する。
    - 生成物の詳細は [2026-03-17-01-administrate-install-generated-files.md](./2026-03-17-01-administrate-install-generated-files.md) を参照。
 4. `config/routes.rb` の `/admin` 公開対象を必要最小限に絞る。
+   - 実装の詳細は [2026-03-18-01-config-routes-admin-scope.md](./2026-03-18-01-config-routes-admin-scope.md) を参照。
+   - 合わせて、不要な routes / controller / dashboard を刈り込む
 5. `Admin::ApplicationController` に認証ガードを実装する。
 6. 管理者フラグ用 migration を追加する。
 7. dashboard の表示項目を整理する。
@@ -30,11 +34,11 @@
 - 管理者権限
   - `users.admin:boolean` で始めるか。
 - 初回対象
-  - `users`
-  - `posts`
   - `filter_terms`
+  - `matching_exclusion_terms`
 - 後続 Issue に回すもの
-  - 通報審査画面
+  - `post_abuse_reports` / `message_abuse_reports` の管理画面
+  - 管理者判定用の `users` 運用導線
   - `sentiment backfill` 実行 action
   - 強制退会や投稿非表示などの運用 action
 
