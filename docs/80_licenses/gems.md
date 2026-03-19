@@ -2,7 +2,7 @@
 
 各gemのライセンス本文および著作権表示は、ホームページ列のリンク先リポジトリにてご確認いただけます。
 
-最終更新日時: 2026-03-13 18:06:36 +0900
+最終更新日時: 2026-03-19 20:07:09 +0900
 
 | Gem | Version | License | Homepage |
 |---|---:|---|---|
@@ -18,6 +18,7 @@
 | activerecord | 8.1.2 | MIT | https://rubyonrails.org |
 | activestorage | 8.1.2 | MIT | https://rubyonrails.org |
 | activesupport | 8.1.2 | MIT | https://rubyonrails.org |
+| administrate | 1.0.0 | MIT | https://administrate-demo.herokuapp.com/ |
 | base64 | 0.3.0 | Ruby, BSD-2-Clause | https://github.com/ruby/base64 |
 | bcrypt | 3.1.21 | MIT | https://github.com/bcrypt-ruby/bcrypt-ruby |
 | bigdecimal | 4.0.1 | Ruby, BSD-2-Clause | https://github.com/ruby/bigdecimal |
@@ -42,8 +43,12 @@
 | irb | 1.17.0 | Ruby, BSD-2-Clause | https://github.com/ruby/irb |
 | jbuilder | 2.14.1 | MIT | https://github.com/rails/jbuilder |
 | json | 2.18.1 | Ruby | https://github.com/ruby/json |
+| kaminari | 1.2.2 | MIT | https://github.com/kaminari/kaminari |
+| kaminari-actionview | 1.2.2 | MIT | https://github.com/kaminari/kaminari |
+| kaminari-activerecord | 1.2.2 | MIT | https://github.com/kaminari/kaminari |
+| kaminari-core | 1.2.2 | MIT | https://github.com/kaminari/kaminari |
 | logger | 1.7.0 | Ruby, BSD-2-Clause | https://github.com/ruby/logger |
-| loofah | 2.25.0 | MIT | https://github.com/flavorjones/loofah |
+| loofah | 2.25.1 | MIT | https://github.com/flavorjones/loofah |
 | mail | 2.9.0 | MIT | https://github.com/mikel/mail |
 | marcel | 1.1.0 | MIT, Apache-2.0 | https://github.com/rails/marcel |
 | mini_mime | 1.1.5 | MIT | https://github.com/discourse/mini_mime |
