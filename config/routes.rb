@@ -1,10 +1,11 @@
 Rails.application.routes.draw do
-  namespace :admin do
-    resources :filter_terms
-    resources :matching_exclusion_terms
-
-    root to: "filter_terms#index"
-  end
+  # 管理画面は一時的に非公開。再開時は下記ルートを戻す。
+  # namespace :admin do
+  #   resources :filter_terms
+  #   resources :matching_exclusion_terms
+  #
+  #   root to: "filter_terms#index"
+  # end
   resource :session, only: %i[new create destroy]
   resource :sign_up, only: %i[new create]
   get "timeline", to: "timeline#index", as: :timeline
