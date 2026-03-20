@@ -2,7 +2,7 @@
 
 各gemのライセンス本文および著作権表示は、ホームページ列のリンク先リポジトリにてご確認いただけます。
 
-最終更新日時: 2026-03-19 20:07:09 +0900
+最終更新日時: 2026-03-21 01:48:59 +0900
 
 | Gem | Version | License | Homepage |
 |---|---:|---|---|
@@ -42,7 +42,7 @@
 | io-console | 0.8.2 | Ruby, BSD-2-Clause | https://github.com/ruby/io-console |
 | irb | 1.17.0 | Ruby, BSD-2-Clause | https://github.com/ruby/irb |
 | jbuilder | 2.14.1 | MIT | https://github.com/rails/jbuilder |
-| json | 2.18.1 | Ruby | https://github.com/ruby/json |
+| json | 2.19.2 | Ruby | https://github.com/ruby/json |
 | kaminari | 1.2.2 | MIT | https://github.com/kaminari/kaminari |
 | kaminari-actionview | 1.2.2 | MIT | https://github.com/kaminari/kaminari |
 | kaminari-activerecord | 1.2.2 | MIT | https://github.com/kaminari/kaminari |
