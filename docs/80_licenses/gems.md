@@ -2,7 +2,7 @@
 
 各gemのライセンス本文および著作権表示は、ホームページ列のリンク先リポジトリにてご確認いただけます。
 
-最終更新日時: 2026-03-21 01:48:59 +0900
+最終更新日時: 2026-03-21 02:28:00 +0900
 
 | Gem | Version | License | Homepage |
 |---|---:|---|---|
@@ -20,7 +20,7 @@
 | activesupport | 8.1.2 | MIT | https://rubyonrails.org |
 | administrate | 1.0.0 | MIT | https://administrate-demo.herokuapp.com/ |
 | base64 | 0.3.0 | Ruby, BSD-2-Clause | https://github.com/ruby/base64 |
-| bcrypt | 3.1.21 | MIT | https://github.com/bcrypt-ruby/bcrypt-ruby |
+| bcrypt | 3.1.22 | MIT | https://github.com/bcrypt-ruby/bcrypt-ruby |
 | bigdecimal | 4.0.1 | Ruby, BSD-2-Clause | https://github.com/ruby/bigdecimal |
 | bootsnap | 1.23.0 | MIT | https://github.com/rails/bootsnap |
 | builder | 3.3.0 | MIT | https://github.com/rails/builder |
