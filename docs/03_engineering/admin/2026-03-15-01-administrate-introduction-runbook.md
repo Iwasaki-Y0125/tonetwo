@@ -25,37 +25,8 @@
 4. `config/routes.rb` の `/admin` 公開対象を必要最小限に絞る。
    - 実装の詳細は [2026-03-18-01-config-routes-admin-scope.md](./2026-03-18-01-config-routes-admin-scope.md) を参照。
    - 合わせて、不要な routes / controller / dashboard を刈り込む
-5. `Admin::ApplicationController` に認証ガードを実装する。
-6. 管理者フラグ用 migration を追加する。
-7. dashboard の表示項目を整理する。
-8. `/admin` と対象一覧画面を確認する。
-
-## 実装時の論点
-- 管理者権限
-  - `users.admin:boolean` で始めるか。
-- 初回対象
-  - `filter_terms`
-  - `matching_exclusion_terms`
-- 後続 Issue に回すもの
-  - `post_abuse_reports` / `message_abuse_reports` の管理画面
-  - 管理者判定用の `users` 運用導線
-  - `sentiment backfill` 実行 action
-  - 強制退会や投稿非表示などの運用 action
-
-## 動作確認
-- 未ログインで `/admin` に入るとログイン画面へ遷移すること
-- 非管理者は `/admin` に入れないこと
-- 管理者だけが `/admin` に入れること
-- 少なくとも1つの管理対象モデルで一覧画面が出ること
-
-## コマンド例
-```bash
-make dev
-make bundle-install
-docker compose --env-file .env.dev -f docker-compose.dev.yml exec -w /app -e HOME=/tmp --user $(id -u):$(id -g) web bundle exec rails generate administrate:install
-make db-migrate
-make test
-```
+5. `Admin::ApplicationController` の認証ガード実装と、管理者フラグ用 migration 追加を進める。
+   - 実装の詳細は [2026-03-20-01-admin-auth-guard-and-role-migration-plan.md](./2026-03-20-01-admin-auth-guard-and-role-migration-plan.md) を参照。
 
 ## 参考
 - ローカル一次情報

@@ -12,6 +12,12 @@ class User < ApplicationRecord
   attr_accessor :terms_agreed
 
   has_secure_password
+
+  # 管理者roleを追加。デフォルトは一般ユーザの member。
+  enum :role, {
+    member: "member",
+    admin: "admin"
+  }, validate: true
   has_many :sessions, dependent: :destroy
 
   # restrict_with_error: ユーザ削除時に関連投稿があると削除できず、エラーになる。
