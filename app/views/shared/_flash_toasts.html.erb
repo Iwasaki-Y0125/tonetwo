@@ -1,0 +1,19 @@
+<div class="tt-layout-flash-overlay">
+  <div class="tt-flash-layer">
+    <% { notice: "alert-success", alert: "alert-error" }.each do |type, alert_class| %>
+      <% next if flash[type].blank? %>
+
+      <div class="alert <%= alert_class %> tt-flash-toast tt-layout-flash-toast"
+           data-controller="flash-toast"
+           data-flash-toast-close-after-ms-value="10000">
+        <span class="font-semibold text-white"><%= flash[type] %></span>
+        <button type="button"
+                class="btn btn-ghost btn-xs text-white hover:text-white/90"
+                aria-label="閉じる"
+                data-action="flash-toast#closeToast">
+          ✕
+        </button>
+      </div>
+    <% end %>
+  </div>
+</div>
