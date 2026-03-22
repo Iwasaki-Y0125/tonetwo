@@ -36,40 +36,7 @@
                 </div>
               </div>
             <% end %>
-
-            <div class="tt-layout-flash-overlay">
-              <div class="tt-flash-layer">
-                <% if flash[:notice] %>
-                <div class="alert alert-success tt-flash-toast tt-layout-flash-toast">
-                  <span class="font-semibold text-white"><%= flash[:notice] %></span>
-                  <button type="button"
-                          class="btn btn-ghost btn-xs text-white hover:text-white/90"
-                          aria-label="閉じる"
-                          onclick="this.closest('.tt-flash-toast').remove()">
-                    ✕
-                  </button>
-                </div>
-                <% end %>
-                <% if flash[:alert] %>
-                <div class="alert alert-error tt-flash-toast tt-layout-flash-toast">
-                  <span class="font-semibold text-white"><%= flash[:alert] %></span>
-                  <button type="button"
-                          class="btn btn-ghost btn-xs text-white hover:text-white/90"
-                          aria-label="閉じる"
-                          onclick="this.closest('.tt-flash-toast').remove()">
-                    ✕
-                  </button>
-                </div>
-                <% end %>
-              </div>
-              <% if flash[:notice] || flash[:alert] %>
-                <script>
-                  setTimeout(() => {
-                    document.querySelectorAll(".tt-flash-toast").forEach((el) => el.remove())
-                  }, 10000)
-                </script>
-              <% end %>
-            </div>
+            <%= render "shared/flash_toasts" %>
             <%= yield %>
           </div>
         </div>
