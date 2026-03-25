@@ -1,5 +1,7 @@
 @import "tailwindcss";
-@plugin "daisyui";
+@plugin "daisyui" {
+  exclude: loading, tooltip, chat, svg;
+}
 
 @plugin "daisyui/theme" {
   name: "pastel";
@@ -870,15 +872,7 @@
     height: 1.25rem;
     display: inline-block;
     flex-shrink: 0;
-    background-color: currentColor;
-    mask-image: var(--tt-header-icon-url);
-    -webkit-mask-image: var(--tt-header-icon-url);
-    mask-repeat: no-repeat;
-    -webkit-mask-repeat: no-repeat;
-    mask-position: center;
-    -webkit-mask-position: center;
-    mask-size: contain;
-    -webkit-mask-size: contain;
+    fill: currentColor;
   }
 
   .tt-tabs-soft {
