@@ -1,6 +1,5 @@
 Rails.application.configure do
   config.content_security_policy do |policy|
-
     # デフォルトは同一オリジンからのリソースのみ許可
     # fallback 対象の一覧は docs/03_engineering/2026-03-23-01-csp-basics.md を参照
     policy.default_src :self
@@ -24,12 +23,11 @@ Rails.application.configure do
     # スクリプトは同一オリジン配信のみ許可
     # importmap 用 nonce をレスポンスヘッダの script-src に載せるためにも必須
     policy.script_src :self
-
   end
 
   # importmap が生成する inline script を許可するため、script-src に nonce を付与する。
   config.content_security_policy_nonce_generator = ->(_request) { SecureRandom.base64(16) }
-  config.content_security_policy_nonce_directives = %w(script-src)
+  config.content_security_policy_nonce_directives = %w[script-src]
 
   # 初回導入は遮断せず、違反の有無を確認できるようにする。
   config.content_security_policy_report_only = true
