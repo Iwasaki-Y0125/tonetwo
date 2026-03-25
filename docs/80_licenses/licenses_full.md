@@ -55,7 +55,7 @@
 
 各gemのライセンス本文および著作権表示は、ホームページ列のリンク先リポジトリにてご確認いただけます。
 
-最終更新日時: 2026-03-26 00:33:58 +0900
+最終更新日時: 2026-03-26 00:53:26 +0900
 
 | Gem | Version | License | Homepage |
 |---|---:|---|---|
@@ -138,7 +138,7 @@
 | securerandom | 0.4.1 | Ruby, BSD-2-Clause | https://github.com/ruby/securerandom |
 | solid_cable | 3.0.12 | MIT | https://github.com/rails/solid_cable |
 | solid_cache | 1.0.10 | MIT | http://github.com/rails/solid_cache |
-| solid_queue | 1.3.2 | MIT | https://github.com/rails/solid_queue |
+| solid_queue | 1.4.0 | MIT | https://github.com/rails/solid_queue |
 | stimulus-rails | 1.3.4 | MIT | https://stimulus.hotwired.dev |
 | stringio | 3.2.0 | Ruby, BSD-2-Clause | https://github.com/ruby/stringio |
 | thor | 1.5.0 | MIT | https://github.com/rails/thor |
