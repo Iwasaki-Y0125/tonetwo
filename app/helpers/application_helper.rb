@@ -1,24 +1,4 @@
 module ApplicationHelper
-  HEADER_ICON_PATHS = %w[
-    icons/home.svg
-    icons/star_shine.svg
-    icons/chat_bubble.svg
-    icons/account_circle.svg
-    icons/settings.svg
-  ].freeze
-
-  def tt_header_icon(icon_path)
-    # 想定外の入力経路が混ざっても、許可アイコン以外は使わない
-    safe_icon_path = HEADER_ICON_PATHS.include?(icon_path) ? icon_path : "icons/home.svg"
-
-    tag.span(
-      "",
-      class: "tt-header-icon",
-      style: "--tt-header-icon-url: url('#{asset_path(safe_icon_path)}')",
-      aria: { hidden: true }
-    )
-  end
-
   # 日時を「2024/01/01 12:00」や「12:00 Today」の形式で表示するユーティリティ関数
   def tt_datetime_label(datetime)
     return "-" if datetime.blank?

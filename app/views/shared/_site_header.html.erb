@@ -16,31 +16,31 @@
           <ul class="tt-header-nav-strip tt-site-header-nav-list">
             <li>
               <%= link_to timeline_path, class: ["tt-header-nav-link", (timeline_active ? "tt-header-nav-link-active" : nil)] do %>
-                <%= tt_header_icon("icons/home.svg") %>
+                <%= render "shared/icons/home" %>
                 <span class="tt-header-nav-text">全体</span>
               <% end %>
             </li>
             <li>
               <%= link_to similar_timeline_path, class: ["tt-header-nav-link", (similar_active ? "tt-header-nav-link-active" : nil)] do %>
-                <%= tt_header_icon("icons/star_shine.svg") %>
+                <%= render "shared/icons/star_shine" %>
                 <span class="tt-header-nav-text">おすすめ</span>
               <% end %>
             </li>
             <li>
               <%= link_to chats_path, class: ["tt-header-nav-link", (chats_active ? "tt-header-nav-link-active" : nil)] do %>
-                <%= tt_header_icon("icons/chat_bubble.svg") %>
+                <%= render "shared/icons/chat_bubble" %>
                 <span class="tt-header-nav-text">チャット</span>
               <% end %>
             </li>
             <li>
               <%= link_to my_posts_path, class: ["tt-header-nav-link", (my_posts_active ? "tt-header-nav-link-active" : nil)] do %>
-                <%= tt_header_icon("icons/account_circle.svg") %>
+                <%= render "shared/icons/account_circle" %>
                 <span class="tt-header-nav-text">MY投稿</span>
               <% end %>
             </li>
             <li>
               <%= link_to settings_path, class: ["tt-header-nav-link", (settings_active ? "tt-header-nav-link-active" : nil)] do %>
-                <%= tt_header_icon("icons/settings.svg") %>
+                <%= render "shared/icons/settings" %>
                 <span class="tt-header-nav-text">設定</span>
               <% end %>
             </li>
@@ -56,31 +56,31 @@
     <ul class="tt-mobile-footer-nav-list">
       <li>
         <%= link_to timeline_path, class: ["tt-mobile-footer-nav-link", (timeline_active ? "tt-mobile-footer-nav-link-active" : nil)] do %>
-          <%= tt_header_icon("icons/home.svg") %>
+          <%= render "shared/icons/home" %>
           <span class="tt-mobile-footer-nav-label">ホーム</span>
         <% end %>
       </li>
       <li>
         <%= link_to similar_timeline_path, class: ["tt-mobile-footer-nav-link", (similar_active ? "tt-mobile-footer-nav-link-active" : nil)] do %>
-          <%= tt_header_icon("icons/star_shine.svg") %>
+          <%= render "shared/icons/star_shine" %>
           <span class="tt-mobile-footer-nav-label">おすすめ</span>
         <% end %>
       </li>
       <li>
         <%= link_to chats_path, class: ["tt-mobile-footer-nav-link", (chats_active ? "tt-mobile-footer-nav-link-active" : nil)] do %>
-          <%= tt_header_icon("icons/chat_bubble.svg") %>
+          <%= render "shared/icons/chat_bubble" %>
           <span class="tt-mobile-footer-nav-label">チャット</span>
         <% end %>
       </li>
       <li>
         <%= link_to my_posts_path, class: ["tt-mobile-footer-nav-link", (my_posts_active ? "tt-mobile-footer-nav-link-active" : nil)] do %>
-          <%= tt_header_icon("icons/account_circle.svg") %>
+          <%= render "shared/icons/account_circle" %>
           <span class="tt-mobile-footer-nav-label">MY投稿</span>
         <% end %>
       </li>
       <li>
         <%= link_to settings_path, class: ["tt-mobile-footer-nav-link", (settings_active ? "tt-mobile-footer-nav-link-active" : nil)] do %>
-          <%= tt_header_icon("icons/settings.svg") %>
+          <%= render "shared/icons/settings" %>
           <span class="tt-mobile-footer-nav-label">設定</span>
         <% end %>
       </li>

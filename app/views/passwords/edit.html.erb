@@ -1,7 +1,7 @@
 <%# TODO(Auth): MVP時点では未使用（routes未公開）。本リリースまでにパスワードリセット実装時に利用する。 %>
 <h1>Update your password</h1>
 
-<%= tag.div(flash[:alert], style: "color:red") if flash[:alert] %>
+<%= tag.div(flash[:alert], class: "text-error") if flash[:alert] %>
 
 <%= form_with url: password_path(params[:token]), method: :put do |form| %>
   <%= form.password_field :password, required: true, autocomplete: "new-password", placeholder: "Enter new password", maxlength: 72 %><br>

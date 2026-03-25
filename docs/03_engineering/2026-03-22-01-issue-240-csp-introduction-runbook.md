@@ -1,5 +1,7 @@
 # Issue #240 CSP導入メモ
 
+- CSPの概要を確認したい場合は [CSP概要メモ](./2026-03-23-01-csp-basics.md) を参照。
+
 ## 目的
 - Issue `#240` の実装前に、CSP導入の進め方と判断ポイントを短く整理する。
 - Cloudflare の既存設定と重複しない責務分担を明文化する。
@@ -18,8 +20,7 @@
 
 ## このドキュメントで決めること
 - このアプリで CSP を導入する順序を決める。
-- 先に除去すべきインライン JS を明示する。
-- 初回を `Report-Only` にするか、最初から enforce にするかの判断材料を整理する。
+- `Report-Only` から enforce へ切り替える判断材料を整理する。
 - Cloudflare と Rails CSP の責務差分を説明できる状態にする。
 
 ## 現時点の整理
@@ -55,42 +56,50 @@
 ## 実装方針
 
 ### 方針 1. 先にインライン JS を外す
-- `onclick` は Stimulus controller か `data-action` に移す。
-- flash 自動消去処理も `app/javascript` 側へ移す。
-- ここを先に片付けることで、`unsafe-inline` に依存しない CSP を目指しやすくする。
+- `onclick` は Stimulus controller か `data-action` に移した。
+- flash 自動消去処理も `app/javascript` 側へ移した。
+- inline style も外出しし、通常ページ向けでは `unsafe-inline` に依存しない構成にした。
 
 ### 方針 2. CSP は最小構成から始める
 - 初期案は `default-src 'self'` をベースに必要なものだけ個別許可する。
-- 少なくとも `object-src 'none'`、`base-uri 'self'` は入れる方向で考える。
-- `script-src` と `style-src` は、実際の importmap / asset 配信形態に合わせて最小化する。
+- `base-uri 'none'`、`form-action 'self'`、`frame-ancestors 'none'`、`img-src 'self' data:`、`object-src 'none'` を個別指定する。
+- `script-src 'self'` は importmap 用 nonce をレスポンスヘッダに載せるためにも残す。
 
-### 方針 3. 初回は Report-Only を第一候補にする
-- 理由:
-  - まだインライン JS が残っている
-  - 画面ごとの読み込み元を網羅確認していない
-  - 本番で Cloudflare 配下の挙動も含めて、違反の有無を先に見たい
-- ただし、実装中に違反箇所を解消し切れて、許可元も限定できるなら enforce 直行も再判断する。
+### 方針 2-1. importmap の inline script は nonce で許可する
+- [app/views/layouts/application.html.erb](../../app/views/layouts/application.html.erb) の `javascript_importmap_tags` は inline script を出力する。
+- そのため、`script-src 'self'` を明示しつつ、`config.content_security_policy_nonce_directives = %w(script-src)` で nonce を有効にする。
+
+### 方針 3. 先に Report-Only で本番確認し、enforce へ切り替える。
+- まずは `Report-Only` のまま本番に載せる。
+- [CSP本番確認とEnforce切り替えチェック #244](https://github.com/Iwasaki-Y0125/tonetwo/issues/244) の確認が完了したら、enforce へ切り替える。
+- 個人開発の間は CSP 違反レポートの受け口は実装せず、ブラウザ DevTools の Console で violation を確認する。
 
 ## 手順
-1. [app/views/layouts/application.html.erb](../../app/views/layouts/application.html.erb) のインライン JS を棚卸しする。
-2. 該当処理を `app/javascript` 配下へ移し、HTML 側は `data-*` 属性中心にする。
-3. [config/initializers/content_security_policy.rb](../../config/initializers/content_security_policy.rb) に暫定 CSP を定義する。
-4. 必要なら nonce と `Report-Only` を設定する。
-5. 主要画面を確認し、違反が出るなら許可元ではなく実装側を先に見直す。
-6. 妥当なら enforce へ切り替える。
-7. 運用 docs に Cloudflare と CSP の責務差分を追記する。
+1. 通常ページ向けのインライン JS / inline style を除去する。
+2. [config/initializers/content_security_policy.rb](../../config/initializers/content_security_policy.rb) に最小構成の CSP を定義する。
+3. importmap の inline script 向けに `script-src` と nonce を設定する。
+4. nonce generator が空文字を返さないことを確認する。
+5. `Report-Only` のまま本番で主要画面を確認する。
+6. CSP violation が出るなら許可元ではなく実装側を先に見直す。
+7. 問題がなければ enforce へ切り替える。
 
-## 受け入れ条件の下書き
-- 本番レスポンスに CSP ヘッダが付与される。
-- `unsafe-inline` を必須としない構成になっている、または残す理由が明文化されている。
-- 主要画面で CSP 違反により操作不能な箇所がない。
-- flash 通知の手動クローズと自動消去が回帰していない。
-- Cloudflare と CSP の役割差分を docs で説明できる。
+## nonce 周りの調査メモ
 
-## 未確定
-- 初回導入を `Report-Only` にするか、最初から enforce にするか。
-- CSP 違反レポートの受け口を実装するか。
-- `img-src` / `font-src` / `connect-src` に `data:` や外部許可元が必要か。
+### 1. `script-src` は nonce のためにも必要
+- `script-src` を削ると、HTML 側に `nonce="..."` が付いていても、レスポンスヘッダ側に `script-src 'nonce-...'` を載せられない。
+- そのため、importmap の inline script を nonce で許可する前提では `script-src 'self'` を残す必要がある。
+
+### 2. `request.session.id.to_s` は nonce generator に向かなかった
+- `request.session.id.to_s` を nonce generator に使うと、未ログイン初回リクエストで空文字になりうる。
+- 実際に確認したレスポンスでも、`nonce=""` と `script-src 'nonce-'` になった。
+
+### 3. 現在は `SecureRandom.base64(16)` を使う
+- 現在は `SecureRandom.base64(16)` を使って毎レスポンスで空にならない nonce を生成する構成にしている。
+- 一次情報:
+  - [config/initializers/content_security_policy.rb](../../config/initializers/content_security_policy.rb)
+  - [Ruby SecureRandom](https://ruby-doc.org/3.4/stdlibs/securerandom/SecureRandom.html)
+  - [MDN nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/nonce)
+- 実レスポンスでも、CSP ヘッダ側の `script-src 'nonce-...'` と HTML 側の `nonce="..."` に同じ値が入ることを確認した。
 
 ## 参考
 - ローカル一次情報
