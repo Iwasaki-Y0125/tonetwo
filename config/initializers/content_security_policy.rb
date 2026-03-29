@@ -32,6 +32,6 @@ Rails.application.configure do
   config.content_security_policy_nonce_generator = ->(_request) { SecureRandom.base64(16) }
   config.content_security_policy_nonce_directives = %w[script-src style-src]
 
-  # 初回導入は遮断せず、違反の有無を確認できるようにする。
-  config.content_security_policy_report_only = true
+  # 本番確認で違反が解消したため、enforce に切り替える。
+  config.content_security_policy_report_only = false
 end
