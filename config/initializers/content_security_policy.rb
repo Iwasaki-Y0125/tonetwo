@@ -17,6 +17,9 @@ Rails.application.configure do
     # 画像は同一オリジンのみ許可
     policy.img_src :self
 
+    # Turbo が挿入する nonce 付き style 要素を許可
+    policy.style_src :self
+
     # object/embed/applet は読み込み自体を禁止
     policy.object_src :none
 
@@ -27,7 +30,7 @@ Rails.application.configure do
 
   # importmap が生成する inline script を許可するため、script-src に nonce を付与する。
   config.content_security_policy_nonce_generator = ->(_request) { SecureRandom.base64(16) }
-  config.content_security_policy_nonce_directives = %w[script-src]
+  config.content_security_policy_nonce_directives = %w[script-src style-src]
 
   # 初回導入は遮断せず、違反の有無を確認できるようにする。
   config.content_security_policy_report_only = true

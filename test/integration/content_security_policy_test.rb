@@ -12,6 +12,9 @@ class ContentSecurityPolicyTest < ActionDispatch::IntegrationTest
     assert_includes header, "form-action 'self'"
     assert_includes header, "frame-ancestors 'none'"
     assert_includes header, "img-src 'self'"
+    assert_includes header, "style-src 'self'"
     assert_includes header, "object-src 'none'"
+    assert_match(/style-src 'self' 'nonce-[^']+'/, header)
+    assert_match(/script-src 'self' 'nonce-[^']+'/, header)
   end
 end
