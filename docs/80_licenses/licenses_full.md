@@ -55,11 +55,11 @@
 
 各gemのライセンス本文および著作権表示は、ホームページ列のリンク先リポジトリにてご確認いただけます。
 
-最終更新日時: 2026-03-26 00:53:26 +0900
+最終更新日時: 2026-04-01 16:53:38 +0900
 
 | Gem | Version | License | Homepage |
 |---|---:|---|---|
-| action_text-trix | 2.1.17 | MIT | https://github.com/basecamp/trix |
+| action_text-trix | 2.1.18 | MIT | https://github.com/basecamp/trix |
 | actioncable | 8.1.3 | MIT | https://rubyonrails.org |
 | actionmailbox | 8.1.3 | MIT | https://rubyonrails.org |
 | actionmailer | 8.1.3 | MIT | https://rubyonrails.org |
@@ -74,7 +74,7 @@
 | administrate | 1.0.0 | MIT | https://administrate-demo.herokuapp.com/ |
 | base64 | 0.3.0 | Ruby, BSD-2-Clause | https://github.com/ruby/base64 |
 | bcrypt | 3.1.22 | MIT | https://github.com/bcrypt-ruby/bcrypt-ruby |
-| bigdecimal | 4.0.1 | Ruby, BSD-2-Clause | https://github.com/ruby/bigdecimal |
+| bigdecimal | 4.1.0 | Ruby, BSD-2-Clause | https://github.com/ruby/bigdecimal |
 | bootsnap | 1.23.0 | MIT | https://github.com/rails/bootsnap |
 | builder | 3.3.0 | MIT | https://github.com/rails/builder |
 | bundler | 2.4.19 | MIT | https://bundler.io |
@@ -105,7 +105,7 @@
 | mail | 2.9.0 | MIT | https://github.com/mikel/mail |
 | marcel | 1.1.0 | MIT, Apache-2.0 | https://github.com/rails/marcel |
 | mini_mime | 1.1.5 | MIT | https://github.com/discourse/mini_mime |
-| minitest | 6.0.2 | MIT | https://minite.st/ |
+| minitest | 6.0.3 | MIT | https://minite.st/ |
 | msgpack | 1.8.0 | Apache 2.0 | http://msgpack.org/ |
 | natto | 1.2.0 | BSD | https://github.com/buruzaemon/natto |
 | net-imap | 0.6.3 | Ruby, BSD-2-Clause | https://github.com/ruby/net-imap |
@@ -123,7 +123,7 @@
 | puma | 7.2.0 | BSD-3-Clause | https://puma.io |
 | raabro | 1.4.0 | MIT | https://github.com/floraison/raabro |
 | racc | 1.8.1 | Ruby, BSD-2-Clause | https://github.com/ruby/racc |
-| rack | 3.2.5 | MIT | https://github.com/rack/rack |
+| rack | 3.2.6 | MIT | https://github.com/rack/rack |
 | rack-attack | 6.8.0 | MIT | https://github.com/rack/rack-attack |
 | rack-session | 2.1.1 | MIT | https://github.com/rack/rack-session |
 | rack-test | 2.2.0 | MIT | https://github.com/rack/rack-test |
