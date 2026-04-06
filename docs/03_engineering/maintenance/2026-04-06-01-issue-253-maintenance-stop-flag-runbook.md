@@ -40,8 +40,8 @@
 - 停止中は原則 503 を返す。
 - 監視維持のため `/up` は常に通す。
 - `robots.txt` やアセット配信など、運用上必要な静的ファイルは通す（最低限 `/assets/`, `/favicon.ico`, `/robots.txt` を許可対象に含める）。
-- 利用者向け表示は ERB で実装する（`app/views/layouts/maintenance.html.erb`）。
-- 専用レイアウトを `app/views/layouts/maintenance.html.erb` に用意し、`authenticated?` など DB/セッションに触れる処理を避ける。
+- 利用者向け表示は ERB で実装する（[app/views/layouts/maintenance.html.erb](../../../app/views/layouts/maintenance.html.erb)）。
+- 専用レイアウトを [app/views/layouts/maintenance.html.erb](../../../app/views/layouts/maintenance.html.erb) に用意し、`authenticated?` など DB/セッションに触れる処理を避ける。
 
 ## 実装手順
 1. `MaintenanceMode` concern を追加する。
@@ -55,14 +55,14 @@
 - 方式: `include MaintenanceMode` + `prepend_before_action :enforce_maintenance_mode`
 
 3. メンテナンス画面（レイアウト内完結）を追加する。
-  - `app/views/layouts/maintenance.html.erb`
+  - [app/views/layouts/maintenance.html.erb](../../../app/views/layouts/maintenance.html.erb)
 - 記載内容:
   - 「現在、定期メンテナンス中です。」
   - 「メンテナンスは4/9 13:30 ~ 15:00を予定しています。」
 - `ApplicationController` の `enforce_maintenance_mode` で `template: "layouts/maintenance"`, `layout: false` を明示し、`authenticated?` を呼ばないレイアウトにする。
 
 4. `/up` 非停止の保証をテストで固定する。
-- 追加テスト候補: `test/integration/maintenance_mode_test.rb`
+- 追加テスト候補: [test/integration/maintenance_mode_test.rb](../../../test/integration/maintenance_mode_test.rb)
 - 確認項目:
   - `MAINTENANCE_MODE` を設定して `GET /up` は 200
   - `MAINTENANCE_MODE` を設定して `GET /timeline` は 503
