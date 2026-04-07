@@ -1,7 +1,7 @@
 # 画面遷移図（スクール提出用）
 
 ## 画面遷移図
-Figma：https://www.figma.com/design/BJ0V33Qn3GaJsfGxfuwuh2/ToneTwo?node-id=51-104&t=aTJel3EJtGbletDD-1
+Figma：https://www.figma.com/design/q1JFzxXJLPsX3GnSAszmMM/ToneTwo-%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3?node-id=2046-3995&t=fztHvkjEwGRLRWce-1
 
 ---
 
