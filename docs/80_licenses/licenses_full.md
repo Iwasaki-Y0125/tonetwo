@@ -55,7 +55,7 @@
 
 各gemのライセンス本文および著作権表示は、ホームページ列のリンク先リポジトリにてご確認いただけます。
 
-最終更新日時: 2026-04-15 01:51:26 +0900
+最終更新日時: 2026-04-15 02:05:01 +0900
 
 | Gem | Version | License | Homepage |
 |---|---:|---|---|
@@ -157,7 +157,7 @@
 
 ## RubyGems（Apache系）LICENSE / NOTICE
 
-### addressable 2.8.8
+### addressable 2.9.0
 - Homepage: https://github.com/sporkmonger/addressable
 - License: Apache-2.0
 
