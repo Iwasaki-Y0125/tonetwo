@@ -55,7 +55,7 @@
 
 各gemのライセンス本文および著作権表示は、ホームページ列のリンク先リポジトリにてご確認いただけます。
 
-最終更新日時: 2026-04-01 16:53:38 +0900
+最終更新日時: 2026-04-15 01:51:26 +0900
 
 | Gem | Version | License | Homepage |
 |---|---:|---|---|
@@ -125,7 +125,7 @@
 | racc | 1.8.1 | Ruby, BSD-2-Clause | https://github.com/ruby/racc |
 | rack | 3.2.6 | MIT | https://github.com/rack/rack |
 | rack-attack | 6.8.0 | MIT | https://github.com/rack/rack-attack |
-| rack-session | 2.1.1 | MIT | https://github.com/rack/rack-session |
+| rack-session | 2.1.2 | MIT | https://github.com/rack/rack-session |
 | rack-test | 2.2.0 | MIT | https://github.com/rack/rack-test |
 | rackup | 2.3.1 | MIT | https://github.com/rack/rackup |
 | rails | 8.1.3 | MIT | https://rubyonrails.org |
