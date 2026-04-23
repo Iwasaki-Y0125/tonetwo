@@ -55,7 +55,7 @@
 
 各gemのライセンス本文および著作権表示は、ホームページ列のリンク先リポジトリにてご確認いただけます。
 
-最終更新日時: 2026-04-23 16:22:11 +0900
+最終更新日時: 2026-04-23 16:44:52 +0900
 
 | Gem | Version | License | Homepage |
 |---|---:|---|---|
@@ -78,7 +78,7 @@
 | bootsnap | 1.23.0 | MIT | https://github.com/rails/bootsnap |
 | builder | 3.3.0 | MIT | https://github.com/rails/builder |
 | bundler | 2.4.19 | MIT | https://bundler.io |
-| commonmarker | 2.7.0 | MIT | https://github.com/gjtorikian/commonmarker |
+| commonmarker | 2.8.1 | MIT | https://github.com/gjtorikian/commonmarker |
 | concurrent-ruby | 1.3.6 | MIT | http://www.concurrent-ruby.com |
 | connection_pool | 3.0.2 | MIT | https://github.com/mperham/connection_pool |
 | crass | 1.0.6 | MIT | https://github.com/rgrove/crass/ |
