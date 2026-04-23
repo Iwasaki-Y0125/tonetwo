@@ -55,7 +55,7 @@
 
 各gemのライセンス本文および著作権表示は、ホームページ列のリンク先リポジトリにてご確認いただけます。
 
-最終更新日時: 2026-04-23 16:44:52 +0900
+最終更新日時: 2026-04-23 17:38:51 +0900
 
 | Gem | Version | License | Homepage |
 |---|---:|---|---|
@@ -120,7 +120,7 @@
 | prism | 1.9.0 | MIT | https://github.com/ruby/prism |
 | propshaft | 1.3.1 | MIT | https://github.com/rails/propshaft |
 | psych | 5.3.1 | MIT | https://github.com/ruby/psych |
-| puma | 7.2.0 | BSD-3-Clause | https://puma.io |
+| puma | 8.0.0 | BSD-3-Clause | https://puma.io |
 | raabro | 1.4.0 | MIT | https://github.com/floraison/raabro |
 | racc | 1.8.1 | Ruby, BSD-2-Clause | https://github.com/ruby/racc |
 | rack | 3.2.6 | MIT | https://github.com/rack/rack |
