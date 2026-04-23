@@ -55,7 +55,7 @@
 
 各gemのライセンス本文および著作権表示は、ホームページ列のリンク先リポジトリにてご確認いただけます。
 
-最終更新日時: 2026-04-15 02:05:01 +0900
+最終更新日時: 2026-04-23 16:22:11 +0900
 
 | Gem | Version | License | Homepage |
 |---|---:|---|---|
@@ -774,7 +774,7 @@ Apache License
 (NOTICE ファイルなし)
 ```
 
-### selenium-webdriver 4.41.0
+### selenium-webdriver 4.43.0
 - Homepage: https://selenium.dev
 - License: Apache-2.0
 
